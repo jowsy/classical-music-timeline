@@ -46,7 +46,10 @@ typings/
 
 # Javascript compiled from TS files
 src/*.js
+src/*.js.map
+src/*.d.ts
 public/main.js
+
 
 # TypeScript cache
 *.tsbuildinfo
