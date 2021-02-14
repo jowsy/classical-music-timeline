@@ -44,6 +44,10 @@ jspm_packages/
 # TypeScript v1 declaration files
 typings/
 
+# Javascript compiled from TS files
+src/*.js
+public/main.js
+
 # TypeScript cache
 *.tsbuildinfo
 
