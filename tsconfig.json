@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "target": "es5",
+        "sourceMap": true,
+        "declaration": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "lib": [
+            "es2016",
+            "es2017",
+            "dom"
+          ],
+          "typeRoots": [
+            "node_modules/@types"
+          ],
+    },
+    "exclude": [
+        "node_modules",
+        "dist"
+    ],
+
+}
