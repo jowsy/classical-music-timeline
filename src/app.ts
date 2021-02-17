@@ -59,9 +59,7 @@ svgRect.height = barHeight*composers.length; //- svgRect.top - svgRect.bottom;
 let minDate: Date = d3.min(composers.map(f => f.getBirthDate()));
 let maxDate: Date = d3.max(composers.map(f => f.getDeathDate()));
 
-
-d3.select('body');
-var	svg = d3.select("body")
+var	svg = d3.select("#timelinecanvas")
 	.append("svg")
 		.attr("width", svgRect.width + svgRect.left + svgRect.right)
         .attr("height", svgRect.height + svgRect.top + svgRect.bottom);
