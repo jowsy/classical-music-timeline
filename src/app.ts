@@ -51,7 +51,7 @@ let	svgRect = new rect();
 svgRect.top = 30;
 svgRect.right = 20;
 svgRect.bottom = 30;
-svgRect.left = 50;
+svgRect.left = 5;
 
 svgRect.width = 2000 - svgRect.left - svgRect.right,
 svgRect.height = barHeight*composers.length; //- svgRect.top - svgRect.bottom;

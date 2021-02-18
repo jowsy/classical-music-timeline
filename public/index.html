@@ -5,21 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>D3 with TypeScript</title>
-    <link href="./css/bootstrap/bootstrap.min.css" rel="stylesheet"></script>
-
-   
+    <link href="./css/bootstrap/bootstrap.min.css" rel="stylesheet"></script> 
+    <link href="./css/app.css" rel="stylesheet"></script> 
 </head>
 <body>
-    <div class="container-fluid">
-        
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Classical Music Timeline</a>
+    </header>
+    <div class="container-fluid">       
         <div class="row">
-            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-            <div>Filter</div>
-        </nav>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div id="timelinecanvas"></div>
-
-        </main>
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+            <h5 class="justify-content-between mt-4 mb-1 text-muted">Filters</h5>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link justify-content-between d-flex" data-bs-toggle="collapse" href="#composerList" role="button" aria-expanded="false" aria-controls="composerList"> 
+                       Composers <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down pull-right" viewBox="0 0 16 16">
+                        <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659l4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z"/>
+                      </svg> 
+                    </a>
+                    <div class="collapse multi-collapse" id="composerList">
+                        <div class="card card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item"><input type="checkbox"> Mozart</li>
+                                <li class="list-group-item"><input type="checkbox"> Beethoven</li>
+                              </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link justify-content-between d-flex" data-bs-toggle="collapse" href="#epochList" role="button" aria-expanded="false" aria-controls="epochList"> 
+                       Epochs <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down pull-right" viewBox="0 0 16 16">
+                        <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659l4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z"/>
+                      </svg> 
+                    </a>
+                    <div class="collapse multi-collapse" id="epochList">
+                        <div class="card card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item"><input type="checkbox"> Mozart</li>
+                                <li class="list-group-item"><input type="checkbox"> Beethoven</li>
+                              </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>       
+            </nav>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div id="timelinecanvas"></div>
+            </main>
+    </div>
     </div>
 <!------------- Javascript ----------------->
     <script src="./js/main.js"></script>
