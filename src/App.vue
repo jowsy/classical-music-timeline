@@ -16,8 +16,8 @@
 import { Options, Vue } from 'vue-class-component';
 import TimeLine from './components/TimeLine.vue';
 import SideMenu from './components/SideMenu.vue';
-import {Session} from './core/Session'
-import {OpenOpusDataMapper} from './db/OpenOpusDataMapper'
+import {Session} from './core/Session';
+import {OpenOpusDataMapper} from './db/OpenOpusDataMapper';
 
 @Options({
   components: {
@@ -34,13 +34,7 @@ export default class App extends Vue {
     return { session : newSession};
   }
 }
-
-
-
-
-
 </script>
 
-<style>
+<style scoped src="../src/assets/css/app.css"/>
 
-</style>
