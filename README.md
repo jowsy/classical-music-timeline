@@ -1,35 +1,24 @@
 # classical-music-timeline
 
-Classical music timeline is a interactive visualization of classical music history.
-
-## Prequisities
-
-* Node.js
-* Typescript (>4.1.3)
-
-## Installation
-
-Use the package manager [npm](https://pip.pypa.io/en/stable/) to install needed packages.
-
+## Project setup
 ```
 npm install
 ```
 
-## Usage
-
-To start server listening on 8080:
+### Compiles and hot-reloads for development
 ```
-node server.js
-```
-To compile:
-```
-npm run dev
+npm run serve
 ```
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+### Compiles and minifies for production
+```
+npm run build
+```
 
-Please make sure to update tests as appropriate.
+### Lints and fixes files
+```
+npm run lint
+```
 
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

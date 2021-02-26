@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import {Composer, Request, RootObject} from "./openopusapi";
 import * as jsonData from "../public/data.json";
 import Utils from "./utils";
-import Vue from 'vue'
+
 
 //------------- PUT THIS INTO A CONFIGURATION -------------------------
 let tickTimeInterval : number = 20; //in year
