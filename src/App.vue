@@ -35,6 +35,5 @@ export default class App extends Vue {
   }
 }
 </script>
-
 <style scoped src="../src/assets/css/app.css"/>
 

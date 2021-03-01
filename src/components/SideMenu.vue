@@ -10,9 +10,9 @@
                         </a>
                         <div class="collapse multi-collapse" id="epochList">
                             <div class="card card-body">
-                                <ul class="list-group">
+                                <ul class="list-group vertical-scroll">
                                       <li class="list-group-item" v-for="object in session.timeSpans" :key="object.id">
-                                         <input type="checkbox" v-model="object.show" @click="notifyParentRedraw"> {{ object.displayCaption }}
+                                         <input type="checkbox" v-model="object.show"> {{ object.displayCaption }}
                                     </li>
                                 </ul>
                             </div>
@@ -35,3 +35,5 @@ import {Session} from '../core/Session';
 export default class SideMenu extends Vue {
 }
 </script>
+
+<style scoped src="../assets/css/app.css"/>
