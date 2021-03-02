@@ -22,13 +22,16 @@ export class Parameter {
         return this._numberValue;
     }
 
-    setString(val:string){
+    //Typescript doesn't do overloading so we need to this:
+    set(val:any) : void {
+        if (typeof val == "string")
         this._stringValue = val;
-    }
-    
-    setNumber(val:number){
+        else if (typeof val == "number")
         this._numberValue = val;
     }
+
+    
+    
 }
 
 export enum ParamType {
