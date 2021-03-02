@@ -19,6 +19,7 @@ export class OpenOpusDataMapper implements DataGateway {
 
     Prepare(): void {
         this._session.addCustomParameter("epoch", ParamType.String, true);
+        this._session.addCustomParameter("portrait", ParamType.String, false);
     }
     
     getTimeSpans(): TimeSpan[] {
@@ -34,6 +35,7 @@ export class OpenOpusDataMapper implements DataGateway {
 
             newTimeSpan.session = this._session;
             newTimeSpan.getParameter("epoch").set(comp.epoch); 
+            newTimeSpan.getParameter("portrait").set(comp.portrait); 
 
             data.push(newTimeSpan);
             });

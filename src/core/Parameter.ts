@@ -28,10 +28,7 @@ export class Parameter {
         this._stringValue = val;
         else if (typeof val == "number")
         this._numberValue = val;
-    }
-
-    
-    
+    }   
 }
 
 export enum ParamType {
