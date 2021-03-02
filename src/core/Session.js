@@ -1,22 +1,36 @@
 import { TimeSpan } from "./TimeSpan";
-import { Event } from "./Event";
+import { ParamDefinition } from "./Parameter";
+import { Guid } from "./Guid";
 export class Session {
-    get objects() {
-        return this.TimeLineBases;
+    constructor() {
+        this._parameterDefs = new Array();
     }
-    set objects(value) {
-        this.TimeLineBases = value;
+    get timeSpans() {
+        return this._timeSpans;
+    }
+    setTimeSpans(value) {
+        this._timeSpans = value;
         this.setExtents();
+    }
+    get parameterDefs() {
+        return this._parameterDefs;
+    }
+    addCustomParameter(name, pType, filterable) {
+        var parameterDef = new ParamDefinition();
+        parameterDef.id = Guid.MakeNew().ToString();
+        parameterDef.name = name;
+        parameterDef.parameterType = pType;
+        parameterDef.filterable = filterable;
+        this._parameterDefs.push(parameterDef);
     }
     setExtents() {
         var list = [];
-        this.objects.map(obj => {
+        this.timeSpans
+            .filter(obj => obj.show == true)
+            .map(obj => {
             if (obj instanceof TimeSpan) {
                 list.push(obj.startDate);
                 list.push(obj.endDate);
-            }
-            else if ((obj instanceof Event)) {
-                list.push(obj.date);
             }
         });
         list.sort((a, b) => {
@@ -27,7 +41,9 @@ export class Session {
     }
     static Create(dataGateway) {
         let session = new Session;
-        session.objects = dataGateway.getObjects();
+        dataGateway.Init(session);
+        dataGateway.Prepare();
+        session.setTimeSpans(dataGateway.getTimeSpans());
         return session;
     }
 }

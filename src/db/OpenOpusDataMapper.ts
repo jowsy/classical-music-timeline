@@ -3,12 +3,24 @@ import * as jsonData from '../assets/data.json'
 import { Composer } from './Composer';
 import { TimeSpan } from '@/core/TimeSpan';
 import { Event } from '@/core/Event';
+import { Session } from '@/core/Session';
+import { ParamType } from '@/core/Parameter';
 
 
 /* -------------------------------------------------------
 * Resonsible to map OpenOpus composers into TimeSpan objects
 -------------------------------------------------------*/ 
 export class OpenOpusDataMapper implements DataGateway {
+
+    private _session : Session;
+    Init(session : Session): void {
+        this._session = session;
+    }
+
+    Prepare(): void {
+        this._session.addCustomParameter("epoch", ParamType.String, true);
+    }
+    
     getTimeSpans(): TimeSpan[] {
         let data: Array<TimeSpan> = new Array<TimeSpan>();
         jsonData.composers.forEach(composer =>{ 
@@ -19,6 +31,10 @@ export class OpenOpusDataMapper implements DataGateway {
             newTimeSpan.startDate = comp.getBirthDate();
             newTimeSpan.endDate = comp.getDeathDate();
             newTimeSpan.show = true; //Show by default
+
+            newTimeSpan.session = this._session;
+            newTimeSpan.getParameter("epoch").setString(comp.epoch); 
+
             data.push(newTimeSpan);
             });
             return data.sort((a, b) => {

@@ -1,8 +1,11 @@
 import {TimeLineBase} from './TimeLineBase'
 import { TimeSpan } from './TimeSpan';
 import { Event } from './Event';
+import { Session } from './Session';
 
 export interface DataGateway {
-    getTimeSpans() : Array<TimeSpan> 
-    getEvents() : Array<Event> 
+    Init(session:Session) : void;
+    Prepare() : void;
+    getTimeSpans() : Array<TimeSpan> ;
+    getEvents() : Array<Event>;
 }

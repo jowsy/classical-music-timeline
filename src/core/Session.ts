@@ -2,9 +2,14 @@ import { TimeLineBase } from "./TimeLineBase";
 import { DataGateway } from "./DataGateway";
 import { TimeSpan } from "./TimeSpan";
 import { Event } from "./Event";
-
+import { ParamDefinition, ParamType } from "./Parameter";
+import { Guid } from "./Guid";
 
 export class Session {
+
+    constructor(){
+        this._parameterDefs = new Array<ParamDefinition>();
+    }
 
     minDate : Date;
     maxDate : Date;
@@ -15,9 +20,24 @@ export class Session {
         return this._timeSpans;
     }
 
-    set timeSpans(value: Array<TimeSpan>) {
+    private setTimeSpans(value: Array<TimeSpan>) {
         this._timeSpans = value;
         this.setExtents();
+    }
+
+    private _parameterDefs:Array<ParamDefinition>;
+
+    get parameterDefs(): Array<ParamDefinition> {
+        return this._parameterDefs;
+    }
+
+    public addCustomParameter(name:string, pType:ParamType, filterable:boolean){
+        var parameterDef = new ParamDefinition();
+        parameterDef.id= Guid.MakeNew().ToString();
+        parameterDef.name = name;
+        parameterDef.parameterType = pType;
+        parameterDef.filterable = filterable;
+        this._parameterDefs.push(parameterDef);
     }
 
     public setExtents():void {
@@ -44,9 +64,10 @@ export class Session {
 
     static Create(dataGateway : DataGateway) : Session{
         let session = new Session;
-        session.timeSpans = dataGateway.getTimeSpans();
+        dataGateway.Init(session);
+        dataGateway.Prepare();
+        session.setTimeSpans(dataGateway.getTimeSpans());
         return session;
     }
-    
 
 }
