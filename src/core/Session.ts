@@ -4,6 +4,7 @@ import { TimeSpan } from "./TimeSpan";
 import { Event } from "./Event";
 import { ParamDefinition, ParamType } from "./Parameter";
 import { Guid } from "./Guid";
+import { IFilter } from "./IFilter";
 
 export class Session {
 
@@ -13,7 +14,7 @@ export class Session {
 
     minDate : Date;
     maxDate : Date;
-
+    private _filters: Array<IFilter>;
     private _timeSpans: Array<TimeSpan>;
 
     get timeSpans(): Array<TimeSpan> {
@@ -40,6 +41,22 @@ export class Session {
         this._parameterDefs.push(parameterDef);
     }
 
+    public addFilter(filter:IFilter){
+        if (this._filters==null) this._filters = new Array<IFilter>();
+        this._filters.push(filter);
+    }
+
+    removeFilter(id:string) : boolean{
+        var index = this._filters.findIndex(f => f.id == id);
+        if (index == -1) return false;
+        this._filters.splice(index,1);
+        return true;
+    }
+
+    public getFilter(parameterDefId:string){
+        return this._filters.find(f => f.id == parameterDefId);
+    }
+
     public setExtents():void {
         
         var list : Array<Date> = [];
@@ -60,6 +77,32 @@ export class Session {
 
         this.minDate = list[0];
         this.maxDate = list[list.length-1]
+    }
+
+    public Refresh(){
+
+        /*
+        * APPLY FILTERS
+        * Test TimeLineBase object against filters       
+        * */
+
+        if (this._filters!=null){
+
+            this._timeSpans.forEach(tSpan => {
+            if (this._filters.length > 0){
+                if (this._filters
+                .map(f=>f.Apply(tSpan))
+                .every(x => x == true))
+                    tSpan.show=true;
+                else
+                    tSpan.show=false;
+                }else{
+                    tSpan.show=true;
+                }
+                
+            });
+         
+        }
     }
 
     static Create(dataGateway : DataGateway) : Session{

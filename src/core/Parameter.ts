@@ -3,6 +3,7 @@ export class ParamDefinition {
     id:string;
     parameterType:ParamType;
     filterable:boolean;
+    isFilterEnabled:boolean;
 }
 
 export class Parameter {

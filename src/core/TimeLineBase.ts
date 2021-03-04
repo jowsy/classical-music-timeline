@@ -11,7 +11,7 @@ export class TimeLineBase {
     
     private _parameters : Array<Parameter> = new Array<Parameter>();
 
-    getParameter(paramName:string) {
+    getParameterByName(paramName:string) {
         var param = this._parameters.find(p => p.definition.name == paramName);
         if (param!= null){
             return param;
@@ -20,6 +20,19 @@ export class TimeLineBase {
 
         let paramDef : ParamDefinition = this.session.parameterDefs.find(p => p.name == paramName) as ParamDefinition;
         let newParam : Parameter = new Parameter(paramDef);
+        this._parameters.push(newParam);
+
+        return newParam;
+    }
+
+    getParameterByDefinition(paramDefinition:ParamDefinition) {
+        var param = this._parameters.find(p => p.definition == paramDefinition);
+        if (param!= null){
+            return param;
+        }
+        if (this.session==null) throw new Error('session is not set.');
+
+        let newParam : Parameter = new Parameter(paramDefinition);
         this._parameters.push(newParam);
 
         return newParam;

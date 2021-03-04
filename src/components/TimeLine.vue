@@ -41,7 +41,6 @@ export default class TimeLine extends Vue {
     }
     redraw(){
 
-console.log("watch!");
  class rect {
         top: number;
         right: number;

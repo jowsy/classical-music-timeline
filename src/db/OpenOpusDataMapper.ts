@@ -34,8 +34,8 @@ export class OpenOpusDataMapper implements DataGateway {
             newTimeSpan.show = true; //Show by default
 
             newTimeSpan.session = this._session;
-            newTimeSpan.getParameter("epoch").set(comp.epoch); 
-            newTimeSpan.getParameter("portrait").set(comp.portrait); 
+            newTimeSpan.getParameterByName("epoch").set(comp.epoch); 
+            //newTimeSpan.getParameterByName("portrait").set(comp.portrait); 
 
             data.push(newTimeSpan);
             });
