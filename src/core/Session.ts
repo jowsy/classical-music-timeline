@@ -9,15 +9,13 @@ import { AndFilter } from "./AndFilterTest";
 
 export class Session {
 
-    constructor(){
-        this._parameterDefs = new Array<ParamDefinition>();
-    }
 
+    private _parameterDefs:Array<ParamDefinition> =  new Array<ParamDefinition>();
+    private _timeSpans: Array<TimeSpan>;
     minDate : Date;
     maxDate : Date;
     public rootFilter: IFilter;
 
-    private _timeSpans: Array<TimeSpan>;
 
     get timeSpans(): Array<TimeSpan> {
         return this._timeSpans;
@@ -27,8 +25,6 @@ export class Session {
         this._timeSpans = value;
         this.setExtents();
     }
-
-    private _parameterDefs:Array<ParamDefinition>;
 
     get parameterDefs(): Array<ParamDefinition> {
         return this._parameterDefs;
@@ -48,7 +44,7 @@ export class Session {
         var list : Array<Date> = [];
         
         this.timeSpans
-        .filter(obj => obj.show == true)
+        .filter(obj => obj.visible == true)
         .map(obj => {
             if (obj instanceof TimeSpan)
             {
@@ -70,7 +66,9 @@ export class Session {
         if (this.rootFilter!=null){
 
             this._timeSpans.forEach(tSpan => {
-              tSpan.show = this.rootFilter.Apply(tSpan);
+              var test = this.rootFilter.Apply(tSpan);
+              tSpan.visible = test;
+              tSpan.visibilityOverriden = !test;
             });
          
         }

@@ -5,7 +5,9 @@ export class TimeLineBase {
 
     session:Session;
     id: string;
-    show : boolean;
+    visible : boolean;
+    visibilityOverriden : boolean;
+
     displayCaption : string;
     order : number;
     

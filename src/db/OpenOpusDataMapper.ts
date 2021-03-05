@@ -31,7 +31,7 @@ export class OpenOpusDataMapper implements DataGateway {
             newTimeSpan.displayCaption = comp.complete_name;
             newTimeSpan.startDate = comp.getBirthDate();
             newTimeSpan.endDate = comp.getDeathDate();
-            newTimeSpan.show = true; //Show by default
+            newTimeSpan.visible = true; //Show by default
 
             newTimeSpan.session = this._session;
             newTimeSpan.getParameterByName("epoch").set(comp.epoch); 

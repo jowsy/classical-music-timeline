@@ -81,7 +81,7 @@ export default class TimeLine extends Vue {
     //let yAxis = d3.axisLeft(scale).ticks(dateInterval); //Vertical grid lines
 
     var g = svg.selectAll("g")
-        .data(this.session.timeSpans.filter(ts => ts.show==true))
+        .data(this.session.timeSpans.filter(ts => ts.visible==true))
         .enter()
         .append("g")
         .attr("transform", function (d, i) {
@@ -95,7 +95,7 @@ export default class TimeLine extends Vue {
         })
         //.attr("fill", function (c) { return GetHexColorByEpoch(c.epoch) })
         .attr("height", barHeight - margin)
-        .attr("visibility", function(d) { if (d.show) return "visible"; else return "collapse"});
+        .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"});
 
                 
         g.append("text")
@@ -104,7 +104,7 @@ export default class TimeLine extends Vue {
             .attr("dy", ".35em")
             .text(function (d) { return d.displayCaption; })
             .style("fill", "white" ) 
-            .attr("visibility", function(d) { if (d.show) return "visible"; else return "collapse"});
+            .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"});
             //.style("fill", function (d) { return Utils.getTextColorByBackgroundColor(GetHexColorByEpoch(d.epoch))} ); 
 
         svg.append("g")

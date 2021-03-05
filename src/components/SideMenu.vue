@@ -12,7 +12,7 @@
                     <div class="card card-body">
                         <ul class="list-group vertical-scroll">
                                 <li class="list-group-item" v-for="object in session.timeSpans" :key="object.id">
-                                    <input type="checkbox" v-model="object.show"> {{ object.displayCaption }}
+                                    <input type="checkbox" v-model="object.visible" v-bind:disabled="object.visibilityOverriden"> {{ object.displayCaption }}
                             </li>
                         </ul>
                     </div>
