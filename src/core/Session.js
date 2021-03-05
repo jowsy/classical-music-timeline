@@ -39,12 +39,17 @@ export class Session {
         this.minDate = list[0];
         this.maxDate = list[list.length - 1];
     }
-    static Create(dataGateway) {
-        let session = new Session;
-        dataGateway.Init(session);
+    Refresh() {
+        if (this.rootFilter != null) {
+            this._timeSpans.forEach(tSpan => {
+                tSpan.show = this.rootFilter.Apply(tSpan);
+            });
+        }
+    }
+    PlugIn(dataGateway) {
+        dataGateway.Init(this);
         dataGateway.Prepare();
-        session.setTimeSpans(dataGateway.getTimeSpans());
-        return session;
+        this.setTimeSpans(dataGateway.getTimeSpans());
     }
 }
 //# sourceMappingURL=Session.js.map

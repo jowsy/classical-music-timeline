@@ -1,42 +1,35 @@
+import { basePlacements } from "@popperjs/core";
 import { geoAlbers } from "d3";
 import { Guid } from "./Guid";
 import { IFilter } from "./IFilter";
+import { LogicalOperatorFilter } from "./LogicalOperatorFilter";
 import { Session } from "./Session";
 import { TimeLineBase } from "./TimeLineBase";
 
-export class OrFilter implements IFilter {
+export class OrFilter extends LogicalOperatorFilter {
     id: string;
     session: Session;
+    public get isActive(): boolean {
+        return this._isActive;
+    }
 
-    constructor(){
-        this.id = Guid.MakeNew().ToString(); 
+    Activate(): void {
+        this._isActive = true;
+    }
+    Deactivate(): void {
+       this._isActive = false;
     }
     Apply(instance: TimeLineBase): boolean {
+        
         if (this.filters.length == 0) return false;
 
         for (let index = 0; index < this.filters.length; index++) {
             const element = this.filters[index];
+            if (element.isActive){
             if (element.Apply(instance)) return true;
+            }
         }
         return false;
     
-    }
-
-    private filters : Array<IFilter> = new Array<IFilter>();
-
-    addFilter(filter:IFilter) : string {
-        this.filters.push(filter);
-        return filter.id;
-    }
-
-    removeFilter(id:string) : boolean{
-        var index = this.filters.findIndex(f => f.id == id);
-        if (index == -1) return false;
-        this.filters.splice(index,1);
-        return true;
-    }
-
-    getCount() : number{
-        return this.filters.length;
     }
 }

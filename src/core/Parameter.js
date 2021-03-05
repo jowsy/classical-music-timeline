@@ -10,11 +10,12 @@ export class Parameter {
     asNumber() {
         return this._numberValue;
     }
-    setString(val) {
-        this._stringValue = val;
-    }
-    setNumber(val) {
-        this._numberValue = val;
+    //Typescript doesn't do overloading so we need to this:
+    set(val) {
+        if (typeof val == "string")
+            this._stringValue = val;
+        else if (typeof val == "number")
+            this._numberValue = val;
     }
 }
 export var ParamType;

@@ -3,7 +3,7 @@ export class TimeLineBase {
     constructor() {
         this._parameters = new Array();
     }
-    getParameter(paramName) {
+    getParameterByName(paramName) {
         var param = this._parameters.find(p => p.definition.name == paramName);
         if (param != null) {
             return param;
@@ -12,6 +12,17 @@ export class TimeLineBase {
             throw new Error('session is not set.');
         let paramDef = this.session.parameterDefs.find(p => p.name == paramName);
         let newParam = new Parameter(paramDef);
+        this._parameters.push(newParam);
+        return newParam;
+    }
+    getParameterByDefinition(paramDefinition) {
+        var param = this._parameters.find(p => p.definition == paramDefinition);
+        if (param != null) {
+            return param;
+        }
+        if (this.session == null)
+            throw new Error('session is not set.');
+        let newParam = new Parameter(paramDefinition);
         this._parameters.push(newParam);
         return newParam;
     }

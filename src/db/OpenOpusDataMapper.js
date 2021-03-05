@@ -11,6 +11,7 @@ export class OpenOpusDataMapper {
     }
     Prepare() {
         this._session.addCustomParameter("epoch", ParamType.String, true);
+        this._session.addCustomParameter("portrait", ParamType.String, false);
     }
     getTimeSpans() {
         let data = new Array();
@@ -22,7 +23,9 @@ export class OpenOpusDataMapper {
             newTimeSpan.startDate = comp.getBirthDate();
             newTimeSpan.endDate = comp.getDeathDate();
             newTimeSpan.show = true; //Show by default
-            newTimeSpan.getParameter("epoch").setString(comp.epoch);
+            newTimeSpan.session = this._session;
+            newTimeSpan.getParameterByName("epoch").set(comp.epoch);
+            //newTimeSpan.getParameterByName("portrait").set(comp.portrait); 
             data.push(newTimeSpan);
         });
         return data.sort((a, b) => {

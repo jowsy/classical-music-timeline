@@ -17,6 +17,7 @@ import { Options, Vue } from 'vue-class-component';
 import TimeLine from './components/TimeLine.vue';
 import SideMenu from './components/SideMenu.vue';
 import {Session} from './core/Session';
+import {AndFilter} from './core/AndFilterTest';
 import {OpenOpusDataMapper} from './db/OpenOpusDataMapper';
 
 @Options({
@@ -30,7 +31,12 @@ export default class App extends Vue {
   data() {
     
     // Create a new user workspace/session for the user with all composers shown as default
-    var newSession = Session.Create(new OpenOpusDataMapper()); //plug-in datamapper for OpenOpus
+    var newSession = new Session();
+    
+    //Adapters
+    newSession.rootFilter = new AndFilter();
+    newSession.PlugIn(new OpenOpusDataMapper());
+
     return { session : newSession};
   }
 }
