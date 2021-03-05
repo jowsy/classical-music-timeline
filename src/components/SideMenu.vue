@@ -52,6 +52,8 @@ import { TimeLineBase } from '@/core/TimeLineBase';
 import { Options, Vue } from 'vue-class-component';
 // eslint-disable-next-line no-unused-vars
 import {Session} from '../core/Session';
+// eslint-disable-next-line no-unused-vars
+import {AndFilter} from '../core/AndFilterTest';
 
 @Options({
   props: {
@@ -75,32 +77,49 @@ return Object.keys(groups);
 }
 
 applyParameterFilter(checkBoxCtrl:any, paramDefinitionId:string, paramName:string, value:string){
+
     let filterId : string = this.filterMap.get(paramDefinitionId) as string;
+    let rootFilter : AndFilter = this.session.rootFilter as AndFilter;
+    
     var checked= checkBoxCtrl.target.checked;
-    var filter = this.session.getFilter(filterId) as OrFilter;
-    console.log("applyParameterFilter, filterId: "+filter.id);
-    if (checked)
-    filter.addFilter(new ParameterStringFilter(paramName, value));
+    var filter = rootFilter.getFilter(filterId) as OrFilter;
+    //console.log("applyParameterFilter, filterId: "+filter.id);
+    if (checked){
+        var newFilter = new ParameterStringFilter(paramName, value);
+        newFilter.id = value;
+        newFilter.Activate(); 
+        filter.addFilter(newFilter);
+      //  console.log("is active:"+newFilter.isActive);
+        rootFilter.Activate();
+    }
     else
-    filter.removeFilter()
-    //
-       console.log("Count in OrFilter: "+filter.getCount());
+    {
+        filter.removeFilter(value);
+        rootFilter.Deactivate();
+    }
+    
+    //console.log("Count in OrFilter: "+filter.getCount());
     this.session.Refresh();
 }
 
 activateFilter(checkBoxCtrl:any, parameterDefId:string){
 
     var checked= checkBoxCtrl.target.checked;
-
+    let rootFilter : AndFilter = this.session.rootFilter as AndFilter;
+    
     if (checked){
         var filter = new OrFilter();
-        this.filterMap.set(parameterDefId, filter.id)
-        this.session.addFilter(filter);
-           console.log("Add OrFilter, id: "+filter.id);
+        this.filterMap.set(parameterDefId, filter.id)  
+        rootFilter.addFilter(filter);
+      //  console.log("Add OrFilter, id: "+filter.id);
+        filter.Activate();
+        rootFilter.Activate();
     }else{
-        this.filterMap.delete(parameterDefId);
-        this.session.
-     console.log("Delete filter, id: "+parameterDefId);
+        var filterId = this.filterMap.get(parameterDefId) as string;
+        rootFilter.removeFilter(filterId);
+        this.filterMap.delete(filterId);
+        rootFilter.Deactivate();
+    // console.log("Delete filter, id: "+parameterDefId);
     }
     //var checked= checkBoxCtrl.target.checked;
     this.session.Refresh();
