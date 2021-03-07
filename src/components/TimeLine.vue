@@ -68,6 +68,12 @@ export default class TimeLine extends Vue {
             .attr("height", svgRect.height + svgRect.top + svgRect.bottom);
             
 
+    //We don't want the array to mutate because it will retrigger redraw and up in maximum recursive update
+    //So first clone TimeSpans
+    const sorted = [...this.session
+                .timeSpans].sort((a, b) => {
+                    return a.startDate > b.startDate ? 1 : -1;});
+
     var scale = d3.scaleTime()
     .domain(
         [this.session.minDate, 
@@ -81,7 +87,7 @@ export default class TimeLine extends Vue {
     //let yAxis = d3.axisLeft(scale).ticks(dateInterval); //Vertical grid lines
 
     var g = svg.selectAll("g")
-        .data(this.session.timeSpans.filter(ts => ts.visible==true))
+        .data(sorted.filter(ts => ts.visible==true))
         .enter()
         .append("g")
         .attr("transform", function (d, i) {

@@ -1,5 +1,5 @@
 import { TimeLineBase } from "./TimeLineBase";
-import { DataGateway } from "./DataGateway";
+import { IDataGateway } from "./IDataGateway";
 import { TimeSpan } from "./TimeSpan";
 import { Event } from "./Event";
 import { ParamDefinition, ParamType } from "./Parameter";
@@ -11,7 +11,7 @@ export class Session {
 
 
     private _parameterDefs:Array<ParamDefinition> =  new Array<ParamDefinition>();
-    private _timeSpans: Array<TimeSpan>;
+    private _timeSpans: Array<TimeSpan> = new Array<TimeSpan>();
     minDate : Date;
     maxDate : Date;
     public rootFilter: IFilter;
@@ -22,7 +22,7 @@ export class Session {
     }
 
     private setTimeSpans(value: Array<TimeSpan>) {
-        this._timeSpans = value;
+        this._timeSpans.push(...value);
         this.setExtents();
     }
 
@@ -74,8 +74,8 @@ export class Session {
         }
     }
 
-    public PlugIn(dataGateway : DataGateway) {
-        dataGateway.Init(this);
+    public PlugIn(dataGateway : IDataGateway) {
+        dataGateway.SetSession(this);
         dataGateway.Prepare();
         this.setTimeSpans(dataGateway.getTimeSpans());
     }

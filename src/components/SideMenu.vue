@@ -21,7 +21,7 @@
         </ul>
         <h5 class="justify-content-between mt-4 mb-1 text-muted">Filters</h5>
         <ul class="nav flex-column">
-            <li class="nav-item" v-for="parameter in getFilterableParameterDefinitions()" :key="parameter.id">
+            <li class="nav-item" v-for="parameter in getFilterableParameterDefinitions()" v-bind:key="parameter.id">
             <div class="justify-content-between d-flex">
                 <div class="form-check form-switch" data-bs-toggle="collapse" v-bind:href="'#'+parameter.name+'List'" role="button" aria-expanded="false" v-bind:aria-controls="parameter.name + 'List'">         
                     <input type="checkbox" class="form-check-input" id="customSwitch1" v-on:change="activateFilter($event, parameter.id)"/>
@@ -32,7 +32,7 @@
                     
                 <div class="collapse multi-collapse" v-bind:id="parameter.name+'List'">
                     <div class="card card-body">
-                            <li class="list-group-item" v-for="str in groupByParameter(parameter)" :key="str">
+                            <li class="list-group-item" v-for="str in groupByParameter(parameter)" v-bind:key="str">
                                     <input type="checkbox" v-on:change="applyParameterFilter($event, parameter.id, parameter.name, str)"> {{str}}
                             </li>
                     </div>

@@ -1,0 +1,133 @@
+{
+    "status": {
+        "version": "1.20.6",
+        "success": "true",
+        "source": "db",
+        "rows": 13,
+        "processingtime": 0.0015909671783447266,
+        "api": "Open Opus-cache"
+    },
+    "request": {
+        "type": "epoch",
+        "item": "Early Romantic"
+    },
+    "composers": [
+        {
+            "id": "145",
+            "name": "Beethoven",
+            "complete_name": "Ludwig van Beethoven",
+            "birth": "1770-01-01",
+            "death": "1827-01-01",
+            "epoch": "Early Romantic",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/55910756-1568084860.jpg"
+        },
+        {
+            "id": "51",
+            "name": "Bellini",
+            "complete_name": "Vincenzo Bellini",
+            "birth": "1801-01-01",
+            "death": "1835-01-01",
+            "epoch": "Early Romantic",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/47933748-1568084861.jpg"
+        },
+        {
+            "id": "195",
+            "name": "Berwald",
+            "complete_name": "Franz Berwald",
+            "birth": "1796-01-01",
+            "death": "1868-01-01",
+            "epoch": "Early Romantic",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/58534608-1568084863.jpg"
+        },
+        {
+            "id": "120",
+            "name": "Cherubini",
+            "complete_name": "Luigi Cherubini",
+            "birth": "1760-01-01",
+            "death": "1842-01-01",
+            "epoch": "Early Romantic",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/47900052-1568084873.jpg"
+        },
+        {
+            "id": "89",
+            "name": "Donizetti",
+            "complete_name": "Gaetano Donizetti",
+            "birth": "1797-01-01",
+            "death": "1848-01-01",
+            "epoch": "Early Romantic",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/86664459-1568084885.jpg"
+        },
+        {
+            "id": "74",
+            "name": "Field",
+            "complete_name": "John Field",
+            "birth": "1782-01-01",
+            "death": "1837-01-01",
+            "epoch": "Early Romantic",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/85683932-1568084889.jpg"
+        },
+        {
+            "id": "30",
+            "name": "Hummel",
+            "complete_name": "Johann Nepomuk Hummel",
+            "birth": "1778-01-01",
+            "death": "1837-01-01",
+            "epoch": "Early Romantic",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/31272918-1568084913.jpg"
+        },
+        {
+            "id": "3",
+            "name": "Paganini",
+            "complete_name": "Niccol\u00f2 Paganini",
+            "birth": "1782-01-01",
+            "death": "1840-01-01",
+            "epoch": "Early Romantic",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/66903104-1568084929.jpg"
+        },
+        {
+            "id": "60",
+            "name": "Rossini",
+            "complete_name": "Gioachino Rossini",
+            "birth": "1792-01-01",
+            "death": "1868-01-01",
+            "epoch": "Early Romantic",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/97489684-1568084941.jpg"
+        },
+        {
+            "id": "183",
+            "name": "Schubert",
+            "complete_name": "Franz Schubert",
+            "birth": "1797-01-01",
+            "death": "1828-01-01",
+            "epoch": "Early Romantic",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/91122704-1568084944.jpg"
+        },
+        {
+            "id": "212",
+            "name": "Sor",
+            "complete_name": "Fernando Sor",
+            "birth": "1778-01-01",
+            "death": "1839-01-01",
+            "epoch": "Early Romantic",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/50999919-1568084948.jpg"
+        },
+        {
+            "id": "166",
+            "name": "Spohr",
+            "complete_name": "Louis Spohr",
+            "birth": "1784-01-01",
+            "death": "1859-01-01",
+            "epoch": "Early Romantic",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/67886161-1568084950.jpg"
+        },
+        {
+            "id": "168",
+            "name": "Weber",
+            "complete_name": "Carl Maria von Weber",
+            "birth": "1786-01-01",
+            "death": "1826-01-01",
+            "epoch": "Early Romantic",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/17859492-1568084960.jpg"
+        }
+    ]
+}

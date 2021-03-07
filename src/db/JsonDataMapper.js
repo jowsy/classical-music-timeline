@@ -1,29 +1,32 @@
-import * as jsonData from '../assets/data.json';
 import { Composer } from './Composer';
 import { TimeSpan } from '@/core/TimeSpan';
 import { ParamType } from '@/core/Parameter';
 /* -------------------------------------------------------
 * Resonsible to map OpenOpus composers into TimeSpan objects
 -------------------------------------------------------*/
-export class OpenOpusDataMapper {
-    Init(session) {
-        this._session = session;
+export class JsonDataMapper {
+    constructor(json) {
+        this.json = json;
+    }
+    SetSession(session) {
+        this.session = session;
     }
     Prepare() {
-        this._session.addCustomParameter("epoch", ParamType.String, true);
-        this._session.addCustomParameter("portrait", ParamType.String, false);
+        this.session.addCustomParameter("epoch", ParamType.String, true);
+        this.session.addCustomParameter("portrait", ParamType.String, false);
     }
     getTimeSpans() {
+        let rootObject = JSON.parse(this.json);
         let data = new Array();
-        jsonData.composers.forEach(composer => {
+        rootObject.composers.forEach(composer => {
             let comp = Object.assign(new Composer(), composer);
             let newTimeSpan = new TimeSpan();
             newTimeSpan.id = comp.id;
             newTimeSpan.displayCaption = comp.complete_name;
             newTimeSpan.startDate = comp.getBirthDate();
             newTimeSpan.endDate = comp.getDeathDate();
-            newTimeSpan.show = true; //Show by default
-            newTimeSpan.session = this._session;
+            newTimeSpan.visible = true; //Show by default
+            newTimeSpan.session = this.session;
             newTimeSpan.getParameterByName("epoch").set(comp.epoch);
             //newTimeSpan.getParameterByName("portrait").set(comp.portrait); 
             data.push(newTimeSpan);
@@ -36,4 +39,4 @@ export class OpenOpusDataMapper {
         throw new Error('Method not implemented.');
     }
 }
-//# sourceMappingURL=OpenOpusDataMapper.js.map
+//# sourceMappingURL=JsonDataMapper.js.map

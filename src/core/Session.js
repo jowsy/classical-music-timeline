@@ -26,7 +26,7 @@ export class Session {
     setExtents() {
         var list = [];
         this.timeSpans
-            .filter(obj => obj.show == true)
+            .filter(obj => obj.visible == true)
             .map(obj => {
             if (obj instanceof TimeSpan) {
                 list.push(obj.startDate);
@@ -42,12 +42,14 @@ export class Session {
     Refresh() {
         if (this.rootFilter != null) {
             this._timeSpans.forEach(tSpan => {
-                tSpan.show = this.rootFilter.Apply(tSpan);
+                var test = this.rootFilter.Apply(tSpan);
+                tSpan.visible = test;
+                tSpan.visibilityOverriden = !test;
             });
         }
     }
     PlugIn(dataGateway) {
-        dataGateway.Init(this);
+        dataGateway.SetSession(this);
         dataGateway.Prepare();
         this.setTimeSpans(dataGateway.getTimeSpans());
     }

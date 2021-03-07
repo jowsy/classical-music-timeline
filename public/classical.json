@@ -1,0 +1,97 @@
+{
+    "status": {
+        "version": "1.20.6",
+        "success": "true",
+        "source": "db",
+        "rows": 9,
+        "processingtime": 0.0016179084777832031,
+        "api": "Open Opus-cache"
+    },
+    "request": {
+        "type": "epoch",
+        "item": "Classical"
+    },
+    "composers": [
+        {
+            "id": "192",
+            "name": "Bach, C.P.E.",
+            "complete_name": "Carl Philipp Emanuel Bach",
+            "birth": "1714-01-01",
+            "death": "1788-01-01",
+            "epoch": "Classical",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/55051391-1568084858.jpg"
+        },
+        {
+            "id": "109",
+            "name": "Bach, J.C.",
+            "complete_name": "Johann Christian Bach",
+            "birth": "1735-01-01",
+            "death": "1782-01-01",
+            "epoch": "Classical",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/28541004-1568084858.jpg"
+        },
+        {
+            "id": "66",
+            "name": "Boccherini",
+            "complete_name": "Luigi Boccherini",
+            "birth": "1743-01-01",
+            "death": "1805-01-01",
+            "epoch": "Classical",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/93166043-1568084865.jpg"
+        },
+        {
+            "id": "206",
+            "name": "Dittersdorf",
+            "complete_name": "Karl Ditters von Dittersdorf",
+            "birth": "1739-01-01",
+            "death": "1799-01-01",
+            "epoch": "Classical",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/91155023-1568084879.jpg"
+        },
+        {
+            "id": "92",
+            "name": "Gluck",
+            "complete_name": "Christoph Willibald von Gluck",
+            "birth": "1714-01-01",
+            "death": "1787-01-01",
+            "epoch": "Classical",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/93070343-1568084903.jpg"
+        },
+        {
+            "id": "208",
+            "name": "Haydn",
+            "complete_name": "Franz Joseph Haydn",
+            "birth": "1732-01-01",
+            "death": "1809-01-01",
+            "epoch": "Classical",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/21056059-1568084909.jpg"
+        },
+        {
+            "id": "196",
+            "name": "Mozart",
+            "complete_name": "Wolfgang Amadeus Mozart",
+            "birth": "1756-01-01",
+            "death": "1791-01-01",
+            "epoch": "Classical",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/21459195-1568084925.jpg"
+        },
+        {
+            "id": "143",
+            "name": "Salieri",
+            "complete_name": "Antonio Salieri",
+            "birth": "1750-01-01",
+            "death": "1825-01-01",
+            "epoch": "Classical",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/29728907-1568084942.jpg"
+        },
+        {
+            "id": "209",
+            "name": "Stamitz",
+            "complete_name": "Carl Stamitz",
+            "birth": "1745-01-01",
+            "death": "1801-01-01",
+            "epoch": "Classical",
+            "portrait": "https:\/\/assets.openopus.org\/portraits\/37622490-1568084950.jpg"
+        }
+    ]
+}
