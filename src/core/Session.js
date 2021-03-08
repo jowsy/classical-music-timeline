@@ -1,5 +1,5 @@
 import { TimeSpan } from "./TimeSpan";
-import { ParamDefinition } from "./Parameter";
+import { ParameterDefinition } from "./Parameter";
 import { Guid } from "./Guid";
 export class Session {
     constructor() {
@@ -16,7 +16,7 @@ export class Session {
         return this._parameterDefs;
     }
     addCustomParameter(name, pType, filterable) {
-        var parameterDef = new ParamDefinition();
+        var parameterDef = new ParameterDefinition();
         parameterDef.id = Guid.MakeNew().ToString();
         parameterDef.name = name;
         parameterDef.parameterType = pType;

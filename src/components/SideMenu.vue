@@ -44,7 +44,7 @@
 
 <script lang="ts">
 // eslint-disable-next-line no-unused-vars
-import { ParamDefinition } from '@/core/Parameter';
+import { ParameterDefinition } from '@/core/Parameter';
 import { ParameterStringFilter } from '@/core/ParameterFilter';
 import { OrFilter } from '@/core/OrFilter';
 // eslint-disable-next-line no-unused-vars
@@ -70,15 +70,15 @@ getFilterableParameterDefinitions() {
    return this.session.parameterDefs.filter(pDef => pDef.filterable==true);
 }
 
-groupByParameter(definition: ParamDefinition) : Array<string>{
+groupByParameter(definition: ParameterDefinition) : Array<string>{
      
 let groups : Record<string,TimeLineBase[]> = this.session.timeSpans.groupBy(tSpan => tSpan.getParameterByDefinition(definition).asString());
 return Object.keys(groups);
 }
 
-applyParameterFilter(checkBoxCtrl:any, paramDefinitionId:string, paramName:string, value:string){
+applyParameterFilter(checkBoxCtrl:any, ParameterDefinitionId:string, paramName:string, value:string){
 
-    let filterId : string = this.filterMap.get(paramDefinitionId) as string;
+    let filterId : string = this.filterMap.get(ParameterDefinitionId) as string;
     let rootFilter : AndFilter = this.session.rootFilter as AndFilter;
     
     var checked= checkBoxCtrl.target.checked;

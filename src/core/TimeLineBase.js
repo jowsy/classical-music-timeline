@@ -15,14 +15,14 @@ export class TimeLineBase {
         this._parameters.push(newParam);
         return newParam;
     }
-    getParameterByDefinition(paramDefinition) {
-        var param = this._parameters.find(p => p.definition == paramDefinition);
+    getParameterByDefinition(ParameterDefinition) {
+        var param = this._parameters.find(p => p.definition == ParameterDefinition);
         if (param != null) {
             return param;
         }
         if (this.session == null)
             throw new Error('session is not set.');
-        let newParam = new Parameter(paramDefinition);
+        let newParam = new Parameter(ParameterDefinition);
         this._parameters.push(newParam);
         return newParam;
     }

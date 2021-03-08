@@ -2,20 +2,17 @@ import { TimeLineBase } from "./TimeLineBase";
 import { IDataGateway } from "./IDataGateway";
 import { TimeSpan } from "./TimeSpan";
 import { Event } from "./Event";
-import { ParamDefinition, ParamType } from "./Parameter";
+import { ParameterDefinition, ParamType } from "./Parameter";
 import { Guid } from "./Guid";
 import { IFilter } from "./IFilter";
 import { AndFilter } from "./AndFilterTest";
 
 export class Session {
-
-
-    private _parameterDefs:Array<ParamDefinition> =  new Array<ParamDefinition>();
+    private _parameterDefs:Array<ParameterDefinition> =  new Array<ParameterDefinition>();
     private _timeSpans: Array<TimeSpan> = new Array<TimeSpan>();
     minDate : Date;
     maxDate : Date;
     public rootFilter: IFilter;
-
 
     get timeSpans(): Array<TimeSpan> {
         return this._timeSpans;
@@ -26,12 +23,12 @@ export class Session {
         this.setExtents();
     }
 
-    get parameterDefs(): Array<ParamDefinition> {
+    get parameterDefs(): Array<ParameterDefinition> {
         return this._parameterDefs;
     }
 
     public addCustomParameter(name:string, pType:ParamType, filterable:boolean){
-        var parameterDef = new ParamDefinition();
+        var parameterDef = new ParameterDefinition();
         parameterDef.id= Guid.MakeNew().ToString();
         parameterDef.name = name;
         parameterDef.parameterType = pType;

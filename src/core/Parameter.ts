@@ -1,4 +1,4 @@
-export class ParamDefinition {
+export class ParameterDefinition {
     name:string;
     id:string;
     parameterType:ParamType;
@@ -7,11 +7,11 @@ export class ParamDefinition {
 }
 
 export class Parameter {
-    definition: ParamDefinition;
+    definition: ParameterDefinition;
     private _numberValue:number;
     private _stringValue:string;
 
-    constructor(def:ParamDefinition){
+    constructor(def:ParameterDefinition){
         this.definition=def;
     }
 

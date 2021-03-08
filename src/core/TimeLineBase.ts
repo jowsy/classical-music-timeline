@@ -1,4 +1,4 @@
-import { ParamDefinition, Parameter } from "./Parameter";
+import { ParameterDefinition, Parameter } from "./Parameter";
 import { Session } from "./Session";
 
 export class TimeLineBase {
@@ -20,21 +20,21 @@ export class TimeLineBase {
         }
         if (this.session==null) throw new Error('session is not set.');
 
-        let paramDef : ParamDefinition = this.session.parameterDefs.find(p => p.name == paramName) as ParamDefinition;
+        let paramDef : ParameterDefinition = this.session.parameterDefs.find(p => p.name == paramName) as ParameterDefinition;
         let newParam : Parameter = new Parameter(paramDef);
         this._parameters.push(newParam);
 
         return newParam;
     }
 
-    getParameterByDefinition(paramDefinition:ParamDefinition) {
-        var param = this._parameters.find(p => p.definition == paramDefinition);
+    getParameterByDefinition(ParameterDefinition:ParameterDefinition) {
+        var param = this._parameters.find(p => p.definition == ParameterDefinition);
         if (param!= null){
             return param;
         }
         if (this.session==null) throw new Error('session is not set.');
 
-        let newParam : Parameter = new Parameter(paramDefinition);
+        let newParam : Parameter = new Parameter(ParameterDefinition);
         this._parameters.push(newParam);
 
         return newParam;

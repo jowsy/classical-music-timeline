@@ -1,4 +1,4 @@
-export class ParamDefinition {
+export class ParameterDefinition {
 }
 export class Parameter {
     constructor(def) {
