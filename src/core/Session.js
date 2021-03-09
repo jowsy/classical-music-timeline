@@ -1,27 +1,18 @@
 import { TimeSpan } from "./TimeSpan";
-import { ParameterDefinition } from "./Parameter";
-import { Guid } from "./Guid";
+import { Configuration } from "./Configuration";
 export class Session {
     constructor() {
-        this._parameterDefs = new Array();
+        this._timeSpans = new Array();
+        this.configuration = new Configuration();
     }
     get timeSpans() {
         return this._timeSpans;
     }
     setTimeSpans(value) {
-        this._timeSpans = value;
+        this._timeSpans.push(...value);
         this.setExtents();
-    }
-    get parameterDefs() {
-        return this._parameterDefs;
-    }
-    addCustomParameter(name, pType, filterable) {
-        var parameterDef = new ParameterDefinition();
-        parameterDef.id = Guid.MakeNew().ToString();
-        parameterDef.name = name;
-        parameterDef.parameterType = pType;
-        parameterDef.filterable = filterable;
-        this._parameterDefs.push(parameterDef);
+        if (this.colorManager != null)
+            this.colorManager.refresh();
     }
     setExtents() {
         var list = [];

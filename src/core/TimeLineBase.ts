@@ -20,7 +20,7 @@ export class TimeLineBase {
         }
         if (this.session==null) throw new Error('session is not set.');
 
-        let paramDef : ParameterDefinition = this.session.parameterDefs.find(p => p.name == paramName) as ParameterDefinition;
+        let paramDef : ParameterDefinition = this.session.configuration.parameterDefinitions.find(p => p.name == paramName) as ParameterDefinition;
         let newParam : Parameter = new Parameter(paramDef);
         this._parameters.push(newParam);
 

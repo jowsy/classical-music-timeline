@@ -19,7 +19,7 @@ import SideMenu from './components/SideMenu.vue';
 import {Session} from './core/Session';
 import {AndFilter} from './core/AndFilterTest';
 import {JsonDataMapper} from './db/JsonDataMapper';
-//import { ParamType } from './core/Parameter';
+import {WebColor} from './WebColor';
 
 @Options({
   components: {
@@ -36,36 +36,52 @@ export default class App extends Vue {
     // Create a new user workspace/session for the user with all composers shown as default
     var newSession = new Session();
     
-    //Plug in adapters
+    //Set main filter
     newSession.rootFilter = new AndFilter();
+
+    //Add color scheme
+    //=================================================================
+    let colors : WebColor[] = [
+                              new WebColor("#54478C"),
+                              new WebColor("#2C699A"),
+                              new WebColor("#048BA8"),
+                              new WebColor("#0DB39E"),
+                              new WebColor("#16DB93"),
+                              new WebColor("#83E377"),
+                              new WebColor("#B9E769"),
+                              new WebColor("#EFEA5A"),
+                              new WebColor("#F1C453"),
+                              new WebColor("#F29E4C")
+                          ];  
+
+    newSession.colorManager.addColorScheme("default",colors);
+
+    newSession.colorManager.setDefaultColor(new WebColor("#808080"));
 
     return { session : newSession};
   }
 
   async mounted(){
 
-    // Add parameter for filtering OpenOpus data
-    //this.session.addCustomParameter("epoch", ParamType.String, true);
-    //this.session.addCustomParameter("portrait", ParamType.String, false);
-      
-    //Preload json data
+
+    //Preload data
     //=================================================================
 
     fetch("medieval.json")
       .then(response => response.text())
       .then(json => this.session.PlugIn(new JsonDataMapper(json)))
-      .finally( () => this.session.Refresh());
+      .finally( () =>fetch("renaissance.json")
+          .then(response => response.text())
+          .then(json => this.session.PlugIn(new JsonDataMapper(json)))
+          .finally( () => fetch("baroque.json")
+            .then(response => response.text())
+            .then(json => this.session.PlugIn(new JsonDataMapper(json)))
+            .finally( () => this.session.Refresh())));
 
-    fetch("renaissance.json")
-      .then(response => response.text())
-      .then(json => this.session.PlugIn(new JsonDataMapper(json)))
-      .finally( () => this.session.Refresh());
+    
 
-    fetch("baroque.json")
-      .then(response => response.text())
-      .then(json => this.session.PlugIn(new JsonDataMapper(json)))
-      .finally( () => this.session.Refresh());
-
+    
+/*
     fetch("classical.json")
       .then(response => response.text())
       .then(json => this.session.PlugIn(new JsonDataMapper(json)))
@@ -85,7 +101,7 @@ export default class App extends Vue {
       .then(response => response.text())
       .then(json => this.session.PlugIn(new JsonDataMapper(json)))
       .finally( () => this.session.Refresh());
-
+*/
 
   }
 }

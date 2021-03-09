@@ -6,36 +6,36 @@ import { ParameterDefinition, ParamType } from "./Parameter";
 import { Guid } from "./Guid";
 import { IFilter } from "./IFilter";
 import { AndFilter } from "./AndFilterTest";
+import { Configuration } from "./Configuration";
+import { ColorManager } from "./ColorManager";
 
 export class Session {
-    private _parameterDefs:Array<ParameterDefinition> =  new Array<ParameterDefinition>();
+
     private _timeSpans: Array<TimeSpan> = new Array<TimeSpan>();
+    public configuration:Configuration = new Configuration();
+    public colorManager: ColorManager = new ColorManager();
+    
     minDate : Date;
     maxDate : Date;
     public rootFilter: IFilter;
-
+ 
+    constructor(){
+        this.configuration.session = this;
+        this.colorManager.session = this;   
+    }
     get timeSpans(): Array<TimeSpan> {
         return this._timeSpans;
     }
 
+
     private setTimeSpans(value: Array<TimeSpan>) {
+        
         this._timeSpans.push(...value);
         this.setExtents();
+        
+        if (this.colorManager!=null) 
+            this.colorManager.refresh();
     }
-
-    get parameterDefs(): Array<ParameterDefinition> {
-        return this._parameterDefs;
-    }
-
-    public addCustomParameter(name:string, pType:ParamType, filterable:boolean){
-        var parameterDef = new ParameterDefinition();
-        parameterDef.id= Guid.MakeNew().ToString();
-        parameterDef.name = name;
-        parameterDef.parameterType = pType;
-        parameterDef.filterable = filterable;
-        this._parameterDefs.push(parameterDef);
-    }
-
     public setExtents():void {
         
         var list : Array<Date> = [];
@@ -66,9 +66,9 @@ export class Session {
               var test = this.rootFilter.Apply(tSpan);
               tSpan.visible = test;
               tSpan.visibilityOverriden = !test;
-            });
-         
+            });      
         }
+ 
     }
 
     public PlugIn(dataGateway : IDataGateway) {

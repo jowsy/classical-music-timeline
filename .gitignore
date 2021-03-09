@@ -48,6 +48,12 @@ typings/
 src/*.js
 src/*.js.map
 src/*.d.ts
+src/core/*.js
+src/core/*.js.map
+src/core/*.d.ts
+src/db/*.js
+src/db/*.js.map
+src/db/*.d.ts
 public/main.js
 
 

@@ -27,9 +27,10 @@ export class JsonDataMapper implements IDataGateway {
     Prepare(): void {
 
         //Create parameter if not exist
-        if (this.session.parameterDefs.findIndex(p => p.name=="epoch") == -1)
-            this.session.addCustomParameter("epoch", ParamType.String, true);
-
+        if (this.session.configuration.parameterDefinitions.findIndex(p => p.name=="epoch") == -1){
+            var definition = this.session.configuration.addParameter("epoch", ParamType.String, true);
+            this.session.colorManager.mapColorsByParameter(definition,"default");
+        }
         //if (this.session.parameterDefs.findIndex(p => p.name=="portrait") == -1)
           //  this.session.addCustomParameter("portrait", ParamType.String, false);
     }

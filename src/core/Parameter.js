@@ -1,4 +1,12 @@
 export class ParameterDefinition {
+    setColorMap(colorMap) {
+        this.colorMap = colorMap;
+    }
+    getColor(value) {
+        if (this.colorMap == null)
+            return "";
+        return this.colorMap.get(value);
+    }
 }
 export class Parameter {
     constructor(def) {

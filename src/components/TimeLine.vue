@@ -10,9 +10,10 @@ import { Vue, Options } from 'vue-class-component'
 import { Session } from '../core/Session';
 import * as d3 from 'd3';
 // eslint-disable-next-line no-unused-vars
-//import TimeLineColorUtils from '../TimeLineColorUtils';
+import { WebColor } from '@/WebColor';
 // eslint-disable-next-line no-unused-vars
-//import {Composer} from '../Composer';
+import { IColor } from '@/core/IColor';
+
 
 //------------- PUT THIS INTO A CONFIGURATION -------------------------
 let tickTimeInterval : number = 20; //in year
@@ -99,7 +100,7 @@ export default class TimeLine extends Vue {
         .attr("width", function (d) {
             return scale(d.endDate)-scale(d.startDate);
         })
-        //.attr("fill", function (c) { return GetHexColorByEpoch(c.epoch) })
+        .attr("fill", function (c) { return (c.session.colorManager.getColor(c, "default") as WebColor).toHexString() } )
         .attr("height", barHeight - margin)
         .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"});
 
@@ -110,8 +111,11 @@ export default class TimeLine extends Vue {
             .attr("dy", ".35em")
             .text(function (d) { return d.displayCaption; })
             .style("fill", "white" ) 
-            .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"});
-            //.style("fill", function (d) { return Utils.getTextColorByBackgroundColor(GetHexColorByEpoch(d.epoch))} ); 
+            .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"})
+            .style("fill", function (d) { 
+                return TimeLine.textBackgroundColor(
+                    d.session.colorManager.getColor(d, "default"))
+                } ); 
 
         svg.append("g")
             .attr("class", "grid")
@@ -124,6 +128,16 @@ export default class TimeLine extends Vue {
             .call(xAxis.tickSize(-svgRect.height).tickFormat(() => ""))
             .lower();
     }  
+
+    private static textBackgroundColor(color:IColor) : string{
+       
+        var newColor = Math.round(((color.r * 299) + 
+                    (color.b * 587) + 
+                    (color.g * 114)) / 1000); 
+        var textColor = (newColor > 125) ? 'black' : 'white'; 
+    
+        return textColor;
+        }
 
 }
 

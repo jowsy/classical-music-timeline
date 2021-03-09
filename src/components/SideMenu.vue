@@ -67,7 +67,10 @@ export default class SideMenu extends Vue {
    filterMap : Map<string,string> = new Map<string,string>();
    //We don't want all parameters to be filterable in the UI
 getFilterableParameterDefinitions() {
-   return this.session.parameterDefs.filter(pDef => pDef.filterable==true);
+   return this.session
+              .configuration
+              .parameterDefinitions
+              .filter(pDef => pDef.filterable==true);
 }
 
 groupByParameter(definition: ParameterDefinition) : Array<string>{

@@ -12,8 +12,11 @@ export class JsonDataMapper {
         this.session = session;
     }
     Prepare() {
-        this.session.addCustomParameter("epoch", ParamType.String, true);
-        this.session.addCustomParameter("portrait", ParamType.String, false);
+        //Create parameter if not exist
+        if (this.session.configuration.parameterDefinitions.findIndex(p => p.name == "epoch") == -1)
+            this.session.configuration.addParameter("epoch", ParamType.String, true);
+        //if (this.session.parameterDefs.findIndex(p => p.name=="portrait") == -1)
+        //  this.session.addCustomParameter("portrait", ParamType.String, false);
     }
     getTimeSpans() {
         let rootObject = JSON.parse(this.json);
@@ -31,9 +34,7 @@ export class JsonDataMapper {
             //newTimeSpan.getParameterByName("portrait").set(comp.portrait); 
             data.push(newTimeSpan);
         });
-        return data.sort((a, b) => {
-            return a.startDate > b.startDate ? 1 : -1;
-        });
+        return data;
     }
     getEvents() {
         throw new Error('Method not implemented.');
