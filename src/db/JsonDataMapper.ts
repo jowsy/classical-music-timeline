@@ -31,6 +31,11 @@ export class JsonDataMapper implements IDataGateway {
             var definition = this.session.configuration.addParameter("epoch", ParamType.String, true);
             this.session.colorManager.mapColorsByParameter(definition,"default");
         }
+
+        if (this.session.configuration.parameterDefinitions.findIndex(p => p.name=="popularity") == -1){
+            var definition = this.session.configuration.addParameter("popularity", ParamType.String, true);
+            //this.session.colorManager.mapColorsByParameter(definition,"default");
+        }
         //if (this.session.parameterDefs.findIndex(p => p.name=="portrait") == -1)
           //  this.session.addCustomParameter("portrait", ParamType.String, false);
     }
@@ -54,6 +59,7 @@ export class JsonDataMapper implements IDataGateway {
 
             newTimeSpan.session = this.session;
             newTimeSpan.getParameterByName("epoch").set(comp.epoch); 
+            newTimeSpan.getParameterByName("popularity").set(comp.popular == 1 ? "High": "Low"); 
             //newTimeSpan.getParameterByName("portrait").set(comp.portrait); 
 
             data.push(newTimeSpan);

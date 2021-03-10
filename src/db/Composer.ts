@@ -10,6 +10,8 @@ export class Composer implements IComposer {
     death: string;
     epoch: string;
     portrait: string;
+    popular: number;
+
     isChecked: boolean;
 
     constructor() {
@@ -21,6 +23,7 @@ export class Composer implements IComposer {
         this.portrait = "";
         this.complete_name ="";
         this.isChecked = true;
+        this.popular = 0;
       }
     getBirthDate() {
         return new Date(this.birth);
