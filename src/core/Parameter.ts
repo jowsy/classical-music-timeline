@@ -5,17 +5,6 @@ export class ParameterDefinition {
     parameterType:ParamType;
     filterable:boolean;
     isFilterEnabled:boolean;
-
-    private colorMap: Map<any,string>; 
-
-    setColorMap(colorMap : Map<any, string>){
-        this.colorMap = colorMap;
-    }
-
-    getColor(value:any) : string {
-        if (this.colorMap == null) return "";
-        return this.colorMap.get(value) as string;
-    }
 }
 
 export class Parameter {
