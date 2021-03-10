@@ -32,9 +32,6 @@ export class Session {
         
         this._timeSpans.push(...value);
         this.setExtents();
-        
-        if (this.colorManager!=null) 
-            this.colorManager.refresh();
     }
     public setExtents():void {
         
