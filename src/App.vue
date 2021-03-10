@@ -70,7 +70,9 @@ export default class App extends Vue {
     fetch("dump.json")
       .then(response => response.text())
       .then(json => this.session.PlugIn(new JsonDataMapper(json)))
-      .finally( () => this.session.Refresh());
+      .then( () => {
+        this.session.colorManager.refresh();
+        this.session.Refresh();});
 
    /* fetch("medieval.json")
       .then(response => response.text())

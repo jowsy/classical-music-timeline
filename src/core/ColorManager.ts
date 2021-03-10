@@ -27,14 +27,18 @@ export class ColorManager {
         this.colorSchemes.set(name,colors);
     }
 
-    private remap(){
+    private async remap()
+    {
+        console.log("remap");
+        if (this.mapTable!=null) console.log(this.mapTable.size);
 
         if (this.currentParameterDefinition==null) return;
         if (this.currentColorScheme==null || this.currentColorScheme == "") return;
 
         var colors = this.colorSchemes.get(this.currentColorScheme);
         if (this.currentParameterDefinition.parameterType==ParamType.String){
-        var parameterGroups = this.groupBy(this.session.timeSpans, 
+        var parameterGroups = this.
+                                        groupBy(this.session.timeSpans, 
                                            entity => entity.getParameterByDefinition(this.currentParameterDefinition)
                                            .asString());
         
@@ -43,11 +47,15 @@ export class ColorManager {
         
         this.mapTable = new Map<string,number>();
 
-        for (let index = 0; index < this.parameterGroupValues.length; index++) {
-            const element = this.parameterGroupValues[index];
-            parameterGroups[element].forEach(p => this.mapTable.set(p.id, index))
-        }
-
+  
+            for (let index = 0; index < this.parameterGroupValues.length; index++) {
+                const element = this.parameterGroupValues[index];
+                for (let index2 = 0; index2 <  parameterGroups[element].length; index2++) {
+                    const p = parameterGroups[element][index2];
+                    if (p.id == "") throw Error("Element must have ID assigned!");
+                    this.mapTable.set(p.id, index);                
+                }
+            }
         }
     }
 
@@ -61,8 +69,8 @@ export class ColorManager {
         return colors[index];
     }
 
-    refresh(){
-        this.remap();
+    async refresh(){
+        await this.remap();
     }
 
     

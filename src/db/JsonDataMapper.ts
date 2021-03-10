@@ -36,12 +36,17 @@ export class JsonDataMapper implements IDataGateway {
     }
     
     getTimeSpans(): TimeSpan[] {
+        let id:number=0;
         let rootObject : RootObject = JSON.parse(this.json);
         let data: Array<TimeSpan> = new Array<TimeSpan>();
         rootObject.composers.forEach(composer =>{ 
             let comp : Composer = Object.assign(new Composer(), composer);
             let newTimeSpan = new TimeSpan();
             newTimeSpan.id = comp.id;
+            if (newTimeSpan.id==""){
+                newTimeSpan.id=id.toString();
+                id++;
+            } 
             newTimeSpan.displayCaption = comp.complete_name;
             newTimeSpan.startDate = comp.getBirthDate();
             newTimeSpan.endDate = comp.getDeathDate();

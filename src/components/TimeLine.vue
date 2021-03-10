@@ -100,7 +100,10 @@ export default class TimeLine extends Vue {
         .attr("width", function (d) {
             return scale(d.endDate)-scale(d.startDate);
         })
-        .attr("fill", function (c) { return (c.session.colorManager.getColor(c, "default") as WebColor).toHexString() } )
+        .attr("fill", function (c) { 
+        var color = c.session.colorManager.getColor(c, "default") as WebColor;
+        if (color == null) return "gray";
+         return color.toHexString(); } )
         .attr("height", barHeight - margin)
         .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"});
 
@@ -115,7 +118,7 @@ export default class TimeLine extends Vue {
             .style("fill", function (d) { 
                 return TimeLine.textBackgroundColor(
                     d.session.colorManager.getColor(d, "default"))
-                } ); 
+                } );
 
         svg.append("g")
             .attr("class", "grid")
