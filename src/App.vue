@@ -67,7 +67,12 @@ export default class App extends Vue {
     //Preload data
     //=================================================================
 
-    fetch("medieval.json")
+    fetch("dump.json")
+      .then(response => response.text())
+      .then(json => this.session.PlugIn(new JsonDataMapper(json)))
+      .finally( () => this.session.Refresh());
+
+   /* fetch("medieval.json")
       .then(response => response.text())
       .then(json => this.session.PlugIn(new JsonDataMapper(json)))
       .finally( () =>fetch("renaissance.json")
@@ -76,7 +81,7 @@ export default class App extends Vue {
           .finally( () => fetch("baroque.json")
             .then(response => response.text())
             .then(json => this.session.PlugIn(new JsonDataMapper(json)))
-            .finally( () => this.session.Refresh())));
+            .finally( () => this.session.Refresh())));*/
 
     
 

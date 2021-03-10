@@ -75,7 +75,9 @@ getFilterableParameterDefinitions() {
 
 groupByParameter(definition: ParameterDefinition) : Array<string>{
      
-let groups : Record<string,TimeLineBase[]> = this.session.timeSpans.groupBy(tSpan => tSpan.getParameterByDefinition(definition).asString());
+let groups : Record<string,TimeLineBase[]> = [...this.session.timeSpans]
+                                                .sort((a, b) => { return a.startDate > b.startDate ? 1 : -1;})
+                                                .groupBy(tSpan => tSpan.getParameterByDefinition(definition).asString());
 return Object.keys(groups);
 }
 
