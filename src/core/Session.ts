@@ -64,7 +64,9 @@ export class Session {
               tSpan.visible = test;
               tSpan.visibilityOverriden = !test;
             });      
-        }
+        }   
+
+        this.colorManager.refresh();
  
     }
 

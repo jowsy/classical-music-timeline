@@ -71,44 +71,7 @@ export default class App extends Vue {
       .then(response => response.text())
       .then(json => this.session.PlugIn(new JsonDataMapper(json)))
       .then( () => {
-        this.session.colorManager.refresh();
         this.session.Refresh();});
-
-   /* fetch("medieval.json")
-      .then(response => response.text())
-      .then(json => this.session.PlugIn(new JsonDataMapper(json)))
-      .finally( () =>fetch("renaissance.json")
-          .then(response => response.text())
-          .then(json => this.session.PlugIn(new JsonDataMapper(json)))
-          .finally( () => fetch("baroque.json")
-            .then(response => response.text())
-            .then(json => this.session.PlugIn(new JsonDataMapper(json)))
-            .finally( () => this.session.Refresh())));*/
-
-    
-
-    
-/*
-    fetch("classical.json")
-      .then(response => response.text())
-      .then(json => this.session.PlugIn(new JsonDataMapper(json)))
-      .finally( () => this.session.Refresh());
-
-    fetch("earlyromantic.json")
-      .then(response => response.text())
-      .then(json => this.session.PlugIn(new JsonDataMapper(json)))
-      .finally( () => this.session.Refresh());
-
-    fetch("romantic.json")
-      .then(response => response.text())
-      .then(json => this.session.PlugIn(new JsonDataMapper(json)))
-      .finally( () => this.session.Refresh());
-    
-    fetch("lateromantic.json")
-      .then(response => response.text())
-      .then(json => this.session.PlugIn(new JsonDataMapper(json)))
-      .finally( () => this.session.Refresh());
-*/
 
   }
 }

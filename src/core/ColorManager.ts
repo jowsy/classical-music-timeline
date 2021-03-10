@@ -27,20 +27,16 @@ export class ColorManager {
         this.colorSchemes.set(name,colors);
     }
 
-    private async remap()
+    private remap()
     {
-        console.log("remap");
-        if (this.mapTable!=null) console.log(this.mapTable.size);
-
         if (this.currentParameterDefinition==null) return;
         if (this.currentColorScheme==null || this.currentColorScheme == "") return;
 
         var colors = this.colorSchemes.get(this.currentColorScheme);
         if (this.currentParameterDefinition.parameterType==ParamType.String){
-        var parameterGroups = this.
-                                        groupBy(this.session.timeSpans, 
-                                           entity => entity.getParameterByDefinition(this.currentParameterDefinition)
-                                           .asString());
+        var parameterGroups = this.groupBy(this.session.timeSpans, 
+                                    entity => entity.getParameterByDefinition(this.currentParameterDefinition)
+                                    .asString());
         
         
         this.parameterGroupValues = Object.keys(parameterGroups);
@@ -69,8 +65,8 @@ export class ColorManager {
         return colors[index];
     }
 
-    async refresh(){
-        await this.remap();
+    refresh(){
+        this.remap();
     }
 
     
