@@ -13,6 +13,7 @@ import * as d3 from 'd3';
 import { WebColor } from '@/WebColor';
 // eslint-disable-next-line no-unused-vars
 import { IColor } from '@/core/IColor';
+//import { max } from 'd3';
 
 
 //------------- PUT THIS INTO A CONFIGURATION -------------------------
@@ -67,18 +68,22 @@ export default class TimeLine extends Vue {
     var svg = timeLineCanvas.append("svg")
             .attr("width", svgRect.width + svgRect.left + svgRect.right)
             .attr("height", svgRect.height + svgRect.top + svgRect.bottom);
-            
+
+    const minDate = this.session.timeExtents.getSelectedMinDate();
+    const maxDate =  this.session.timeExtents.getSelectedMaxDate();
+        
 
     //We don't want the array to mutate because it will retrigger redraw and up in maximum recursive update
     //So first clone TimeSpans
     const sorted = [...this.session
                 .timeSpans].sort((a, b) => {
-                    return a.startDate > b.startDate ? 1 : -1;});
+                    return a.startDate > b.startDate ? 1 : -1;})
+                    .filter(tSpan => tSpan.startDate>=minDate && tSpan.startDate<=maxDate);
 
     var scale = d3.scaleTime()
     .domain(
-        [this.session.minDate, 
-        this.session.maxDate])
+        [minDate, 
+        maxDate])
         .range([svgRect.left, svgRect.width]);
 
 
