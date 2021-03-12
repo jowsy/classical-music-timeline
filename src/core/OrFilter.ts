@@ -2,13 +2,13 @@ import { basePlacements } from "@popperjs/core";
 import { geoAlbers } from "d3";
 import { Guid } from "./Guid";
 import { IFilter } from "./IFilter";
+import { ISessionContext } from "./ISessionContext";
 import { LogicalOperatorFilter } from "./LogicalOperatorFilter";
-import { Session } from "./Session";
 import { TimeLineBase } from "./TimeLineBase";
 
 export class OrFilter extends LogicalOperatorFilter {
     id: string;
-    session: Session;
+    session: ISessionContext;
     public get isActive(): boolean {
         return this._isActive;
     }

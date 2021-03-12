@@ -1,11 +1,11 @@
 import { Guid } from "./Guid";
 import { IFilter } from "./IFilter";
-import { Session } from "./Session";
+import { ISessionContext } from "./ISessionContext";
 import { TimeLineBase } from "./TimeLineBase";
 
 export class ParameterStringFilter implements IFilter{
     id: string;
-    session: Session;
+    session: ISessionContext;
     parameterName:string;
     filterValue : string;
     private _isActive: boolean;

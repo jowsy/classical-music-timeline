@@ -1,12 +1,12 @@
 import { IColor } from "./IColor";
 import { ParameterDefinition, ParamType } from "./Parameter";
 import { ParameterStringFilter } from "./ParameterFilter";
-import { Session } from "./Session";
+import { ISessionContext } from "./ISessionContext";
 import { TimeLineBase } from "./TimeLineBase";
 
 export class ColorManager {
 
-    session: Session;
+    session: ISessionContext;
     private currentParameterDefinition: ParameterDefinition;
     private currentColorScheme: string;
     private colorSchemes:Map<string,Array<IColor>> = new Map<string,Array<IColor>>();

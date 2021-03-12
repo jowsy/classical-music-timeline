@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component'
-import { Session } from '../core/Session';
+import { SessionVm } from '../viewmodel/SessionVm';
 import * as d3 from 'd3';
 // eslint-disable-next-line no-unused-vars
 import { WebColor } from '@/WebColor';
@@ -23,12 +23,12 @@ var margin = 1;
 
 @Options({
       props: {
-    session: Session
+    session: SessionVm
       }
 })
 export default class TimeLine extends Vue {
 
-    session : Session;
+    session : SessionVm;
 
     created(){
 

@@ -1,9 +1,7 @@
 import { Guid } from "./Guid";
 import { ParameterDefinition, ParamType } from "./Parameter";
-import { Session } from "./Session";
 
 export class Configuration{
-    session : Session;
     parameterDefinitions: ParameterDefinition[] = new Array<ParameterDefinition>();
     colorByParameterDefinition:ParameterDefinition;
 
@@ -15,9 +13,5 @@ export class Configuration{
         parameterDef.filterable = filterable;
         this.parameterDefinitions.push(parameterDef);
         return parameterDef;
-    }
-
-    generateColorMap(parameterDefinition : ParameterDefinition) {
-
     }
 }

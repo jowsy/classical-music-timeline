@@ -5,7 +5,7 @@
              <SideMenu :session="session"/> 
            </nav>
           <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-          <TimeLine :session="session"/>          
+            <TimeLine :session="session"/>          
           </main>
         </div>
     </div>
@@ -16,10 +16,10 @@
 import { Options, Vue } from 'vue-class-component';
 import TimeLine from './components/TimeLine.vue';
 import SideMenu from './components/SideMenu.vue';
-import {Session} from './core/Session';
 import {AndFilter} from './core/AndFilterTest';
 import {JsonDataMapper} from './db/JsonDataMapper';
 import {WebColor} from './WebColor';
+import {SessionVm} from './viewmodel/SessionVm'
 
 @Options({
   components: {
@@ -29,12 +29,12 @@ import {WebColor} from './WebColor';
 })
 export default class App extends Vue {
 
-  session:Session;
+  session:SessionVm;
 
   data() {
     
     // Create a new user workspace/session for the user with all composers shown as default
-    var newSession = new Session();
+    var newSession = new SessionVm	();
     
     //Set main filter
     newSession.rootFilter = new AndFilter();

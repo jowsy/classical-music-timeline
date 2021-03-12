@@ -18,6 +18,7 @@ export interface IComposer {
     death: string;
     epoch: string;
     portrait: string;
+    popular: number;
 }
 
 export interface RootObject {

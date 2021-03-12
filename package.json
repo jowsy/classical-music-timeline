@@ -15,7 +15,8 @@
     "d3": "^6.5.0",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
-    "vue-property-decorator": "^9.1.2"
+    "vue-property-decorator": "^9.1.2",
+    "vue-slider-component": "^4.0.0-beta.3"
   },
   "devDependencies": {
     "@types/d3": "^6.3.0",

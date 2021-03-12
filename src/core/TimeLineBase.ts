@@ -1,9 +1,9 @@
+import { ISessionContext } from "./ISessionContext";
 import { ParameterDefinition, Parameter } from "./Parameter";
-import { Session } from "./Session";
 
 export class TimeLineBase {
 
-    session:Session;
+    session:ISessionContext;
     id: string;
     visible : boolean;
     visibilityOverriden : boolean;

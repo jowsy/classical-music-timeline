@@ -1,40 +1,39 @@
-import { TimeLineBase } from "./TimeLineBase";
-import { IDataGateway } from "./IDataGateway";
-import { TimeSpan } from "./TimeSpan";
-import { Event } from "./Event";
-import { ParameterDefinition, ParamType } from "./Parameter";
-import { Guid } from "./Guid";
-import { IFilter } from "./IFilter";
-import { AndFilter } from "./AndFilterTest";
-import { Configuration } from "./Configuration";
-import { ColorManager } from "./ColorManager";
+import { TimeLineBase } from "../core/TimeLineBase";
+import { IDataGateway } from "../core/IDataGateway";
+import { TimeSpan } from "../core/TimeSpan";
+import { Event } from "../core/Event";
+import { ParameterDefinition, ParamType } from "../core/Parameter";
+import { Guid } from "../core/Guid";
+import { IFilter } from "../core/IFilter";
+import { AndFilter } from "../core/AndFilterTest";
+import { Configuration } from "../core/Configuration";
+import { ColorManager } from "../core/ColorManager";
+import { timeLineExtents } from "./timeLineExtents";
+import { ISessionContext } from "@/core/ISessionContext";
 
-export class Session {
-
+export class SessionVm implements ISessionContext {
     private _timeSpans: Array<TimeSpan> = new Array<TimeSpan>();
     public configuration:Configuration = new Configuration();
     public colorManager: ColorManager = new ColorManager();
     
     minDate : Date;
     maxDate : Date;
+    timeExtents : timeLineExtents;
     public rootFilter: IFilter;
  
     constructor(){
-        this.configuration.session = this;
         this.colorManager.session = this;   
     }
     get timeSpans(): Array<TimeSpan> {
         return this._timeSpans;
     }
 
-
-    private setTimeSpans(value: Array<TimeSpan>) {
-        
+    protected setTimeSpans(value: Array<TimeSpan>) {
         this._timeSpans.push(...value);
         this.setExtents();
     }
-    public setExtents():void {
-        
+    protected setExtents():void {
+   
         var list : Array<Date> = [];
         
         this.timeSpans
@@ -53,6 +52,14 @@ export class Session {
 
         this.minDate = list[0];
         this.maxDate = list[list.length-1]
+
+        this.timeExtents = new timeLineExtents();
+        const minYear=this.minDate.getFullYear();
+        const maxYear=this.maxDate.getFullYear();
+
+        this.timeExtents.value =  [minYear,maxYear];
+        this.timeExtents.min = minYear;
+        this.timeExtents.max = maxYear;
     }
 
     public Refresh(){

@@ -2,16 +2,16 @@ import {IDataGateway} from '../core/IDataGateway'
 import { Composer } from './Composer';
 import { TimeSpan } from '@/core/TimeSpan';
 import { Event } from '@/core/Event';
-import { Session } from '@/core/Session';
 import { ParamType } from '@/core/Parameter';
 import { RootObject } from './OpenOpus';
+import { SessionVm } from '@/viewmodel/SessionVm';
 
 /* -------------------------------------------------------
 * Resonsible to map OpenOpus composers into TimeSpan objects
 -------------------------------------------------------*/ 
 export class JsonDataMapper implements IDataGateway {
 
-    private session : Session;
+    private session : SessionVm;
     private json : string;
 
 
@@ -19,7 +19,7 @@ export class JsonDataMapper implements IDataGateway {
         this.json = json;
     }
 
-    SetSession(session:Session) {
+    SetSession(session:SessionVm) {
         this.session=session;
     }
     void: any;
@@ -48,10 +48,12 @@ export class JsonDataMapper implements IDataGateway {
             let comp : Composer = Object.assign(new Composer(), composer);
             let newTimeSpan = new TimeSpan();
             newTimeSpan.id = comp.id;
+            
             if (newTimeSpan.id==""){
                 newTimeSpan.id=id.toString();
                 id++;
             } 
+
             newTimeSpan.displayCaption = comp.complete_name;
             newTimeSpan.startDate = comp.getBirthDate();
             newTimeSpan.endDate = comp.getDeathDate();

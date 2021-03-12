@@ -12,11 +12,17 @@
                     <div class="card card-body">
                         <ul class="list-group vertical-scroll">
                                 <li class="list-group-item" v-for="object in session.timeSpans" :key="object.id">
-                                    <input type="checkbox" v-model="object.visible" v-bind:disabled="object.visibilityOverriden"> {{ object.displayCaption }}
+                                    <input type="checkbox" class="form-check-input" v-model="object.visible" v-bind:disabled="object.visibilityOverriden"> {{ object.displayCaption }}
                             </li>
                         </ul>
                     </div>
                 </div>
+            </li>
+            <li class="nav-item">
+                   <vue-slider 
+                  v-bind:min="session.timeExtents.min"
+                  v-bind:max="session.timeExtents.max" 
+                  v-model="session.timeExtents.value" />
             </li>
         </ul>
         <h5 class="justify-content-between mt-4 mb-1 text-muted">Filters</h5>
@@ -33,7 +39,7 @@
                 <div class="collapse multi-collapse" v-bind:id="parameter.name+'List'">
                     <div class="card card-body">
                             <li class="list-group-item" v-for="str in groupByParameter(parameter)" v-bind:key="str">
-                                    <input type="checkbox" v-on:change="applyParameterFilter($event, parameter.id, parameter.name, str)"> {{str}}
+                                    <input type="checkbox" class="form-check-input" v-on:change="applyParameterFilter($event, parameter.id, parameter.name, str)"> {{str}}
                             </li>
                     </div>
                 </div>
@@ -51,20 +57,29 @@ import { OrFilter } from '@/core/OrFilter';
 import { TimeLineBase } from '@/core/TimeLineBase';
 import { Options, Vue } from 'vue-class-component';
 // eslint-disable-next-line no-unused-vars
-import {Session} from '../core/Session';
+import {SessionVm} from '../viewmodel/SessionVm';
 // eslint-disable-next-line no-unused-vars
 import {AndFilter} from '../core/AndFilterTest';
+import VueSlider from 'vue-slider-component'
+import 'vue-slider-component/theme/antd.css'
+//import MultiRangeSlider from './MultiRangeSlider.vue';
 
 @Options({
   props: {
-    session: Session
+    session: SessionVm
+  },
+  components: {
+    VueSlider
   }
 })
 export default class SideMenu extends Vue {
 
-   session : Session;
-
+   value : Array<number> = [];
+   session : SessionVm;
    filterMap : Map<string,string> = new Map<string,string>();
+    minValue:number;
+    maxValue:number;
+
    //We don't want all parameters to be filterable in the UI
 getFilterableParameterDefinitions() {
    return this.session
@@ -82,7 +97,7 @@ return Object.keys(groups);
 }
 
 applyParameterFilter(checkBoxCtrl:any, ParameterDefinitionId:string, paramName:string, value:string){
-
+    
     let filterId : string = this.filterMap.get(ParameterDefinitionId) as string;
     let rootFilter : AndFilter = this.session.rootFilter as AndFilter;
     
@@ -150,4 +165,6 @@ Array.prototype.groupBy = function<T, K extends keyof any>(this:T[], getKey: (it
 
 </script>
 
-<style scoped src="../assets/css/app.css"/>
+<style scoped>
+@import '../assets/css/app.css';
+</style>
