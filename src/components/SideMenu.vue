@@ -19,10 +19,14 @@
                 </div>
             </li>
             <li class="nav-item">
+                <div>
+                        <div>{{ session.timeExtents.value[0] }} - {{ session.timeExtents.value[1] }}</div>
                    <vue-slider 
-                  v-bind:min="session.timeExtents.min"
-                  v-bind:max="session.timeExtents.max" 
-                  v-model="session.timeExtents.value" />
+                    :tooltip="'none'"
+                    v-bind:min="session.timeExtents.min"
+                    v-bind:max="session.timeExtents.max" 
+                    v-model="session.timeExtents.value" />
+                  </div>
             </li>
         </ul>
         <h5 class="justify-content-between mt-4 mb-1 text-muted">Filters</h5>

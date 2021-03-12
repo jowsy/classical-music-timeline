@@ -18,7 +18,7 @@ export class SessionVm implements ISessionContext {
     
     minDate : Date;
     maxDate : Date;
-    timeExtents : timeLineExtents;
+    timeExtents : timeLineExtents = new timeLineExtents();
     public rootFilter: IFilter;
  
     constructor(){
