@@ -14,3 +14,7 @@ ul.list-group.vertical-scroll
     max-height: 300px;
     overflow-y: scroll;
 }
+
+.verticalgrid line {
+    stroke: dimgrey;
+}
