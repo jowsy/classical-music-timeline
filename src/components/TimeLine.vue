@@ -1,8 +1,7 @@
 <template>
     <div>
-        <div id="timelinecanvas"></div>
-        <span>Extents: {{ session.minDate }} -> {{ session.maxDate }}</span> 
-    </div>  
+        <div id="canvas"></div>
+    </div> 
 </template>
 
 <script lang="ts">
@@ -13,13 +12,13 @@ import * as d3 from 'd3';
 import { WebColor } from '@/WebColor';
 // eslint-disable-next-line no-unused-vars
 import { IColor } from '@/core/IColor';
-//import { max } from 'd3';
-
 
 //------------- PUT THIS INTO A CONFIGURATION -------------------------
 let tickTimeInterval : number = 20; //in year
-var barHeight = 20;
-var margin = 1;
+
+
+var pixelPerYear = 5;
+var verticalGridPaddingTop = 20;
 //----------------------------------------------------------------
 
 @Options({
@@ -43,32 +42,17 @@ export default class TimeLine extends Vue {
     }
     redraw(){
 
- class rect {
-        top: number;
-        right: number;
-        bottom: number;
-        left: number;
+
+ //Define svg dimensions
+ class SvgDimensions {
+        marginLeft: number;
+        marginRight: number;
+        marginBottom: number;
+        marginTop: number;       
         width: number;
         height: number;
     }
-
-    let	svgRect = new rect();
-    svgRect.top = 30;
-    svgRect.right = 20;
-    svgRect.bottom = 30;
-    svgRect.left = 5;
-
-    svgRect.width = 2000 - svgRect.left - svgRect.right,
-    svgRect.height = barHeight*this.session.timeSpans.length; //- svgRect.top - svgRect.bottom;
-  
-
-   var	timeLineCanvas = d3.select("#timelinecanvas");
-
-        timeLineCanvas.select("svg").remove(); 
-    var svg = timeLineCanvas.append("svg")
-            .attr("width", svgRect.width + svgRect.left + svgRect.right)
-            .attr("height", svgRect.height + svgRect.top + svgRect.bottom);
-
+    const svgDimensions = new SvgDimensions();
     const minDate = this.session.timeExtents.getSelectedMinDate();
     const maxDate =  this.session.timeExtents.getSelectedMaxDate();
         
@@ -78,64 +62,158 @@ export default class TimeLine extends Vue {
     const sorted = [...this.session
                 .timeSpans].sort((a, b) => {
                     return a.startDate > b.startDate ? 1 : -1;})
-                    .filter(tSpan => tSpan.startDate>=minDate && tSpan.startDate<=maxDate);
+                       .filter(tSpan => tSpan.startDate>=minDate && tSpan.endDate<=maxDate);
 
-    var scale = d3.scaleTime()
+
+
+    svgDimensions.marginLeft = 20;
+    svgDimensions.marginTop = 40;
+
+
+    //Calculate svg width & height based on screen size
+    const sideMenuHeight = document.getElementById("sidebarMenu")?.clientHeight;
+    const sideMenuWidth = document.getElementById("sidebarMenu")?.clientWidth;
+    const topMenuWidth = document.getElementById("topMenu")?.offsetWidth;
+    const componentHeight =(sideMenuHeight || 0.0)-50;//-(topMenuHeight || 0.0); 
+
+    const maxBarHeight = 70;
+    const barHeight = Math.min((componentHeight)/(sorted.length),maxBarHeight);
+
+
+    const componentWidth = (topMenuWidth || 0.0) - (sideMenuWidth || 0.0) - svgDimensions.marginLeft - 60;// - (sideBarWidth || 0.0) - svgRect.left - svgRect.right;
+    const timeLineObjectPaddingTop=50;
+
+    svgDimensions.width = componentWidth;
+    svgDimensions.height = componentHeight;
+
+    //if redraw, remove old canvas
+    d3.select("#canvas").select("svg").remove();
+
+    //DEFINE MAIN SVG
+    //Explicit cast necessary
+    //Reference: https://stackoverflow.com/questions/66059904/type-errors-for-d3js-in-angular-latest
+    const gMain = d3.select<SVGSVGElement, unknown>("#canvas")
+        .append("svg")
+        .attr("width", svgDimensions.width)
+        .attr("height", svgDimensions.height)
+        .append("g");
+
+    //Only show graphics inside a specified rectangle
+    var clip = gMain.append("defs").append("SVG:clipPath")
+    .attr("id", "clip")
+    .append("SVG:rect")
+    .attr("width", svgDimensions.width)
+    .attr("height", svgDimensions.height)
+    .attr("x", 0)
+    .attr("y", 0);
+
+    var canvas = gMain.append('g')
+    .attr("clip-path", "url(#clip)")
+
+    //Define time scale
+    const scale = d3.scaleTime()
     .domain(
         [minDate, 
         maxDate])
-        .range([svgRect.left, svgRect.width]);
+        .range([0, svgDimensions.width]);
 
 
     let dateInterval = d3.timeYear.every(tickTimeInterval);
+    let xAxis = d3.axisTop(scale).ticks(dateInterval); //Date ticks
+  
+    //This rectangle exists as a zooming area
+    const rectangle = gMain
+        .append("rect")
+        .attr("id","zoomRect")
+        .attr("x", 0)
+        .attr("y",  0)
+        .attr("width", svgDimensions.width)
+        .attr("height", svgDimensions.height)
+        .style("fill", "transparent")
 
-    let xAxis = d3.axisBottom(scale).ticks(dateInterval); //Date ticks
-    //let yAxis = d3.axisLeft(scale).ticks(dateInterval); //Vertical grid lines
-
-    var g = svg.selectAll("g")
+    //Create svg groups where we can put rectangle and texts
+    var g = canvas.selectAll("rect")
         .data(sorted.filter(ts => ts.visible==true))
         .enter()
         .append("g")
         .attr("transform", function (d, i) {
-            return "translate("+svgRect.left+"," + i * barHeight + ")";
+            return "translate("+scale(new Date(d.startDate))+"," + ((i * barHeight) + timeLineObjectPaddingTop) +")";
         });
 
-    g.append("rect")
-        .attr("x", function (d) { return (scale(d.startDate)); })
-        .attr("width", function (d) {
+    const barHeightWithMargin = barHeight*0.9;
+    //Create rectangles inside groups
+    const rectangles = g
+        .append("rect")
+        .attr("width", function (d)  {
             return scale(d.endDate)-scale(d.startDate);
         })
+        .attr("height",barHeightWithMargin)
         .attr("fill", function (c) { 
         var color = c.session.colorManager.getColor(c, "default") as WebColor;
         if (color == null) return "gray";
          return color.toHexString(); } )
-        .attr("height", barHeight - margin)
         .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"});
+   
+   /*.attr("transform", function (d, i) {
+            return "translate("+svgRect.left+"," + ((i * barHeight)+timeLineObjectPaddingTop) + ")";
+        });*/
 
+    const texts = g.append("text")
+        .attr("dy", ".7em")
+        .text(function (d) { return d.displayCaption; })
+        .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"})
+        .style("fill", function (d) { 
+            return TimeLine.textBackgroundColor(
+                d.session.colorManager.getColor(d, "default"))
+            } )
+        .style("font", function (d)  {
+
+            return Math.max((scale(new Date(d.startDate)) - scale(new Date(d.endDate)))/d.displayCaption.length,barHeightWithMargin)+"px times";
+        });
+
+    const axis = gMain.append("g")
+        .attr("class", "grid")
+        .attr("transform", "translate("+ 0+","+ timeLineObjectPaddingTop + ")")
+        .call(xAxis);
+    
+
+    const verticalAxis = canvas.append("g")
+        .attr("class", "verticalgrid")
+        .attr("transform", "translate(" + 0+ "," + (componentHeight + timeLineObjectPaddingTop) + ")")
+        .call(xAxis.tickSize(componentHeight).tickFormat(() => ""))
+        .lower();
+
+    const zoom = d3.zoom<SVGSVGElement, unknown>();
+    const zoomRect = d3.select<SVGSVGElement, unknown>("#zoomRect").call(zoom);
+
+    zoom.extent([[0, 0], [svgDimensions.width, svgDimensions.height]])
+    .scaleExtent([1, 10])
+    .translateExtent([[0, 0], [svgDimensions.width, svgDimensions.height]])
+    .on('zoom', updateChart);
+
+    
+        /*eslint no-unused-vars: 0 */    
+        function updateChart(event:any, d:any) {
+
+            var xNewScale = event.transform.rescaleX(scale);
+
+            gMain.attr("transform", event.transform);      
                 
-        g.append("text")
-            .attr("x", function (d) { return (scale(new Date(d.startDate))); })
-            .attr("y", barHeight / 2)
-            .attr("dy", ".35em")
-            .text(function (d) { return d.displayCaption; })
-            .style("fill", "white" ) 
-            .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"})
-            .style("fill", function (d) { 
-                return TimeLine.textBackgroundColor(
-                    d.session.colorManager.getColor(d, "default"))
-                } );
+                  //gMain.attr("transform", "translate(" +  event.transform.translate + ")scale(" +  event.transform.scale + ")");
+                //texts.attr("transform",event.transform);
+            axis.call(d3.axisTop(xNewScale).ticks(dateInterval));
+               // verticalAxis.call(d3.axisTop(xNewScale).tickSize(componentHeight).ticks(dateInterval).tickFormat(() => ""));
+        }
 
-        svg.append("g")
-            .attr("class", "grid")
-            .attr("transform", "translate(" + svgRect.left + "," + svgRect.height + ")")
-            .call(xAxis);
+         window.addEventListener('resize', () => {
+                  const t0 = d3.zoomTransform(zoomRect.node() as Element);
+                   //t0.                  
+         });
 
-        svg.append("g")
-            .attr("class", "grid")
-            .attr("transform", "translate(" + svgRect.left + "," + svgRect.height + ")")
-            .call(xAxis.tickSize(-svgRect.height).tickFormat(() => ""))
-            .lower();
     }  
+
+
+
 
     private static textBackgroundColor(color:IColor) : string{
        
