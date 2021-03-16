@@ -60,26 +60,25 @@ export default class TimeLine extends Vue {
     const sorted = [...this.session
                 .timeSpans].sort((a, b) => {
                     return a.startDate > b.startDate ? 1 : -1;})
-                       .filter(tSpan => tSpan.startDate>=minDate && tSpan.endDate<=maxDate);
+                       .filter(tSpan => tSpan.startDate.getFullYear()>=minDate.getFullYear() && tSpan.endDate.getFullYear()<=maxDate.getFullYear());
 
 
 
     svgDimensions.marginLeft = 20;
     svgDimensions.marginTop = 40;
 
-
     //Calculate svg width & height based on screen size
     const sideMenuHeight = document.getElementById("sidebarMenu")?.clientHeight;
     const sideMenuWidth = document.getElementById("sidebarMenu")?.clientWidth;
     const topMenuWidth = document.getElementById("topMenu")?.offsetWidth;
     const componentHeight =(sideMenuHeight || 0.0)-50;//-(topMenuHeight || 0.0); 
-
+    const timeLineObjectPaddingTop=50;
     const maxBarHeight = 70;
-    const barHeight = Math.min((componentHeight)/(sorted.length),maxBarHeight);
+    const barHeight = Math.min((componentHeight-timeLineObjectPaddingTop)/(sorted.length),maxBarHeight);
 
 
     const componentWidth = (topMenuWidth || 0.0) - (sideMenuWidth || 0.0) - svgDimensions.marginLeft - 60;// - (sideBarWidth || 0.0) - svgRect.left - svgRect.right;
-    const timeLineObjectPaddingTop=50;
+
 
     svgDimensions.width = componentWidth;
     svgDimensions.height = componentHeight;
