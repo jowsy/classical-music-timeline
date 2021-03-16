@@ -14,9 +14,7 @@ import { WebColor } from '@/WebColor';
 import { IColor } from '@/core/IColor';
 
 //------------- PUT THIS INTO A CONFIGURATION -------------------------
-let tickTimeInterval : number = 20; //in year
-
-
+let tickTimeInterval : number = 10; //in year
 var pixelPerYear = 5;
 var verticalGridPaddingTop = 20;
 //----------------------------------------------------------------
@@ -103,20 +101,20 @@ export default class TimeLine extends Vue {
     .attr("id", "clip")
     .append("SVG:rect")
     .attr("width", svgDimensions.width)
-    .attr("height", svgDimensions.height)
+    .attr("height", svgDimensions.height - timeLineObjectPaddingTop)
     .attr("x", 0)
-    .attr("y", 0);
+    .attr("y", timeLineObjectPaddingTop);
 
-    var canvas = gMain.append('g')
+    var clipPath = gMain.append('g')
     .attr("clip-path", "url(#clip)")
 
+    var canvas = clipPath.append('g');
     //Define time scale
     const scale = d3.scaleTime()
     .domain(
         [minDate, 
         maxDate])
         .range([0, svgDimensions.width]);
-
 
     let dateInterval = d3.timeYear.every(tickTimeInterval);
     let xAxis = d3.axisTop(scale).ticks(dateInterval); //Date ticks
@@ -141,6 +139,7 @@ export default class TimeLine extends Vue {
         });
 
     const barHeightWithMargin = barHeight*0.9;
+
     //Create rectangles inside groups
     const rectangles = g
         .append("rect")
@@ -154,10 +153,6 @@ export default class TimeLine extends Vue {
          return color.toHexString(); } )
         .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"});
    
-   /*.attr("transform", function (d, i) {
-            return "translate("+svgRect.left+"," + ((i * barHeight)+timeLineObjectPaddingTop) + ")";
-        });*/
-
     const texts = g.append("text")
         .attr("dy", ".7em")
         .text(function (d) { return d.displayCaption; })
@@ -176,8 +171,7 @@ export default class TimeLine extends Vue {
         .attr("transform", "translate("+ 0+","+ timeLineObjectPaddingTop + ")")
         .call(xAxis);
     
-
-    const verticalAxis = canvas.append("g")
+    const verticalAxis = gMain.append("g")
         .attr("class", "verticalgrid")
         .attr("transform", "translate(" + 0+ "," + (componentHeight + timeLineObjectPaddingTop) + ")")
         .call(xAxis.tickSize(componentHeight).tickFormat(() => ""))
@@ -197,17 +191,14 @@ export default class TimeLine extends Vue {
 
             var xNewScale = event.transform.rescaleX(scale);
 
-            gMain.attr("transform", event.transform);      
-                
-                  //gMain.attr("transform", "translate(" +  event.transform.translate + ")scale(" +  event.transform.scale + ")");
-                //texts.attr("transform",event.transform);
+            canvas.attr("transform", event.transform);      
+
             axis.call(d3.axisTop(xNewScale).ticks(dateInterval));
-               // verticalAxis.call(d3.axisTop(xNewScale).tickSize(componentHeight).ticks(dateInterval).tickFormat(() => ""));
+            verticalAxis.call(d3.axisTop(xNewScale).tickSize(componentHeight).ticks(dateInterval).tickFormat(() => ""));
         }
 
          window.addEventListener('resize', () => {
-                  const t0 = d3.zoomTransform(zoomRect.node() as Element);
-                   //t0.                  
+               //   this.redraw();                 
          });
 
     }  
