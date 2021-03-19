@@ -1,4 +1,4 @@
-import {IDataGateway} from '../core/IDataGateway'
+import {IDataGateway} from '../../core/IDataGateway'
 import { Composer } from './Composer';
 import { TimeSpan } from '@/core/TimeSpan';
 import { Event } from '@/core/Event';
@@ -9,7 +9,7 @@ import { SessionVm } from '@/viewmodel/SessionVm';
 /* -------------------------------------------------------
 * Resonsible to map OpenOpus composers into TimeSpan objects
 -------------------------------------------------------*/ 
-export class JsonDataMapper implements IDataGateway {
+export class OpenOpusJsonMapper implements IDataGateway {
 
     private session : SessionVm;
     private json : string;

@@ -9,7 +9,6 @@
           </main>
         </div>
     </div>
-      
 </template>
 
 <script lang="ts">
@@ -17,9 +16,11 @@ import { Options, Vue } from 'vue-class-component';
 import TimeLine from './components/TimeLine.vue';
 import SideMenu from './components/SideMenu.vue';
 import {AndFilter} from './core/AndFilterTest';
-import {JsonDataMapper} from './db/JsonDataMapper';
+import {CsvMapper, CsvMapperConfig} from './db/CsvMapper';
+import {OpenOpusJsonMapper} from './db/OpenOpus/OpenOpusJsonMapper';
 import {WebColor} from './WebColor';
 import {SessionVm} from './viewmodel/SessionVm'
+import {ParamType } from './core/Parameter';
 
 @Options({
   components: {
@@ -63,15 +64,40 @@ export default class App extends Vue {
 
   async mounted(){
 
+    //Define data transformer for CSV file
+    //=================================================================
+    const imdbDestParameterName = "ImdbSoundtrackCredits";
+        
+      const csvMapperConfig = Object.assign({
+            destFieldNameToMatch:"displayCaption",
+            csvFieldNameToMatch:"Name",
+            destFieldNameToSet:imdbDestParameterName,
+            csvFieldNameToRetrieve:"SoundtrackCredits",
+            delimiterString: ";"
+        }, new CsvMapperConfig());
+
+
+    //Create custom parameters
+    //=================================================================
+    this.session.configuration.addParameter(imdbDestParameterName, 
+                                            ParamType.Number,
+                                            true); //for IMDB, see transform above
 
     //Preload data
     //=================================================================
 
     fetch("dump.json")
       .then(response => response.text())
-      .then(json => this.session.PlugIn(new JsonDataMapper(json)))
-      .then( () => {
-        this.session.Refresh();});
+      .then(json => this.session.PlugIn(new OpenOpusJsonMapper(json)))
+      .finally( () => {
+         fetch("IMDBSoundtrackCredits.csv")
+          .then(response => response.text())
+          .then(csv => {
+              const csvTransformer=new CsvMapper(csv, csvMapperConfig);
+              csvTransformer.transform(this.session.timeSpans);
+              this.session.Refresh();
+            });
+        });
 
   }
 }

@@ -1,11 +1,13 @@
 import { TimeSpan } from "../core/TimeSpan";
 import { Configuration } from "../core/Configuration";
 import { ColorManager } from "../core/ColorManager";
+import { timeLineExtents } from "./timeLineExtents";
 export class SessionVm {
     constructor() {
         this._timeSpans = new Array();
         this.configuration = new Configuration();
         this.colorManager = new ColorManager();
+        this.timeExtents = new timeLineExtents();
         this.colorManager.session = this;
     }
     get timeSpans() {
@@ -13,6 +15,7 @@ export class SessionVm {
     }
     setTimeSpans(value) {
         this._timeSpans.push(...value);
+        this.setExtents();
     }
     setExtents() {
         var list = [];
@@ -29,6 +32,12 @@ export class SessionVm {
         });
         this.minDate = list[0];
         this.maxDate = list[list.length - 1];
+        this.timeExtents = new timeLineExtents();
+        const minYear = this.minDate.getFullYear();
+        const maxYear = this.maxDate.getFullYear();
+        this.timeExtents.value = [minYear, maxYear];
+        this.timeExtents.min = minYear;
+        this.timeExtents.max = maxYear;
     }
     Refresh() {
         if (this.rootFilter != null) {
