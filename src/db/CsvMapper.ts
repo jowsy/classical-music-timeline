@@ -11,6 +11,8 @@ export class CsvMapper implements ITransformer{
         this.csvConfig = configuration;
         this.defaultConfig.delimiter = configuration.delimiterString;
     }
+
+    //Directly from example code for papaparse
     defaultConfig = 
     {
         quotes: false, //or array of booleans
@@ -24,12 +26,17 @@ export class CsvMapper implements ITransformer{
     };
 
     transform(objects: TimeLineBase[]): void {   
+
+        // csv <=> object
         const destFieldNameToMatch = this.csvConfig.destFieldNameToMatch;
         const csvFieldNameToMatch = this.csvConfig.csvFieldNameToMatch;
+
+        // csv => object value field
         const destFieldNameToSet = this.csvConfig.destFieldNameToSet;
         const csvFieldNameToRetrieve = this.csvConfig.csvFieldNameToRetrieve;
 
         var result = parse<any>(this.content,this.defaultConfig);
+        
         for (let i = 0; i < objects.length; i++) {
             const element=objects[i];
             try {
@@ -59,7 +66,6 @@ export class CsvMapper implements ITransformer{
         }
 
         }
-        console.log(result.data);
     }
 
     getProperty<T, K extends keyof T>(o: T, propertyName: K): T[K] {

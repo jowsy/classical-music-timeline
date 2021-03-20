@@ -1,28 +1,47 @@
-import { IColor } from "./IColor";
-import { ParameterDefinition, ParamType } from "./Parameter";
-import { ParameterStringFilter } from "./ParameterFilter";
-import { ISessionContext } from "./ISessionContext";
-import { TimeLineBase } from "./TimeLineBase";
+import { IColorGenerator, 
+         IColor, 
+         ParameterDefinition,
+         TimeLineBase,
+         ISessionContext,
+         ParamType } from "./";
 
 export class ColorManager {
 
     session: ISessionContext;
+    colorGenerator : IColorGenerator;
     private currentParameterDefinition: ParameterDefinition;
-    private currentColorScheme: string;
+    private currentColorScheme: string | undefined;
     private colorSchemes:Map<string,Array<IColor>> = new Map<string,Array<IColor>>();
 
     private parameterGroupValues : Array<string>;
     private mapTable : Map<string,number>;
     private defaultColor : IColor;
 
+    private colorGenStepNumber : number = 10;
+    private colorGenStartColor : IColor;
+    private colorGenEndColor : IColor; 
+    protected colorGenColorSchemeName : string = "colorGen";
+
     setDefaultColor(color: IColor){
         this.defaultColor = color;
     }
 
-    mapColorsByParameter(parameterDefinition : ParameterDefinition, colorScheme:string){
-        this.currentParameterDefinition = parameterDefinition;
-        this.currentColorScheme = colorScheme;
+    mapColorsByStringParameter(parameterDefinition : ParameterDefinition, colorScheme?:string){
+            this.currentParameterDefinition = parameterDefinition;       
+            this.currentColorScheme = colorScheme == undefined ? "default" : colorScheme;
     }
+
+    mapColorsByNumberParameter(parameterDefinition : ParameterDefinition, steps:number, startColor:IColor, endColor:IColor){
+            this.currentParameterDefinition = parameterDefinition;       
+            this.GenerateColorScheme(this.colorGenColorSchemeName, steps, startColor, endColor);
+            this.currentColorScheme = this.colorGenColorSchemeName;
+    }
+
+    GenerateColorScheme(schemeName: string, steps: number, startColor: IColor, endColor: IColor) {
+        throw new Error("Function not implemented.");
+    }
+    
+
     addColorScheme(name:string, colors:IColor[]){
         this.colorSchemes.set(name,colors);
     }
@@ -81,3 +100,4 @@ export class ColorManager {
 };
 
 }
+

@@ -29,15 +29,12 @@ export class OpenOpusJsonMapper implements IDataGateway {
         //Create parameter if not exist
         if (this.session.configuration.parameterDefinitions.findIndex(p => p.name=="epoch") == -1){
             var definition = this.session.configuration.addParameter("epoch", ParamType.String, true);
-            this.session.colorManager.mapColorsByParameter(definition,"default");
+            this.session.colorManager.mapColorsByStringParameter(definition);
         }
 
         if (this.session.configuration.parameterDefinitions.findIndex(p => p.name=="popularity") == -1){
             var definition = this.session.configuration.addParameter("popularity", ParamType.String, true);
-            //this.session.colorManager.mapColorsByParameter(definition,"default");
         }
-        //if (this.session.parameterDefs.findIndex(p => p.name=="portrait") == -1)
-          //  this.session.addCustomParameter("portrait", ParamType.String, false);
     }
     
     getTimeSpans(): TimeSpan[] {

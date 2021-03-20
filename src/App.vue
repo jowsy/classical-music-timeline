@@ -21,6 +21,7 @@ import {OpenOpusJsonMapper} from './db/OpenOpus/OpenOpusJsonMapper';
 import {WebColor} from './WebColor';
 import {SessionVm} from './viewmodel/SessionVm'
 import {ParamType } from './core/Parameter';
+import {ColorGeneratorImpl} from './viewmodel/ColorGeneratorImpl';
 
 @Options({
   components: {
@@ -39,6 +40,9 @@ export default class App extends Vue {
     
     //Set main filter
     newSession.rootFilter = new AndFilter();
+
+    //Set color generator
+    newSession.colorManager.colorGenerator = new ColorGeneratorImpl();
 
     //Add color scheme
     //=================================================================
