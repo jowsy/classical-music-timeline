@@ -1,3 +1,5 @@
+import { parse } from "papaparse";
+
 export class ParameterDefinition {
 
     name:string;
@@ -25,11 +27,18 @@ export class Parameter {
     }
 
     //Typescript doesn't do overloading so we need to this:
+    //TODO: could this be done in a more elegant way??
     set(val:any) : void {
-        if (typeof val == "string")
-        this._stringValue = val;
-        else if (typeof val == "number")
-        this._numberValue = val;
+        if (typeof val == "string"){
+            if (this.definition.parameterType==ParamType.Number) 
+                throw Error("Can't assign parameter of type number to a string");
+            this._stringValue = val;
+        }
+        else if (typeof val == "number"){
+            if (this.definition.parameterType==ParamType.String) 
+                throw Error("Can't assign parameter of type string to a number");
+            this._numberValue = val;
+        }
     }   
 }
 

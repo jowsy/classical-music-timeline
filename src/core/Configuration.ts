@@ -14,4 +14,10 @@ export class Configuration{
         this.parameterDefinitions.push(parameterDef);
         return parameterDef;
     }
+
+    public getParameterByName(name:string) : ParameterDefinition | undefined {
+        const index = this.parameterDefinitions.findIndex(p => p.name==name);
+        if (index==-1) return undefined;
+        return this.parameterDefinitions[index];
+    }
 }

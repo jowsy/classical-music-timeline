@@ -14,6 +14,8 @@ export class OpenOpusJsonMapper implements IDataGateway {
     private session : SessionVm;
     private json : string;
 
+    private epochParameterName : string = "epoch";
+    private popParameterName : string = "popularity";
 
     constructor(json : string){
         this.json = json;
@@ -25,15 +27,17 @@ export class OpenOpusJsonMapper implements IDataGateway {
     void: any;
 
     Prepare(): void {
-
-        //Create parameter if not exist
-        if (this.session.configuration.parameterDefinitions.findIndex(p => p.name=="epoch") == -1){
-            var definition = this.session.configuration.addParameter("epoch", ParamType.String, true);
-            this.session.colorManager.mapColorsByStringParameter(definition);
+    
+        const epochParameterDef = this.session.configuration.getParameterByName(this.epochParameterName);
+        const popParameterDef = this.session.configuration.getParameterByName(this.popParameterName);
+        
+        if (epochParameterDef == undefined){
+            var definition = this.session.configuration.addParameter(this.epochParameterName, ParamType.String, true);
+            //this.session.colorManager.mapColorsByStringParameter(definition);
         }
 
-        if (this.session.configuration.parameterDefinitions.findIndex(p => p.name=="popularity") == -1){
-            var definition = this.session.configuration.addParameter("popularity", ParamType.String, true);
+        if (popParameterDef == undefined){
+            var definition = this.session.configuration.addParameter(this.popParameterName, ParamType.String, true);
         }
     }
     
@@ -57,8 +61,8 @@ export class OpenOpusJsonMapper implements IDataGateway {
             newTimeSpan.visible = true; //Show by default
 
             newTimeSpan.session = this.session;
-            newTimeSpan.getParameterByName("epoch").set(comp.epoch); 
-            newTimeSpan.getParameterByName("popularity").set(comp.popular == 1 ? "High": "Low"); 
+            newTimeSpan.getParameterByName(this.epochParameterName).set(comp.epoch); 
+            newTimeSpan.getParameterByName(this.popParameterName).set(comp.popular == 1 ? "High": "Low"); 
             //newTimeSpan.getParameterByName("portrait").set(comp.portrait); 
 
             data.push(newTimeSpan);

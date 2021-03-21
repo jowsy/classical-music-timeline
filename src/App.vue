@@ -76,6 +76,7 @@ export default class App extends Vue {
             destFieldNameToMatch:"displayCaption",
             csvFieldNameToMatch:"Name",
             destFieldNameToSet:imdbDestParameterName,
+            destFieldNameToSetType: ParamType.Number,
             csvFieldNameToRetrieve:"SoundtrackCredits",
             delimiterString: ";"
         }, new CsvMapperConfig());
@@ -85,11 +86,10 @@ export default class App extends Vue {
     //=================================================================
     this.session.configuration.addParameter(imdbDestParameterName, 
                                             ParamType.Number,
-                                            true); //for IMDB, see transform above
+                                            true); //for IMDB soundtrack credits, see csv-mapper above
 
-    //Preload data
+    //Load data source - OpenOpus
     //=================================================================
-
     fetch("dump.json")
       .then(response => response.text())
       .then(json => this.session.PlugIn(new OpenOpusJsonMapper(json)))
@@ -99,6 +99,16 @@ export default class App extends Vue {
           .then(csv => {
               const csvTransformer=new CsvMapper(csv, csvMapperConfig);
               csvTransformer.transform(this.session.timeSpans);
+              
+              const parameterDef = this.session.configuration.getParameterByName(imdbDestParameterName);
+
+              //Color in timeline using a gradient
+              if (parameterDef!=undefined)
+                this.session.colorManager.mapColorsByNumberParameter(parameterDef,
+                                                                     10, 
+                                                                      new WebColor("#e5f5f9"), 
+                                                                      new WebColor("#2ca25f"));
+              
               this.session.Refresh();
             });
         });

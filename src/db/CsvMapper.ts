@@ -1,3 +1,4 @@
+import { ParamType } from "@/core";
 import { ITransformer } from "@/core/ITransformer";
 import { TimeLineBase } from "@/core/TimeLineBase";
 import { parse, ParseResult } from "papaparse";
@@ -58,7 +59,23 @@ export class CsvMapper implements ITransformer{
             const query = result.data.find(item => item[csvFieldNameToMatch] == matchInElement);
             if (query != undefined){
                 const parameter = element.getParameterByName(destFieldNameToSet);
-                parameter.set(query[csvFieldNameToRetrieve]);
+                const value = query[csvFieldNameToRetrieve];
+                if (value!=undefined)
+                {
+                    switch (this.csvConfig.destFieldNameToSetType){
+                        case ParamType.String:
+                            {
+                                parameter.set(value);   
+                                break;
+                            }
+                        case ParamType.Number: 
+                            {
+                                parameter.set(parseInt(value));
+                                break;
+                            }
+                    }
+                }
+                
             }
 
         }catch(Error){
@@ -79,5 +96,6 @@ export class CsvMapperConfig {
     destFieldNameToMatch:string;
     csvFieldNameToMatch:string;
     destFieldNameToSet:string;
+    destFieldNameToSetType:ParamType;
     csvFieldNameToRetrieve:string;
 }
