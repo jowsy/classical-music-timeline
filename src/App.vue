@@ -105,7 +105,7 @@ export default class App extends Vue {
               //Color in timeline using a gradient
               if (parameterDef!=undefined)
                 this.session.colorManager.mapColorsByNumberParameter(parameterDef,
-                                                                     10, 
+                                                                     100, 
                                                                       new WebColor("#e5f5f9"), 
                                                                       new WebColor("#2ca25f"));
               
