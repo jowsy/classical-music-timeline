@@ -37,17 +37,21 @@ export class ColorManager {
 
     mapColorsByNumberParameter(parameterDefinition : ParameterDefinition, steps:number, startColor:IColor, endColor:IColor){
         this.currentParameterDefinition = parameterDefinition;   
-        this.currentColorScheme = this.colorGenColorSchemeName;    
-        this.generateColorScheme(this.colorGenColorSchemeName, steps, startColor, endColor);
+          
+        if (this.generateColorScheme(this.colorGenColorSchemeName, steps, startColor, endColor))
+            this.currentColorScheme = this.colorGenColorSchemeName; 
+            
     }
 
-    generateColorScheme(schemeName: string, steps: number, startColor: IColor, endColor: IColor) {
+    generateColorScheme(schemeName: string, steps: number, startColor: IColor, endColor: IColor) : boolean {
         this.colorGenStepNumber = steps;
         this.colorGenStartColor = startColor;
         this.colorGenEndColor = endColor;
         
         const numbers : number[] = this.session.timeSpans.map(t => t.getParameterByDefinition(this.currentParameterDefinition).asNumber()).filter(n => n!=undefined);
-              
+        
+        if (numbers.length==0) return false;
+
         const max = numbers.reduce(function(prev, current) {
             return (prev > current) ? prev : current
         });
@@ -73,6 +77,7 @@ export class ColorManager {
         }
         this.colorGenMinMax = [min, max];
         this.addColorScheme(this.colorGenColorSchemeName, listOfColors);
+        return true;
     }
     
 

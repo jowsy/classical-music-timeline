@@ -16,14 +16,8 @@ export class CsvMapper implements ITransformer{
     //Directly from example code for papaparse
     defaultConfig = 
     {
-        quotes: false, //or array of booleans
-        quoteChar: '"',
-        escapeChar: '"',
-        delimiter: ";",
-        header: true,
-        newline: "\r\n",
-        skipEmptyLines: false, //other option is 'greedy', meaning skip delimiters, quotes, and whitespace.
-        columns: null //or array of strings
+        delimiter: "",
+        header: true
     };
 
     transform(objects: TimeLineBase[]): void {   
@@ -56,7 +50,7 @@ export class CsvMapper implements ITransformer{
                 }
             }
 
-            const query = result.data.find(item => item[csvFieldNameToMatch] == matchInElement);
+            const query = (result.data as any[]).find(item => item[csvFieldNameToMatch] == matchInElement);
             if (query != undefined){
                 const parameter = element.getParameterByName(destFieldNameToSet);
                 const value = query[csvFieldNameToRetrieve];
