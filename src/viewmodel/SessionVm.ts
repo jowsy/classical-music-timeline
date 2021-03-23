@@ -10,12 +10,15 @@ import { Configuration } from "../core/Configuration";
 import { ColorManager } from "../core/ColorManager";
 import { timeLineExtents } from "./timeLineExtents";
 import { ISessionContext } from "@/core/ISessionContext";
+import { IShapeGenerator } from "@/core/IShapeGenerator";
+import { ShapeGenerator } from "./ShapeGenerator";
 
 export class SessionVm implements ISessionContext {
     private _timeSpans: Array<TimeSpan> = new Array<TimeSpan>();
     public configuration:Configuration = new Configuration();
     public colorManager: ColorManager = new ColorManager();
-    
+    public shapeGenerator: IShapeGenerator = new ShapeGenerator();
+
     minDate : Date;
     maxDate : Date;
     timeExtents : timeLineExtents = new timeLineExtents();
@@ -24,6 +27,7 @@ export class SessionVm implements ISessionContext {
     constructor(){
         this.colorManager.session = this;   
     }
+
     get timeSpans(): Array<TimeSpan> {
         return this._timeSpans;
     }

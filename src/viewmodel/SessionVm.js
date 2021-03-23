@@ -2,11 +2,13 @@ import { TimeSpan } from "../core/TimeSpan";
 import { Configuration } from "../core/Configuration";
 import { ColorManager } from "../core/ColorManager";
 import { timeLineExtents } from "./timeLineExtents";
+import { ShapeGenerator } from "./ShapeGenerator";
 export class SessionVm {
     constructor() {
         this._timeSpans = new Array();
         this.configuration = new Configuration();
         this.colorManager = new ColorManager();
+        this.shapeGenerator = new ShapeGenerator();
         this.timeExtents = new timeLineExtents();
         this.colorManager.session = this;
     }

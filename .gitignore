@@ -54,6 +54,12 @@ src/core/*.d.ts
 src/db/*.js
 src/db/*.js.map
 src/db/*.d.ts
+src/db/OpenOpus/*.js
+src/db/OpenOpus/*.js.map
+src/db/OpenOpus/*.d.ts
+src/viewmodel/*.js
+src/viewmodel/*.js.map
+src/viewmodel/*.d.ts
 public/main.js
 
 
@@ -115,3 +121,9 @@ dist
 
 # TernJS port file
 .tern-port
+src/db/OpenOpus/OpenOpusJsonMapper.js
+src/db/OpenOpus/OpenOpusJsonMapper.js.map
+src/viewmodel/ColorGeneratorImpl.js.map
+src/viewmodel/ShapeGenerator.js
+src/viewmodel/ShapeGenerator.js.map
+src/db/OpenOpus/OpenOpusJsonMapper.js
