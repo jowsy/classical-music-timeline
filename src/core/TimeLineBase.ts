@@ -1,7 +1,7 @@
 import { ISessionContext } from "./ISessionContext";
 import { ParameterDefinition, Parameter } from "./Parameter";
 
-export class TimeLineBase {
+export abstract class TimeLineBase {
 
     session:ISessionContext;
     id: string;
