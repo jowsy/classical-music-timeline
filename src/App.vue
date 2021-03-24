@@ -22,6 +22,8 @@ import {WebColor} from './WebColor';
 import {SessionVm} from './viewmodel/SessionVm'
 import {ParamType } from './core/Parameter';
 import {ColorGeneratorImpl} from './viewmodel/ColorGeneratorImpl';
+import { ShapeGeneratorConfig } from './viewmodel/ShapeGeneratorConfig';
+import { SvgDimensions } from './viewmodel/SvgDimensions';
 
 @Options({
   components: {
@@ -60,8 +62,18 @@ export default class App extends Vue {
                           ];  
 
     newSession.colorManager.addColorScheme("default",colors);
-
     newSession.colorManager.setDefaultColor(new WebColor("#808080"));
+
+    //Setup shape generator, set constants
+    newSession.shapeGenerator.config = new ShapeGeneratorConfig();
+
+    var svgConfig = new SvgDimensions();
+    svgConfig.marginLeft = 20;
+    svgConfig.marginTop = 40;
+    
+    newSession.shapeGenerator.config.svgDimensions = new SvgDimensions();
+
+    
 
     return { session : newSession};
   }

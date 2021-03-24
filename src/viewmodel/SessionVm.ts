@@ -10,14 +10,13 @@ import { Configuration } from "../core/Configuration";
 import { ColorManager } from "../core/ColorManager";
 import { timeLineExtents } from "./timeLineExtents";
 import { ISessionContext } from "@/core/ISessionContext";
-import { IShapeGenerator } from "@/core/IShapeGenerator";
-import { ShapeGenerator } from "./ShapeGenerator";
+import { ShapeGeneratorImpl } from "./ShapeGeneratorImpl";
 
 export class SessionVm implements ISessionContext {
     private _timeSpans: Array<TimeSpan> = new Array<TimeSpan>();
     public configuration:Configuration = new Configuration();
     public colorManager: ColorManager = new ColorManager();
-    public shapeGenerator: IShapeGenerator = new ShapeGenerator();
+    public shapeGenerator: ShapeGeneratorImpl = new ShapeGeneratorImpl();
 
     minDate : Date;
     maxDate : Date;
