@@ -5,8 +5,8 @@ export abstract class TimeLineBase {
 
     session:ISessionContext;
     id: string;
-    visible : boolean;
-    visibilityOverriden : boolean;
+//    visible : boolean;
+//    visibilityOverriden : boolean;
 
     displayCaption : string;
     order : number;

@@ -11,9 +11,12 @@ import { ColorManager } from "../core/ColorManager";
 import { timeLineExtents } from "./timeLineExtents";
 import { ISessionContext } from "@/core/ISessionContext";
 import { ShapeGeneratorImpl } from "./ShapeGeneratorImpl";
+import { Composer } from "@/core/Composer";
+import { Work } from "@/core/Work";
+import { TimeLineGeometry } from "@/core/TimeLineGeometry";
 
 export class SessionVm implements ISessionContext {
-    private _timeSpans: Array<TimeSpan> = new Array<TimeSpan>();
+    private _elements: Array<TimeLineBase> = new Array<TimeLineBase>();
     public configuration:Configuration = new Configuration();
     public colorManager: ColorManager = new ColorManager();
     public shapeGenerator: ShapeGeneratorImpl = new ShapeGeneratorImpl();
@@ -27,26 +30,28 @@ export class SessionVm implements ISessionContext {
         this.colorManager.session = this;   
     }
 
-    get timeSpans(): Array<TimeSpan> {
-        return this._timeSpans;
+    get elements(): Array<TimeLineBase> {
+        return this._elements;
     }
 
-    protected setTimeSpans(value: Array<TimeSpan>) {
-        this._timeSpans.push(...value);
+    get composers() : Array<Composer> {
+        return this._elements.filter(el => el instanceof Composer) as Array<Composer>;
+    }
+
+
+    protected setElements(value: Array<TimeLineBase>) {
+        this._elements.push(...value);
         this.setExtents();
     }
     protected setExtents():void {
    
         var list : Array<Date> = [];
         
-        this.timeSpans
-        .filter(obj => obj.visible == true)
+        this.composers
+        .filter(obj => obj.visible)
         .map(obj => {
-            if (obj instanceof TimeSpan)
-            {
-                list.push((obj as TimeSpan).startDate);
-                list.push((obj as TimeSpan).endDate);
-            }
+                list.push(obj.birth);
+                list.push(obj.death);
         });
 
         list.sort((a: Date, b: Date) => {
@@ -69,10 +74,12 @@ export class SessionVm implements ISessionContext {
 
         if (this.rootFilter!=null){
 
-            this._timeSpans.forEach(tSpan => {
-              var test = this.rootFilter.Apply(tSpan);
-              tSpan.visible = test;
-              tSpan.visibilityOverriden = !test;
+            this._elements.forEach(geometry => {
+              if (geometry instanceof TimeLineGeometry){
+                var test = this.rootFilter.Apply(geometry);
+                geometry.visible = test;
+                geometry.visibilityOverriden = !test;
+              }
             });      
         }   
 
@@ -83,7 +90,7 @@ export class SessionVm implements ISessionContext {
     public PlugIn(dataGateway : IDataGateway) {
         dataGateway.SetSession(this);
         dataGateway.Prepare();
-        this.setTimeSpans(dataGateway.getTimeSpans());
+        this.setElements(dataGateway.getElements());
     }
 
 }

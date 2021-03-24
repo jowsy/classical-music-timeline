@@ -110,7 +110,7 @@ export default class App extends Vue {
           .then(response => response.text())
           .then(csv => {
               const csvTransformer=new CsvMapper(csv, csvMapperConfig);
-              csvTransformer.transform(this.session.timeSpans);
+              csvTransformer.transform(this.session.elements);
               
               const parameterDef = this.session.configuration.getParameterByName(imdbDestParameterName);
 

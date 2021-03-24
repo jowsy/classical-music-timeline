@@ -5,7 +5,7 @@ import { IShapeGenerator } from "./IShapeGenerator";
 import { TimeLineBase } from "./TimeLineBase";
 
 export interface ISessionContext {
-    timeSpans : Array<TimeLineBase>;
+    elements : Array<TimeLineBase>;
     configuration: Configuration;
     colorManager: ColorManager;
     shapeGenerator: IShapeGenerator;

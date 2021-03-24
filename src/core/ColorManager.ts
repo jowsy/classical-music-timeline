@@ -48,7 +48,7 @@ export class ColorManager {
         this.colorGenStartColor = startColor;
         this.colorGenEndColor = endColor;
         
-        const numbers : number[] = this.session.timeSpans.map(t => t.getParameterByDefinition(this.currentParameterDefinition).asNumber()).filter(n => n!=undefined);
+        const numbers : number[] = this.session.elements.map(t => t.getParameterByDefinition(this.currentParameterDefinition).asNumber()).filter(n => n!=undefined);
         
         if (numbers.length==0) return false;
 
@@ -94,7 +94,7 @@ export class ColorManager {
         
         switch(this.currentParameterDefinition.parameterType){
             case ParamType.String:{
-                var parameterGroups = this.groupBy(this.session.timeSpans, 
+                var parameterGroups = this.groupBy(this.session.elements, 
                                             entity => entity.getParameterByDefinition(this.currentParameterDefinition)
                                             .asString());                
                 

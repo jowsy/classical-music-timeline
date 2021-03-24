@@ -58,9 +58,9 @@ export default class TimeLine extends Vue {
     //We don't want the array to mutate because it will retrigger redraw and up in maximum recursive update
     //So first clone TimeSpans
     const sorted = [...this.session
-                .timeSpans].sort((a, b) => {
-                    return a.startDate > b.startDate ? 1 : -1;})
-                       .filter(tSpan => tSpan.startDate.getFullYear()>=minDate.getFullYear() && tSpan.endDate.getFullYear()<=maxDate.getFullYear());
+                .composers].sort((a, b) => {
+                    return a.birth > b.birth ? 1 : -1;})
+                       .filter(tSpan => tSpan.birth.getFullYear()>=minDate.getFullYear() && tSpan.death.getFullYear()<=maxDate.getFullYear());
 
 
 
@@ -134,7 +134,7 @@ export default class TimeLine extends Vue {
         .enter()
         .append("g")
         .attr("transform", function (d, i) {
-            return "translate("+scale(new Date(d.startDate))+"," + ((i * barHeight) + timeLineObjectPaddingTop) +")";
+            return "translate("+scale(new Date(d.birth))+"," + ((i * barHeight) + timeLineObjectPaddingTop) +")";
         });
 
     const barHeightWithMargin = barHeight*0.9;
@@ -143,7 +143,7 @@ export default class TimeLine extends Vue {
     const rectangles = g
         .append("rect")
         .attr("width", function (d)  {
-            return scale(d.endDate)-scale(d.startDate);
+            return scale(d.death)-scale(d.birth);
         })
         .attr("height",barHeightWithMargin)
         .attr("fill", function (c) { 
@@ -162,7 +162,7 @@ export default class TimeLine extends Vue {
             } )
         .style("font", function (d)  {
 
-            return Math.max((scale(new Date(d.startDate)) - scale(new Date(d.endDate)))/d.displayCaption.length,barHeightWithMargin)+"px times";
+            return Math.max((scale(new Date(d.birth)) - scale(new Date(d.death)))/d.displayCaption.length,barHeightWithMargin)+"px times";
         });
 
     const axis = gMain.append("g")

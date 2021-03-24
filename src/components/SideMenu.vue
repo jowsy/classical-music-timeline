@@ -11,7 +11,7 @@
                 <div class="collapse multi-collapse" id="composerList">
                     <div class="card card-body">
                         <ul class="list-group vertical-scroll">
-                                <li class="list-group-item" v-for="object in sortedTimeSpans()" :key="object.id">
+                                <li class="list-group-item" v-for="object in sortedComposers()" :key="object.id">
                                     <input type="checkbox" class="form-check-input" v-model="object.visible" v-bind:disabled="object.visibilityOverriden"> {{ object.displayCaption }}
                             </li>
                         </ul>
@@ -84,8 +84,8 @@ export default class SideMenu extends Vue {
     minValue:number;
     maxValue:number;
 
-sortedTimeSpans(){
-  return [...this.session.timeSpans].sort((a, b) => (a.displayCaption > b.displayCaption) ? 1 : -1);
+sortedComposers(){
+  return [...this.session.composers].sort((a, b) => (a.displayCaption > b.displayCaption) ? 1 : -1);
 }
    //We don't want all parameters to be filterable in the UI
 getFilterableParameterDefinitions() {
@@ -97,8 +97,8 @@ getFilterableParameterDefinitions() {
 
 groupByParameter(definition: ParameterDefinition) : Array<string>{
      
-let groups : Record<string,TimeLineBase[]> = [...this.session.timeSpans]
-                                                .sort((a, b) => { return a.startDate > b.startDate ? 1 : -1;})
+let groups : Record<string,TimeLineBase[]> = [...this.session.composers]
+                                                .sort((a, b) => { return a.birth > b.birth ? 1 : -1;})
                                                 .groupBy(tSpan => tSpan.getParameterByDefinition(definition).asString());
 return Object.keys(groups);
 }
