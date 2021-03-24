@@ -1,9 +1,5 @@
 import { TimeLineBase } from "../core/TimeLineBase";
 import { IDataGateway } from "../core/IDataGateway";
-import { TimeSpan } from "../core/TimeSpan";
-import { Event } from "../core/Event";
-import { ParameterDefinition, ParamType } from "../core/Parameter";
-import { Guid } from "../core/Guid";
 import { IFilter } from "../core/IFilter";
 import { AndFilter } from "../core/AndFilterTest";
 import { Configuration } from "../core/Configuration";
@@ -12,7 +8,6 @@ import { timeLineExtents } from "./timeLineExtents";
 import { ISessionContext } from "@/core/ISessionContext";
 import { ShapeGeneratorImpl } from "./ShapeGeneratorImpl";
 import { Composer } from "@/core/Composer";
-import { Work } from "@/core/Work";
 import { TimeLineGeometry } from "@/core/TimeLineGeometry";
 
 export class SessionVm implements ISessionContext {
