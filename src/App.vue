@@ -2,10 +2,10 @@
     <div class="container-fluid">       
         <div class="row">
            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-             <SideMenu :session="session"/> 
+             <SideMenu :session="session" @callUpdateTimeLineInParent="updateTimeLine"/> 
            </nav>
           <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <TimeLine :session="session"/>          
+            <TimeLine :session="session" ref="timeline"/>          
           </main>
         </div>
     </div>
@@ -34,6 +34,11 @@ import { SvgDimensions } from './viewmodel/SvgDimensions';
 export default class App extends Vue {
 
   session:SessionVm;
+
+  updateTimeLine(){
+     console.log("Update timeline component");  
+    (this.$refs as any).timeline.redraw();
+  }
 
   data() {
     
@@ -122,6 +127,7 @@ export default class App extends Vue {
                                                                       new WebColor("#2ca25f"));
               
               this.session.Refresh();
+              this.updateTimeLine();
             });
         });
 

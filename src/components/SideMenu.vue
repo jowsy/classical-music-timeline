@@ -12,7 +12,7 @@
                     <div class="card card-body">
                         <ul class="list-group vertical-scroll">
                                 <li class="list-group-item" v-for="object in sortedComposers()" :key="object.id">
-                                    <input type="checkbox" class="form-check-input" v-model="object.visible" v-bind:disabled="object.visibilityOverriden"> {{ object.displayCaption }}
+                                    <input type="checkbox" class="form-check-input" @change="redrawTimeLine" v-model="object.visible" v-bind:disabled="object.visibilityOverriden"> {{ object.displayCaption }}
                             </li>
                         </ul>
                     </div>
@@ -25,7 +25,8 @@
                     :tooltip="'none'"
                     v-bind:min="session.timeExtents.min"
                     v-bind:max="session.timeExtents.max" 
-                    v-model="session.timeExtents.value" />
+                    v-model="session.timeExtents.value"
+                    @change="redrawTimeLine" />
                   </div>
             </li>
         </ul>
@@ -74,7 +75,8 @@ import 'vue-slider-component/theme/antd.css'
   },
   components: {
     VueSlider
-  }
+  },
+  emits:["callUpdateTimeLineInParent"]
 })
 export default class SideMenu extends Vue {
 
@@ -127,8 +129,11 @@ applyParameterFilter(checkBoxCtrl:any, ParameterDefinitionId:string, paramName:s
     
     //console.log("Count in OrFilter: "+filter.getCount());
     this.session.Refresh();
+    this.redrawTimeLine();
 }
-
+redrawTimeLine(){
+    this.$emit("callUpdateTimeLineInParent");
+}
 activateFilter(checkBoxCtrl:any, parameterDefId:string){
 
     var checked= checkBoxCtrl.target.checked;
@@ -150,6 +155,7 @@ activateFilter(checkBoxCtrl:any, parameterDefId:string){
     }
     //var checked= checkBoxCtrl.target.checked;
     this.session.Refresh();
+    this.redrawTimeLine();
 }
     
 }
