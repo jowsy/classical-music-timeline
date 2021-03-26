@@ -12,6 +12,8 @@ import * as d3 from 'd3';
 import { WebColor } from '@/WebColor';
 // eslint-disable-next-line no-unused-vars
 import { IColor } from '@/core/IColor';
+import { SvgDimensions } from '@/viewmodel/SvgDimensions';
+import { TimeLineRectangle } from '@/core/TimeLineShapes';
 
 //------------- PUT THIS INTO A CONFIGURATION -------------------------
 let tickTimeInterval : number = 10; //in year
@@ -38,51 +40,25 @@ export default class TimeLine extends Vue {
         });
 
     }*/
-    
+
     redraw(){
 
+    this.session.regenerate(); //generate shapes
+    const config = this.session.shapeGenerator.config;
+    const maxDate = config.maxDate;
+    const minDate = config.minDate;
+    const computedWidth = this.session.shapeGenerator.svgCanvasWidth;
+    const computedHeight = this.session.shapeGenerator.svgCanvasHeight;
+    const gridHeight = computedHeight-config.svgDimensions.topAxisHeight;
 
- //Define svg dimensions
- class SvgDimensions {
-        marginLeft: number;
-        marginRight: number;
-        marginBottom: number;
-        marginTop: number;       
-        width: number;
-        height: number;
-    }
-    const svgDimensions = new SvgDimensions();
-    const minDate = this.session.timeExtents.getSelectedMinDate();
-    const maxDate =  this.session.timeExtents.getSelectedMaxDate();
-        
-
-    //We don't want the array to mutate because it will retrigger redraw and up in maximum recursive update
-    //So first clone TimeSpans
-    const sorted = [...this.session
+    //Filter
+    const sortedRects = [...this.session
                 .composers].sort((a, b) => {
                     return a.birth > b.birth ? 1 : -1;})
-                       .filter(tSpan => tSpan.birth.getFullYear()>=minDate.getFullYear() && tSpan.death.getFullYear()<=maxDate.getFullYear());
+                       .filter(c =>
+                       c.shape instanceof TimeLineRectangle &&
+                       c.isInsideTimeSpan(minDate.getFullYear(), maxDate.getFullYear()));
 
-
-
-    svgDimensions.marginLeft = 20;
-    svgDimensions.marginTop = 40;
-
-    //Calculate svg width & height based on screen size
-    const sideMenuHeight = document.getElementById("sidebarMenu")?.clientHeight;
-    const sideMenuWidth = document.getElementById("sidebarMenu")?.clientWidth;
-    const topMenuWidth = document.getElementById("topMenu")?.offsetWidth;
-    const componentHeight =(sideMenuHeight || 0.0)-50;//-(topMenuHeight || 0.0); 
-    const timeLineObjectPaddingTop=50;
-    const maxBarHeight = 70;
-    const barHeight = Math.min((componentHeight-timeLineObjectPaddingTop)/(sorted.length),maxBarHeight);
-
-
-    const componentWidth = (topMenuWidth || 0.0) - (sideMenuWidth || 0.0) - svgDimensions.marginLeft - 60;// - (sideBarWidth || 0.0) - svgRect.left - svgRect.right;
-
-
-    svgDimensions.width = componentWidth;
-    svgDimensions.height = componentHeight;
 
     //if redraw, remove old canvas
     d3.select("#canvas").select("svg").remove();
@@ -92,29 +68,30 @@ export default class TimeLine extends Vue {
     //Reference: https://stackoverflow.com/questions/66059904/type-errors-for-d3js-in-angular-latest
     const gMain = d3.select<SVGSVGElement, unknown>("#canvas")
         .append("svg")
-        .attr("width", svgDimensions.width)
-        .attr("height", svgDimensions.height)
+        .attr("width", computedWidth)
+        .attr("height", computedHeight)
         .append("g");
+
 
     //Only show graphics inside a specified rectangle
     var clip = gMain.append("defs").append("SVG:clipPath")
     .attr("id", "clip")
     .append("SVG:rect")
-    .attr("width", svgDimensions.width)
-    .attr("height", svgDimensions.height - timeLineObjectPaddingTop)
+    .attr("width", computedWidth)
+    .attr("height", gridHeight)
     .attr("x", 0)
-    .attr("y", timeLineObjectPaddingTop);
+    .attr("y", config.svgDimensions.topAxisHeight);
 
     var clipPath = gMain.append('g')
     .attr("clip-path", "url(#clip)")
 
     var canvas = clipPath.append('g');
+
     //Define time scale
     const scale = d3.scaleTime()
     .domain(
-        [minDate, 
-        maxDate])
-        .range([0, svgDimensions.width]);
+        [minDate, maxDate])
+        .range([0, computedWidth]);
 
     let dateInterval = d3.timeYear.every(tickTimeInterval);
     let xAxis = d3.axisTop(scale).ticks(dateInterval); //Date ticks
@@ -125,28 +102,26 @@ export default class TimeLine extends Vue {
         .attr("id","zoomRect")
         .attr("x", 0)
         .attr("y",  0)
-        .attr("width", svgDimensions.width)
-        .attr("height", svgDimensions.height)
+        .attr("width", computedWidth)
+        .attr("height", gridHeight)
         .style("fill", "transparent")
 
     //Create svg groups where we can put rectangle and texts
     var g = canvas.selectAll("rect")
-        .data(sorted.filter(ts => ts.visible==true))
+        .data(sortedRects.filter(ts => ts.visible==true))
         .enter()
         .append("g")
         .attr("transform", function (d, i) {
-            return "translate("+scale(new Date(d.birth))+"," + ((i * barHeight) + timeLineObjectPaddingTop) +")";
+            return "translate("+d.shape.x+"," + d.shape.y +")";
         });
 
-    const barHeightWithMargin = barHeight*0.9;
+    //const barHeightWithMargin = barHeight*0.9;
 
     //Create rectangles inside groups
     const rectangles = g
         .append("rect")
-        .attr("width", function (d)  {
-            return scale(d.death)-scale(d.birth);
-        })
-        .attr("height",barHeightWithMargin)
+        .attr("width", d => (d.shape as TimeLineRectangle).width)
+        .attr("height",d => (d.shape as TimeLineRectangle).height)
         .attr("fill", function (c) { 
         var color = c.session.colorManager.getColor(c) as WebColor;
         if (color == null) return "gray";
@@ -163,26 +138,28 @@ export default class TimeLine extends Vue {
             } )
         .style("font", function (d)  {
 
-            return Math.max((scale(new Date(d.birth)) - scale(new Date(d.death)))/d.displayCaption.length,barHeightWithMargin)+"px times";
+            return Math.max((scale(new Date(d.birth)) - scale(new Date(d.death)))/d.displayCaption.length,
+                    (d.shape as TimeLineRectangle).height)+"px times";
         });
 
     const axis = gMain.append("g")
         .attr("class", "grid")
-        .attr("transform", "translate("+ 0+","+ timeLineObjectPaddingTop + ")")
+        .attr("transform", "translate("+ 0+","+ config.svgDimensions.topAxisHeight + ")")
         .call(xAxis);
+   
     
     const verticalAxis = gMain.append("g")
         .attr("class", "verticalgrid")
-        .attr("transform", "translate(" + 0+ "," + (componentHeight + timeLineObjectPaddingTop) + ")")
-        .call(xAxis.tickSize(componentHeight).tickFormat(() => ""))
+        .attr("transform", "translate(" + 0+ "," + gridHeight + ")")
+        .call(xAxis.tickSize(computedHeight).tickFormat(() => ""))
         .lower();
 
     const zoom = d3.zoom<SVGSVGElement, unknown>();
     const zoomRect = d3.select<SVGSVGElement, unknown>("#zoomRect").call(zoom);
 
-    zoom.extent([[0, 0], [svgDimensions.width, svgDimensions.height]])
+    zoom.extent([[0, 0], [ computedWidth, computedHeight]])
     .scaleExtent([1, 10])
-    .translateExtent([[0, 0], [svgDimensions.width, svgDimensions.height]])
+    .translateExtent([[0, 0], [computedWidth, computedHeight]])
     .on('zoom', updateChart);
 
     
@@ -194,12 +171,9 @@ export default class TimeLine extends Vue {
             canvas.attr("transform", event.transform);      
 
             axis.call(d3.axisTop(xNewScale).ticks(dateInterval));
-            verticalAxis.call(d3.axisTop(xNewScale).tickSize(componentHeight).ticks(dateInterval).tickFormat(() => ""));
+            verticalAxis.call(d3.axisTop(xNewScale).tickSize(gridHeight).ticks(dateInterval).tickFormat(() => ""));
         }
 
-         window.addEventListener('resize', () => {
-               //   this.redraw();                 
-         });
 
     }  
 

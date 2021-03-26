@@ -1,6 +1,7 @@
 export class TimeLineShape {
     x:number;
     y:number;
+    kind:string="";
 }
 
 export class TimeLinePoint extends TimeLineShape{
@@ -10,4 +11,5 @@ export class TimeLinePoint extends TimeLineShape{
 export class TimeLineRectangle extends TimeLineShape {
     kind:string="rectangle";
     width:number;
+    height:number;
 }

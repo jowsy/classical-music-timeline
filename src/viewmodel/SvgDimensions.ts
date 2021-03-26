@@ -1,8 +1,7 @@
  export class SvgDimensions {
-        marginLeft: number;
-        marginRight: number;
-        marginBottom: number;
-        marginTop: number;       
-        width: number;
-        height: number;
+        marginLeft: number = 0;
+        marginRight: number = 0;
+        marginBottom: number = 0;
+        marginTop: number = 0;       
+        topAxisHeight:number = 50;
     }

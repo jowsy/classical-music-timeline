@@ -23,6 +23,7 @@ export class SessionVm implements ISessionContext {
  
     constructor(){
         this.colorManager.session = this;   
+        this.shapeGenerator.session = this;
     }
 
     get elements(): Array<TimeLineBase> {
@@ -63,6 +64,9 @@ export class SessionVm implements ISessionContext {
         this.timeExtents.value =  [minYear,maxYear];
         this.timeExtents.min = minYear;
         this.timeExtents.max = maxYear;
+
+        this.shapeGenerator.config.minDate = this.minDate;
+        this.shapeGenerator.config.maxDate = this.maxDate;
     }
 
     public Refresh(){
@@ -79,13 +83,17 @@ export class SessionVm implements ISessionContext {
         }   
 
         this.colorManager.refresh();
- 
     }
 
     public PlugIn(dataGateway : IDataGateway) {
         dataGateway.SetSession(this);
         dataGateway.Prepare();
         this.setElements(dataGateway.getElements());
+    }
+
+    public regenerate(){
+        if (this.shapeGenerator!=null)
+            this.shapeGenerator.generateShapes();
     }
 
 }
