@@ -7,7 +7,7 @@ export class Composer extends Person {
     isInsideTimeSpan(startYear:number, endYear:number){
         const checkBirth = this.birth.getFullYear()>=startYear;
         var death = this.death;
-        if (death==null) death = new Date();
+        if (death==null || death==undefined) death = new Date();
         return checkBirth && death.getFullYear()<=endYear;
     }
 }

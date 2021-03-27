@@ -58,7 +58,8 @@ export class OpenOpusJsonMapper implements IDataGateway {
             composer.displayCaption = openOpusComposer.complete_name; //REMOVE LATER
 
             composer.birth = new Date(openOpusComposer.birth);
-            composer.death = new Date(openOpusComposer.death);
+            if (openOpusComposer.death!=null)
+                composer.death = new Date(openOpusComposer.death);
             composer.visible = true; //Show by default
 
             composer.session = this.session;

@@ -15,12 +15,6 @@ import { IColor } from '@/core/IColor';
 import { SvgDimensions } from '@/viewmodel/SvgDimensions';
 import { TimeLineRectangle } from '@/core/TimeLineShapes';
 
-//------------- PUT THIS INTO A CONFIGURATION -------------------------
-let tickTimeInterval : number = 10; //in year
-var pixelPerYear = 5;
-var verticalGridPaddingTop = 20;
-//----------------------------------------------------------------
-
 @Options({
       props: {
     session: SessionVm
@@ -93,7 +87,7 @@ export default class TimeLine extends Vue {
         [minDate, maxDate])
         .range([0, computedWidth]);
 
-    let dateInterval = d3.timeYear.every(tickTimeInterval);
+    let dateInterval = d3.timeYear.every(config.tickTimeInterval);
     let xAxis = d3.axisTop(scale).ticks(dateInterval); //Date ticks
   
     //This rectangle exists as a zooming area
@@ -101,7 +95,7 @@ export default class TimeLine extends Vue {
         .append("rect")
         .attr("id","zoomRect")
         .attr("x", 0)
-        .attr("y",  0)
+        .attr("y",  config.svgDimensions.topAxisHeight)
         .attr("width", computedWidth)
         .attr("height", gridHeight)
         .style("fill", "transparent")
@@ -138,8 +132,7 @@ export default class TimeLine extends Vue {
             } )
         .style("font", function (d)  {
 
-            return Math.max((scale(new Date(d.birth)) - scale(new Date(d.death)))/d.displayCaption.length,
-                    (d.shape as TimeLineRectangle).height)+"px times";
+            return Math.min((d.shape as TimeLineRectangle).width/d.displayCaption.length,(d.shape as TimeLineRectangle).height)+"px times";
         });
 
     const axis = gMain.append("g")
@@ -150,8 +143,8 @@ export default class TimeLine extends Vue {
     
     const verticalAxis = gMain.append("g")
         .attr("class", "verticalgrid")
-        .attr("transform", "translate(" + 0+ "," + gridHeight + ")")
-        .call(xAxis.tickSize(computedHeight).tickFormat(() => ""))
+        .attr("transform", "translate(" + 0+ "," + computedHeight + ")")
+        .call(xAxis.tickSize(gridHeight).tickFormat(() => ""))
         .lower();
 
     const zoom = d3.zoom<SVGSVGElement, unknown>();

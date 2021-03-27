@@ -47,7 +47,7 @@ export class SessionVm implements ISessionContext {
         .filter(obj => obj.visible)
         .map(obj => {
                 list.push(obj.birth);
-                list.push(obj.death);
+                list.push(obj.death == undefined ? new Date() : obj.death);
         });
 
         list.sort((a: Date, b: Date) => {

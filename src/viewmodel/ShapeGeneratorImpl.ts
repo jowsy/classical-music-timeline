@@ -33,7 +33,7 @@ export class ShapeGeneratorImpl implements IShapeGenerator {
     }
 
     public get drawingAreaHeight(){
-        return this.svgCanvasHeight - this.config.svgDimensions.topAxisHeight;
+        return this.svgCanvasHeight - this.config.svgDimensions.topAxisHeight - this.config.svgDimensions.marginBottom - this.config.svgDimensions.marginTop;
     }
 
     private GetMaximumBarHeight(length:number){
@@ -58,7 +58,6 @@ export class ShapeGeneratorImpl implements IShapeGenerator {
 
                     var sortComposerList = [...composers].sort((a, b) => {
                         return a.birth > b.birth ? 1 : -1;});
-
                      
                     for (let index = 0; index < sortComposerList.length; index++) {
                         const element = sortComposerList[index];
@@ -72,14 +71,6 @@ export class ShapeGeneratorImpl implements IShapeGenerator {
                 //IMPLEMENT!!    
                 break;
         }
-       
-       
-       
-      
-
-       
-        
-
         
     }
 
@@ -87,8 +78,10 @@ export class ShapeGeneratorImpl implements IShapeGenerator {
         const rectangle = new TimeLineRectangle();
         rectangle.x = scale(composer.birth);
         rectangle.y = ((index * rectangleHeight) + this.config.svgDimensions.topAxisHeight);
-        if (composer.death==undefined) composer.death = new Date();
-        rectangle.width = scale(composer.death)-scale(composer.birth);
+        var endDate = composer.death;
+        if (endDate==undefined)
+            endDate = new Date();  
+        rectangle.width = scale(endDate)-scale(composer.birth);
         rectangle.height = rectangleHeight;
         composer.shape = rectangle;
     }
