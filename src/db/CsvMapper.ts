@@ -41,7 +41,7 @@ export class CsvMapper implements ITransformer{
                     matchInElement = element.displayCaption;
                     break;}
                 case "id":{
-                    matchInElement = element.id;
+                    matchInElement = element.internalId.toString();
                     break;}
                 default:{
                     const parameter = element.getParameterByName(destFieldNameToMatch);

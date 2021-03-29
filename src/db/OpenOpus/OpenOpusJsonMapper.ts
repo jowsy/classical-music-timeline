@@ -48,13 +48,10 @@ export class OpenOpusJsonMapper implements IDataGateway {
         rootObject.composers.forEach(c =>{ 
             let openOpusComposer : ComposerImpl = Object.assign(new ComposerImpl(), c);
             let composer = new Composer();
-            composer.id = openOpusComposer.id;
-            
-            if (composer.id==""){
-                composer.id=id.toString();
-                id++;
-            } 
 
+            composer.internalId=id;
+            id++;
+        
             composer.displayCaption = openOpusComposer.complete_name; //REMOVE LATER
 
             composer.birth = new Date(openOpusComposer.birth);

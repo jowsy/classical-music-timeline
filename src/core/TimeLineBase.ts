@@ -4,7 +4,7 @@ import { ParameterDefinition, Parameter } from "./Parameter";
 export abstract class TimeLineBase {
 
     session:ISessionContext;
-    id: string;
+    internalId: number;
 //    visible : boolean;
 //    visibilityOverriden : boolean;
 

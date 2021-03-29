@@ -47,31 +47,81 @@ export class ShapeGeneratorImpl implements IShapeGenerator {
 
     generateShapes(): void {
         const scale = this.createScale();
-
-        switch (this.config.layoutType) {
-            case LayoutType.StackVertically:
-                var composers = this.session.composers;
-                if (composers.length > 0){
-                    const barHeight = this.GetMaximumBarHeight(composers.length);
-                    let dateInterval = d3.timeYear.every(this.config.tickTimeInterval);
-                    let xAxis = d3.axisTop(scale).ticks(dateInterval); //Date ticks
-
-                    var sortComposerList = [...composers].sort((a, b) => {
-                        return a.birth > b.birth ? 1 : -1;});
-                     
-                    for (let index = 0; index < sortComposerList.length; index++) {
-                        const element = sortComposerList[index];
-                        if (element instanceof Composer){
-                            this.createComposerShape(element as Composer, index, scale, barHeight);
-                        }
-                    }
-                }
-                break;
-            case LayoutType.Optimize:
-                //IMPLEMENT!!    
-                break;
-        }
+        let dateInterval = d3.timeYear.every(this.config.tickTimeInterval);
+        let xAxis = d3.axisTop(scale).ticks(dateInterval); //Date ticks
         
+     
+        var composers = this.session.composers;
+        const barHeight = this.GetMaximumBarHeight(composers.length);
+        var sortComposerList = [...composers].sort((a, b) => {
+            return a.birth > b.birth ? 1 : -1;});
+         
+        if (composers.length > 0){
+            switch (this.config.layoutType) {
+                case LayoutType.StackVertically:
+                    {
+                        for (let index = 0; index < sortComposerList.length; index++) {
+                            const element = sortComposerList[index];
+                            if (element instanceof Composer){
+                                this.createComposerShape(element as Composer, index, scale, barHeight);
+                            }
+                        }
+                    
+                    break;
+                    }
+                case LayoutType.Optimize:{
+                    //IMPLEMENT!!   
+
+                    let composerIdShapeCreated : number[] = [];
+                    
+                    this.recursiveCreateShape(sortComposerList, 0, 1, composerIdShapeCreated, scale, barHeight);
+
+                }
+            }
+        }
+    }
+        
+    private recursiveCreateShape(list:Composer[],
+                                currentIndex:number, 
+                                yRow:number,
+                                takenIndexes: number[], 
+                                scale:d3.ScaleTime<number,number,never>, 
+                                rectangleHeight:number){
+    
+        var composer = list[currentIndex];
+        const rectangle = new TimeLineRectangle();
+        rectangle.x = scale(composer.birth);
+        rectangle.y = ((yRow * rectangleHeight) + this.config.svgDimensions.topAxisHeight);
+        var endDate = composer.death;
+        if (endDate==undefined)
+            endDate = new Date();  
+        rectangle.width = scale(endDate)-scale(composer.birth);
+        rectangle.height = rectangleHeight;
+        composer.shape = rectangle;
+        takenIndexes.push(list.indexOf(composer));
+        takenIndexes.sort((a, b) => {
+            return a > b ? 1 : -1;});
+        //Get composer next to current
+        var query = list.filter(c => takenIndexes.findIndex(indx => indx==list.indexOf(c))==-1)
+                        .filter(c => scale(c.birth)>composer.shape.x+rectangle.width);
+        
+        if (query.length!=0){
+        const nextIndex = list.indexOf(query[0]);
+        this.recursiveCreateShape(list, nextIndex, yRow, takenIndexes, scale, rectangleHeight);
+        }else{
+            if (takenIndexes.length!=list.length){
+                yRow++;
+                var nextIndex = 0;
+                for (let index = 0; index < takenIndexes.length; index++) {
+                    if (takenIndexes[index]!=index){
+                        nextIndex = index;
+                        break;
+                    }
+                    
+                }
+                this.recursiveCreateShape(list, nextIndex, yRow, takenIndexes, scale, rectangleHeight);
+            }
+        }
     }
 
     private createComposerShape(composer:Composer, index:number, scale:d3.ScaleTime<number,number,never>, rectangleHeight:number){

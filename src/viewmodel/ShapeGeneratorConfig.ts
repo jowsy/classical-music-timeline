@@ -6,7 +6,7 @@ export class ShapeGeneratorConfig {
     svgDimensions:SvgDimensions;
     tickTimeInterval : number = 10; //years
     horizontalBarHeight: number;
-    layoutType:LayoutType = LayoutType.StackVertically;
+    layoutType:LayoutType = LayoutType.Optimize;
 }
 
 export enum LayoutType {

@@ -15,7 +15,7 @@ export class ColorManager {
     private colorSchemes:Map<string,Array<IColor>> = new Map<string,Array<IColor>>();
 
     private parameterGroupValues : Array<string>;
-    private mapTable : Map<string,number>;
+    private mapTable : Map<number,number>;
     private defaultColor : IColor;
 
     //Number parameters use generated color scheme
@@ -100,14 +100,14 @@ export class ColorManager {
                 
                 this.parameterGroupValues = Object.keys(parameterGroups);
                 
-                this.mapTable = new Map<string,number>();
+                this.mapTable = new Map<number,number>();
 
                 for (let index = 0; index < this.parameterGroupValues.length; index++) {
                     const element = this.parameterGroupValues[index];
                     for (let index2 = 0; index2 <  parameterGroups[element].length; index2++) {
                         const p = parameterGroups[element][index2];
-                        if (p.id == "") throw Error("Element must have ID assigned!");
-                        this.mapTable.set(p.id, index);                
+                        if (p.internalId == undefined) throw Error("Element must have ID assigned!");
+                        this.mapTable.set(p.internalId, index);                
                     }
                 }
                 break;
@@ -131,7 +131,7 @@ export class ColorManager {
 
         switch(this.currentParameterDefinition.parameterType){
             case ParamType.String:{         
-                var index = this.mapTable.get(element.id)
+                var index = this.mapTable.get(element.internalId)
 
                 if (index==null ||colors.length<index)
                     return this.defaultColor;
