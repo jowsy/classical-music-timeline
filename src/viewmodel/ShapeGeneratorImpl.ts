@@ -70,10 +70,7 @@ export class ShapeGeneratorImpl implements IShapeGenerator {
                     break;
                     }
                 case LayoutType.Optimize:{
-                    //IMPLEMENT!!   
-
-                    let composerIdShapeCreated : number[] = [];
-                    
+                    let composerIdShapeCreated : number[] = [];                
                     this.recursiveCreateShape(sortComposerList, 0, 1, composerIdShapeCreated, scale, barHeight);
 
                 }
@@ -96,7 +93,7 @@ export class ShapeGeneratorImpl implements IShapeGenerator {
         if (endDate==undefined)
             endDate = new Date();  
         rectangle.width = scale(endDate)-scale(composer.birth);
-        rectangle.height = rectangleHeight;
+        rectangle.height = rectangleHeight*(1-this.config.rectangleMargin);
         composer.shape = rectangle;
         takenIndexes.push(list.indexOf(composer));
         takenIndexes.sort((a, b) => {

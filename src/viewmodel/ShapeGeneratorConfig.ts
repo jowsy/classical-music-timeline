@@ -7,6 +7,7 @@ export class ShapeGeneratorConfig {
     tickTimeInterval : number = 10; //years
     horizontalBarHeight: number;
     layoutType:LayoutType = LayoutType.Optimize;
+    rectangleMargin:number = 0.1; //Percent
 }
 
 export enum LayoutType {

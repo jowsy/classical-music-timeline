@@ -14,6 +14,7 @@ import { WebColor } from '@/WebColor';
 import { IColor } from '@/core/IColor';
 import { SvgDimensions } from '@/viewmodel/SvgDimensions';
 import { TimeLineRectangle } from '@/core/TimeLineShapes';
+import { ZoomBehavior } from 'd3';
 
 @Options({
       props: {
@@ -36,9 +37,12 @@ export default class TimeLine extends Vue {
     }*/
 
     redraw(){
-
-    this.session.regenerate(); //generate shapes
     const config = this.session.shapeGenerator.config;
+    //config.minDate = this.session.timeExtents.getSelectedMinDate();
+    //config.maxDate = this.session.timeExtents.getSelectedMaxDate();
+
+    //this.session.regenerate(); //generate shapes
+ 
     const maxDate = config.maxDate;
     const minDate = config.minDate;
     const computedWidth = this.session.shapeGenerator.svgCanvasWidth;
@@ -51,8 +55,18 @@ export default class TimeLine extends Vue {
                     return a.birth > b.birth ? 1 : -1;})
                        .filter(c =>
                        c.shape instanceof TimeLineRectangle &&
-                       c.isInsideTimeSpan(minDate.getFullYear(), maxDate.getFullYear()));
+                       c.isInsideTimeSpan(this.session.timeExtents.getSelectedMinDate().getFullYear(), 
+                       this.session.timeExtents.getSelectedMaxDate().getFullYear()));
 
+
+    //Preserve zoom
+
+    var oldZoomRect = d3.select<SVGSVGElement, unknown>("#zoomRect");
+    var prevZoomTransform;
+    var nodeElement = oldZoomRect.node();
+    if (nodeElement!=null){
+        prevZoomTransform= d3.zoomTransform(nodeElement);
+    }
 
     //if redraw, remove old canvas
     d3.select("#canvas").select("svg").remove();
@@ -147,25 +161,28 @@ export default class TimeLine extends Vue {
         .call(xAxis.tickSize(gridHeight).tickFormat(() => ""))
         .lower();
 
-    const zoom = d3.zoom<SVGSVGElement, unknown>();
-    const zoomRect = d3.select<SVGSVGElement, unknown>("#zoomRect").call(zoom);
 
+    var zoom = d3.zoom<SVGSVGElement, unknown>();
     zoom.extent([[0, 0], [ computedWidth, computedHeight]])
     .scaleExtent([1, 10])
     .translateExtent([[0, 0], [computedWidth, computedHeight]])
     .on('zoom', updateChart);
 
+    const zoomRect = d3.select<SVGSVGElement, unknown>("#zoomRect").call(zoom);
     
-        /*eslint no-unused-vars: 0 */    
-        function updateChart(event:any, d:any) {
+    if (prevZoomTransform!=null)
+        zoomRect.call(zoom.transform, prevZoomTransform);
 
-            var xNewScale = event.transform.rescaleX(scale);
+    /*eslint no-unused-vars: 0 */    
+    function updateChart(event:any, d:any) {
 
-            canvas.attr("transform", event.transform);      
+        var xNewScale = event.transform.rescaleX(scale);
+        
+        canvas.attr("transform", event.transform);      
 
-            axis.call(d3.axisTop(xNewScale).ticks(dateInterval));
-            verticalAxis.call(d3.axisTop(xNewScale).tickSize(gridHeight).ticks(dateInterval).tickFormat(() => ""));
-        }
+        axis.call(d3.axisTop(xNewScale).ticks(dateInterval));
+        verticalAxis.call(d3.axisTop(xNewScale).tickSize(gridHeight).ticks(dateInterval).tickFormat(() => ""));
+    }
 
 
     }  

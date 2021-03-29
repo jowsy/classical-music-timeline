@@ -117,15 +117,16 @@ export default class App extends Vue {
               const csvTransformer=new CsvMapper(csv, csvMapperConfig);
               csvTransformer.transform(this.session.elements);
               
-              const parameterDef = this.session.configuration.getParameterByName(imdbDestParameterName);
+             // const parameterDef = this.session.configuration.getParameterByName(imdbDestParameterName);
 
               //Color in timeline using a gradient
-              if (parameterDef!=undefined)
+            /* if (parameterDef!=undefined)
                 this.session.colorManager.mapColorsByNumberParameter(parameterDef,
                                                                      100, 
                                                                       new WebColor("#e5f5f9"), 
-                                                                      new WebColor("#2ca25f"));
+                                                                      new WebColor("#2ca25f"));*/
               
+              this.session.regenerate(); //generate geometry
               this.session.Refresh();
               this.updateTimeLine();
             });
