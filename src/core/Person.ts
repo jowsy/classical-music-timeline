@@ -6,4 +6,7 @@ export class Person extends TimeLineGeometry {
     birthPlace:string;
     deathPlace:string;
     fullName:string;
+    get displayCaption() : string{
+        return this.fullName;
+    }
 }

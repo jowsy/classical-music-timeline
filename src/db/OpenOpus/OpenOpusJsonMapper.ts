@@ -52,7 +52,7 @@ export class OpenOpusJsonMapper implements IDataGateway {
             composer.internalId=id;
             id++;
         
-            composer.displayCaption = openOpusComposer.complete_name; //REMOVE LATER
+            composer.fullName = openOpusComposer.complete_name; 
 
             composer.birth = new Date(openOpusComposer.birth);
             if (openOpusComposer.death!=null)

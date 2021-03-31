@@ -16,11 +16,11 @@
                             <div class="accordion-body" style="margin:0; padding:0;">
                                 <div>
                                     <input class="form-control" list="datalistOptions" id="exampleDataList"
-                                        placeholder="Type to search...">
+                                        placeholder="Type to search..." v-model="composerFilterValue">
                                 </div>
                                 <div class="card card-body">
                                     <ul class="list-group vertical-scroll">
-                                        <li class="list-group-item" v-for="object in sortedComposers()" :key="object.id">
+                                        <li class="list-group-item" v-for="object in sortedComposers" :key="object.id">
                                             <input type="checkbox" class="form-check-input" @change="redrawTimeLine"
                                                 v-model="object.visible" v-bind:disabled="object.visibilityOverriden"> {{
                                             object.displayCaption }}
@@ -101,9 +101,20 @@
     minValue: number;
     maxValue: number;
 
-    sortedComposers(){
-        return [...this.session.composers].sort((a, b) => (a.displayCaption > b.displayCaption) ? 1 : -1);
+    private _composerFilterValue:string = "";
+    get composerFilterValue(): string {
+        return this._composerFilterValue;
     }
+    set composerFilterValue(value: string) {
+        this._composerFilterValue = value;
+        //this.$forceUpdate();
+    }
+
+    get sortedComposers(){
+        return [...this.session.composers].filter(c => this._composerFilterValue == "" ? true : c.fullName.toLowerCase().includes(this._composerFilterValue.toLowerCase()))
+                                             .sort((a, b) => (a.displayCaption > b.displayCaption) ? 1 : -1);
+    }
+
     //We don't want all parameters to be filterable in the UI
     getFilterableParameterDefinitions() {
         return this.session

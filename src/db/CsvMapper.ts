@@ -1,5 +1,6 @@
 import { ParamType } from "@/core";
 import { ITransformer } from "@/core/ITransformer";
+import { Person } from "@/core/Person";
 import { TimeLineBase } from "@/core/TimeLineBase";
 import { parse, ParseResult } from "papaparse";
 
@@ -37,8 +38,8 @@ export class CsvMapper implements ITransformer{
             try {
             let matchInElement:string;
             switch (destFieldNameToMatch) {
-                case "displayCaption":{
-                    matchInElement = element.displayCaption;
+                case "fullName":{
+                    matchInElement = (element as Person).fullName;
                     break;}
                 case "id":{
                     matchInElement = element.internalId.toString();

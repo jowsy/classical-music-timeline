@@ -5,10 +5,7 @@ export abstract class TimeLineBase {
 
     session:ISessionContext;
     internalId: number;
-//    visible : boolean;
-//    visibilityOverriden : boolean;
 
-    displayCaption : string;
     order : number;
     
     private _parameters : Array<Parameter> = new Array<Parameter>();
