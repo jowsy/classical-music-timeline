@@ -124,13 +124,15 @@ export default class TimeLine extends Vue {
         });
 
     //const barHeightWithMargin = barHeight*0.9;
-
+    const selectedColor = "#007bff";
+    var selection = this.session.selection;
     //Create rectangles inside groups
     const rectangles = g
         .append("rect")
         .attr("width", d => (d.shape as TimeLineRectangle).width)
         .attr("height",d => (d.shape as TimeLineRectangle).height)
         .attr("fill", function (c) { 
+        if (selection.includes(c.internalId)) return selectedColor;
         var color = c.session.colorManager.getColor(c) as WebColor;
         if (color == null) return "gray";
          return color.toHexString(); } )
@@ -141,6 +143,7 @@ export default class TimeLine extends Vue {
         .text(function (d) { return d.displayCaption; })
         .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"})
         .style("fill", function (d) { 
+            if (selection.includes(d.internalId)) return TimeLine.textBackgroundColor(new WebColor(selectedColor));
             return TimeLine.textBackgroundColor(
                 d.session.colorManager.getColor(d))
             } )

@@ -16,6 +16,7 @@ export class SessionVm implements ISessionContext {
     public colorManager: ColorManager = new ColorManager();
     public shapeGenerator: ShapeGeneratorImpl = new ShapeGeneratorImpl();
 
+    selection:number[]=[];
     minDate : Date;
     maxDate : Date;
     timeExtents : timeLineExtents = new timeLineExtents();
