@@ -193,14 +193,12 @@ export default class SideMenu extends Vue {
       .sort((a, b) => (a.displayCaption > b.displayCaption ? 1 : -1));
   }
 
-    private selectionId: number = 0;
     isSelected(id:number){
-        return this.selectionId==id;
+        return this.session.selection.includes(id);
     }
 
     selectComposer(e:number){
         this.session.selection = [e];
-        this.selectionId = e;
         this.redrawTimeLine();
     }
 
@@ -208,7 +206,7 @@ export default class SideMenu extends Vue {
         var composer = this.session.composers.find(c => c.internalId == e);
         if (composer == undefined || composer.visibilityOverriden) return;
         composer.visible = true;
-        this.$forceUpdate();
+        //this.$forceUpdate();
         this.redrawTimeLine();
     }
 

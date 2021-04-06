@@ -15,6 +15,7 @@ import { IColor } from '@/core/IColor';
 import { SvgDimensions } from '@/viewmodel/SvgDimensions';
 import { TimeLineRectangle } from '@/core/TimeLineShapes';
 import { ZoomBehavior } from 'd3';
+import { Composer } from '@/core/Composer';
 
 @Options({
       props: {
@@ -38,6 +39,7 @@ export default class TimeLine extends Vue {
 
     redraw(){
     const config = this.session.shapeGenerator.config;
+    var session = this.session;
     //config.minDate = this.session.timeExtents.getSelectedMinDate();
     //config.maxDate = this.session.timeExtents.getSelectedMaxDate();
 
@@ -78,7 +80,18 @@ export default class TimeLine extends Vue {
         .append("svg")
         .attr("width", computedWidth)
         .attr("height", computedHeight)
-        .append("g");
+        .append("g")
+        .attr("class","zoom_area");
+
+                //This rectangle exists as a zooming area
+    const rectangle = gMain
+        .append("rect")
+        .attr("id","zoomRect")
+        .attr("x", 0)
+        .attr("y",  config.svgDimensions.topAxisHeight)
+        .attr("width", computedWidth)
+        .attr("height", gridHeight)
+        .style("fill", "transparent");
 
 
     //Only show graphics inside a specified rectangle
@@ -95,6 +108,7 @@ export default class TimeLine extends Vue {
 
     var canvas = clipPath.append('g');
 
+
     //Define time scale
     const scale = d3.scaleTime()
     .domain(
@@ -104,16 +118,7 @@ export default class TimeLine extends Vue {
     let dateInterval = d3.timeYear.every(config.tickTimeInterval);
     let xAxis = d3.axisTop(scale).ticks(dateInterval); //Date ticks
   
-    //This rectangle exists as a zooming area
-    const rectangle = gMain
-        .append("rect")
-        .attr("id","zoomRect")
-        .attr("x", 0)
-        .attr("y",  config.svgDimensions.topAxisHeight)
-        .attr("width", computedWidth)
-        .attr("height", gridHeight)
-        .style("fill", "transparent")
-
+  
     //Create svg groups where we can put rectangle and texts
     var g = canvas.selectAll("rect")
         .data(sortedRects.filter(ts => ts.visible==true))
@@ -129,6 +134,7 @@ export default class TimeLine extends Vue {
     //Create rectangles inside groups
     const rectangles = g
         .append("rect")
+        .attr("id", d => d.internalId)
         .attr("width", d => (d.shape as TimeLineRectangle).width)
         .attr("height",d => (d.shape as TimeLineRectangle).height)
         .attr("fill", function (c) { 
@@ -136,8 +142,10 @@ export default class TimeLine extends Vue {
         var color = c.session.colorManager.getColor(c) as WebColor;
         if (color == null) return "gray";
          return color.toHexString(); } )
-        .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"});
-   
+        .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"})
+      
+
+
     const texts = g.append("text")
         .attr("dy", ".7em")
         .text(function (d) { return d.displayCaption; })
@@ -151,6 +159,37 @@ export default class TimeLine extends Vue {
 
             return Math.min((d.shape as TimeLineRectangle).width/d.displayCaption.length,(d.shape as TimeLineRectangle).height)+"px times";
         });
+
+    rectangles.on("click", (e,c) => select(e,c));
+    texts.on("click", (e,c) => select(e,c));
+
+    function select(e:any,c:Composer) {       
+        console.log(typeof e);
+         //Reset selection, we can only select one item at a time, 
+         if (session.selection.length>0){
+            var previousId = session.selection[0];
+            var node = document.querySelector("[id='"+previousId+"']");
+            if (node!=null){
+            var previousSelectionComposer = session
+                .composers.find(c => c.internalId == previousId)
+            if (previousSelectionComposer!=undefined)
+                node.setAttribute("fill", (c.session.colorManager.getColor(previousSelectionComposer) as WebColor).toHexString());
+            }
+         }
+         
+         session.selection = [c.internalId];
+         
+         //If selection is text, highlight rectangle in the same group
+         if (e.target.tagName=="text"){
+               var rectangleNode = document.querySelector("[id='"+c.internalId+"']");
+                 if (rectangleNode!=undefined)
+                rectangleNode.setAttribute("fill", selectedColor);
+
+         }else{
+         e.srcElement.setAttribute("fill", selectedColor);
+         }
+
+    }
 
     const axis = gMain.append("g")
         .attr("class", "grid")
@@ -171,10 +210,12 @@ export default class TimeLine extends Vue {
     .translateExtent([[0, 0], [computedWidth, computedHeight]])
     .on('zoom', updateChart);
 
-    const zoomRect = d3.select<SVGSVGElement, unknown>("#zoomRect").call(zoom);
+    const zoom_area =  d3.select<SVGSVGElement, unknown>(".zoom_area");
+    zoom(zoom_area);
+    //const zoomRect = d3.select<SVGSVGElement, unknown>("#zoomRect").call(zoom);
     
     if (prevZoomTransform!=null)
-        zoomRect.call(zoom.transform, prevZoomTransform);
+       zoom_area.call(zoom.transform, prevZoomTransform);
 
     /*eslint no-unused-vars: 0 */    
     function updateChart(event:any, d:any) {
