@@ -4,8 +4,10 @@
            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
              <SideMenu :session="session" @callUpdateTimeLineInParent="updateTimeLine"/> 
            </nav>
-          <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <TimeLine :session="session" ref="timeline"/>          
+          <main class="col-md-9 ms-sm-auto col-lg-10 px-md-0">
+            <Properties/>
+            <TimeLine :session="session" ref="timeline"/>        
+            <Footer/>  
           </main>
         </div>
     </div>
@@ -15,6 +17,9 @@
 import { Options, Vue } from 'vue-class-component';
 import TimeLine from './components/TimeLine.vue';
 import SideMenu from './components/SideMenu.vue';
+import Properties from './components/Properties.vue';
+import Footer from './components/Footer.vue';
+
 import {AndFilter} from './core/AndFilterTest';
 import {CsvMapper, CsvMapperConfig} from './db/CsvMapper';
 import {OpenOpusJsonMapper} from './db/OpenOpus/OpenOpusJsonMapper';
@@ -28,7 +33,9 @@ import { SvgDimensions } from './viewmodel/SvgDimensions';
 @Options({
   components: {
     TimeLine,
-    SideMenu
+    SideMenu,
+    Properties,
+    Footer
   },
 })
 export default class App extends Vue {
