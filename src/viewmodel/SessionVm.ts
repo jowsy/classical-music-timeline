@@ -16,10 +16,22 @@ export class SessionVm implements ISessionContext {
     public colorManager: ColorManager = new ColorManager();
     public shapeGenerator: ShapeGeneratorImpl = new ShapeGeneratorImpl();
 
-    selection:number[]=[];
+    private _selection:number[]=[];
+    selectedComposer:Composer;
+    get selection(){
+        return this._selection;
+    }
+    set selection(value){
+        this._selection = value;
+        var c = this.composers.find(comp => comp.internalId == value[0]);
+        if (c!=undefined)
+            this.selectedComposer = c;
+    }
+
     minDate : Date;
     maxDate : Date;
     timeExtents : timeLineExtents = new timeLineExtents();
+
     public rootFilter: IFilter;
  
     constructor(){

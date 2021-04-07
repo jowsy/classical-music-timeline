@@ -1,9 +1,9 @@
 <template>
 <div id="property-menu">
-  <div class="collapse" id="navbarToggleExternalContent">
+  <div  v-if="composer!=undefined" class="collapse" id="navbarToggleExternalContent">
     <div class="bg-dark p-4">
-      <h5 class="text-white h4">Collapsed content</h5>
-      <span class="text-muted">Toggleable via the navbar brand.</span>
+      <h5 class="text-white h4">{{composer.fullName}}</h5>
+      <span class="text-muted">{{composer.birth.toLocaleDateString('en-US')}}</span><span class="text-muted"> - </span><span v-if="composer.death!=undefined" class="text-muted">{{composer.death.toLocaleDateString('en-US')}}</span>
     </div>
   </div>
   <nav class="navbar navbar-dark bg-dark">
@@ -25,7 +25,15 @@
 </template>
 
 <script lang="ts">
-import { Vue } from "vue-class-component";
+import { Composer } from "@/core/Composer";
+import { Options, Vue } from "vue-class-component";
+
+@Options({
+      props: {
+    composer: Composer
+      }
+})
 export default class Properties extends Vue {
+    
 }
 </script>
