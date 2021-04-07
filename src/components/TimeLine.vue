@@ -143,6 +143,7 @@ export default class TimeLine extends Vue {
         if (color == null) return "gray";
          return color.toHexString(); } )
         .attr("visibility", function(d) { if (d.visible) return "visible"; else return "collapse"})
+        .attr("cursor","pointer");
       
 
 
@@ -158,7 +159,8 @@ export default class TimeLine extends Vue {
         .style("font", function (d)  {
 
             return Math.min((d.shape as TimeLineRectangle).width/d.displayCaption.length,(d.shape as TimeLineRectangle).height)+"px times";
-        });
+        })
+        .attr("cursor","pointer");
 
     rectangles.on("click", (e,c) => select(e,c));
     texts.on("click", (e,c) => select(e,c));
