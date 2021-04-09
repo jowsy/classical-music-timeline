@@ -150,6 +150,35 @@ export class ColorManager {
 
     }
 
+    getCurrentColorMap() : Map<string,IColor>{
+        var arrayOfColorMappings = new Map<string,IColor>();
+        if (this.currentColorScheme == undefined) return arrayOfColorMappings;
+if (this.parameterGroupValues == undefined) return arrayOfColorMappings;
+        var colorScheme = this.colorSchemes.get(this.currentColorScheme);
+        
+
+        switch(this.currentParameterDefinition.parameterType){
+            case ParamType.String:{
+         
+                this.parameterGroupValues.forEach(str => {
+                    var indexInList = this.parameterGroupValues.indexOf(str);
+
+                    if (colorScheme == undefined) return arrayOfColorMappings;
+                    var color =  colorScheme[indexInList];
+                    if (color!=undefined)
+                        arrayOfColorMappings.set(str,color);
+
+                });
+                break;
+            }
+            case ParamType.Number:{
+
+               break;
+            }
+        }
+        return arrayOfColorMappings;
+    }
+
     refresh(){
         this.remap();
     }

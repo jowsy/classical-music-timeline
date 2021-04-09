@@ -7,7 +7,7 @@
           <main class="col-md-9 ms-sm-auto col-lg-10 px-md-0">
             <Properties :composer="session.selectedComposer"/>
             <TimeLine :session="session" ref="timeline"/>        
-            <Footer/>  
+            <Footer :colorManager="session.colorManager"/>  
           </main>
         </div>
     </div>
@@ -43,7 +43,6 @@ export default class App extends Vue {
   session:SessionVm;
 
   updateTimeLine(){
-     console.log("Update timeline component");  
     (this.$refs as any).timeline.redraw();
   }
 
