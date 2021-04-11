@@ -1,5 +1,6 @@
 //Entities
 export * from './TimeLineBase';
+export * from './TimeLineGeometry';
 
 //Container interface
 export * from './ISessionContext';
@@ -11,3 +12,4 @@ export * from './IColor';
 
 //Parameter modules
 export * from './Parameter';
+export * from './ParameterGroup';

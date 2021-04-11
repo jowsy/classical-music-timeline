@@ -1,10 +1,11 @@
-import { toHandlers } from "@vue/runtime-core";
+
 import { IColorGenerator, 
          IColor, 
          ParameterDefinition,
          TimeLineBase,
          ISessionContext,
-         ParamType } from "./";
+         ParamType,
+         ParameterGroup } from "./";
 
 export class ColorManager {
 
@@ -94,18 +95,25 @@ export class ColorManager {
         
         switch(this.currentParameterDefinition.parameterType){
             case ParamType.String:{
-                var parameterGroups = this.groupBy(this.session.elements, 
+
+                // NOTE: Sort based on x value in geometry instance
+                // The first item in the group represent the group's total x-value (problems???)
+                let parameterGroups : Array<ParameterGroup<string>> = this.groupBy(this.session.elements, 
                                             entity => entity.getParameterByDefinition(this.currentParameterDefinition)
-                                            .asString());                
+                                            .asString())
+                                            .sort((a, b) => {
+                                                return a.getXValues()[0] > b.getXValues()[0] ? 1 : -1;});
+
                 
-                this.parameterGroupValues = Object.keys(parameterGroups);
+
+                this.parameterGroupValues = parameterGroups.map(t => t.key);
                 
                 this.mapTable = new Map<number,number>();
 
-                for (let index = 0; index < this.parameterGroupValues.length; index++) {
-                    const element = this.parameterGroupValues[index];
-                    for (let index2 = 0; index2 <  parameterGroups[element].length; index2++) {
-                        const p = parameterGroups[element][index2];
+                for (let index = 0; index < parameterGroups.length; index++) {
+                  
+                    for (let index2 = 0; index2 <  parameterGroups[index].items.length; index2++) {
+                        const p = parameterGroups[index].items[index2];
                         if (p.internalId == undefined) throw Error("Element must have ID assigned!");
                         this.mapTable.set(p.internalId, index);                
                     }
@@ -184,15 +192,23 @@ if (this.parameterGroupValues == undefined) return arrayOfColorMappings;
     }
 
     
-    groupBy = function<T, K extends keyof any>(arrayOfSomething:T[], getKey: (item:T) => K){
-    return arrayOfSomething.reduce( (prev, current) => {
-        const group = getKey(current);
-        if (!prev[group]) prev[group] = [];
-        prev[group].push(current);
-        return prev;
-    }, {} as Record<K,T[]>);
+    groupBy = function<K extends keyof any>(arrayOfSomething:TimeLineBase[], getKey: (item:TimeLineBase) => K) : Array<ParameterGroup<K>>{
+        var records = arrayOfSomething.reduce( (prev, current) => {
+            const group = getKey(current);
+            if (!prev[group]) prev[group] = [];
+            prev[group].push(current);
+            return prev;
+        }, {} as Record<K,TimeLineBase[]>);
+        var result : Array<ParameterGroup<K>> = new Array<ParameterGroup<K>>();
+        var recordValues = Object.keys(records) as K[];
 
-};
+        for (let index = 0; index < recordValues.length; index++) {
+            var key = recordValues[index];
+            var items = records[key] as TimeLineBase[];          
+            result.push(new ParameterGroup<K>(recordValues[index], items));            
+        }
+        return result;
+    };
 
 }
 
