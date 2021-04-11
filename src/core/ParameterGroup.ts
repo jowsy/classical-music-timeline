@@ -1,5 +1,4 @@
-import { TimeLineBase } from ".";
-import { TimeLineGeometry } from "./TimeLineGeometry";
+import { TimeLineBase, TimeLineGeometry } from ".";
 
 export class ParameterGroup<T> {
     key:T;
