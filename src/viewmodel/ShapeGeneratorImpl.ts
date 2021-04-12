@@ -17,8 +17,12 @@ export class ShapeGeneratorImpl implements IShapeGenerator {
 
     get svgCanvasHeight(){
         var sideMenuDomObject = document.getElementById("sidebarMenu");
+        var propertyMenuDomObject = document.getElementById("property-menu");
+        var footerDomObject = document.getElementById("main-footer");
         if (sideMenuDomObject==null) throw Error("Can't computer canvas height. Sidebar menu dom-object not found.");
-        return sideMenuDomObject.clientHeight-this.config.svgDimensions.marginTop-this.config.svgDimensions.marginBottom;
+        if (propertyMenuDomObject==null) throw Error("Can't computer canvas height. Property menu dom-object not found.");
+        if (footerDomObject==null) throw Error("Can't computer canvas height. Footer dom-object not found.");
+        return sideMenuDomObject.clientHeight-this.config.svgDimensions.marginTop-this.config.svgDimensions.marginBottom-propertyMenuDomObject.clientHeight-footerDomObject.clientHeight;
     }
 
     get svgCanvasWidth(){
