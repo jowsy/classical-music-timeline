@@ -33,7 +33,7 @@ export class OpenOpusJsonMapper implements IDataGateway {
         
         if (epochParameterDef == undefined){
             var definition = this.session.configuration.addParameter(this.epochParameterName, ParamType.String, true);
-            this.session.colorManager.mapColorsByStringParameter(definition);
+           // this.session.colorManager.mapColorsByStringParameter(definition);
         }
 
         if (popParameterDef == undefined){

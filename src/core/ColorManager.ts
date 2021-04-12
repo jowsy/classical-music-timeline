@@ -79,8 +79,7 @@ export class ColorManager {
         this.colorGenMinMax = [min, max];
         this.addColorScheme(this.colorGenColorSchemeName, listOfColors);
         return true;
-    }
-    
+    }  
 
     addColorScheme(name:string, colors:IColor[]){
         this.colorSchemes.set(name,colors);
@@ -161,18 +160,15 @@ export class ColorManager {
     getCurrentColorMap() : Map<string,IColor>{
         var arrayOfColorMappings = new Map<string,IColor>();
         if (this.currentColorScheme == undefined) return arrayOfColorMappings;
-if (this.parameterGroupValues == undefined) return arrayOfColorMappings;
         var colorScheme = this.colorSchemes.get(this.currentColorScheme);
         
 
         switch(this.currentParameterDefinition.parameterType){
             case ParamType.String:{
-         
+                if (this.parameterGroupValues == undefined) return arrayOfColorMappings;
                 this.parameterGroupValues.forEach(str => {
                     var indexInList = this.parameterGroupValues.indexOf(str);
-
-                    if (colorScheme == undefined) return arrayOfColorMappings;
-                    var color =  colorScheme[indexInList];
+                    var color =  colorScheme![indexInList];
                     if (color!=undefined)
                         arrayOfColorMappings.set(str,color);
 
@@ -180,7 +176,13 @@ if (this.parameterGroupValues == undefined) return arrayOfColorMappings;
                 break;
             }
             case ParamType.Number:{
-
+                if (colorScheme != undefined) {
+                this.colorGenRanges.forEach(range => {
+                        var indexInList = this.colorGenRanges.indexOf(range);
+                         var label = Math.round(range[0]).toString()+"-"+Math.round(range[1]).toString();
+                         arrayOfColorMappings.set(label,colorScheme![indexInList]);
+                });
+                }
                break;
             }
         }

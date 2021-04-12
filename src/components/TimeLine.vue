@@ -166,7 +166,6 @@ export default class TimeLine extends Vue {
     texts.on("click", (e,c) => select(e,c));
 
     function select(e:any,c:Composer) {       
-        console.log(typeof e);
          //Reset selection, we can only select one item at a time, 
          if (session.selection.length>0){
             var previousId = session.selection[0];
