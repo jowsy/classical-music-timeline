@@ -26,17 +26,21 @@ export default class TimeLine extends Vue {
 
     session : SessionVm;
 
-    /*created(){
+    created(){
 
-        this.$watch('session', () => {
+       /* this.$watch('session', () => {
             //this.session.setExtents();
             //this.redraw();
         }, {
         deep: true
-        });
+        });*/
+        window.addEventListener("resize", this.redrawFully);
 
-    }*/
-
+    }
+    redrawFully(){
+        this.session.shapeGenerator.generateShapes();
+        this.redraw();
+    }
     redraw(){
     const config = this.session.shapeGenerator.config;
     var session = this.session;
