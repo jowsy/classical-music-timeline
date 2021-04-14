@@ -1,4 +1,4 @@
-import { ParamType } from "@/core";
+import { ParameterType } from "@/core";
 import { ITransformer } from "@/core/ITransformer";
 import { Person } from "@/core/Person";
 import { TimeLineBase } from "@/core/TimeLineBase";
@@ -58,12 +58,12 @@ export class CsvMapper implements ITransformer{
                 if (value!=undefined)
                 {
                     switch (this.csvConfig.destFieldNameToSetType){
-                        case ParamType.String:
+                        case ParameterType.String:
                             {
                                 parameter.set(value);   
                                 break;
                             }
-                        case ParamType.Number: 
+                        case ParameterType.Number: 
                             {
                                 parameter.set(parseInt(value));
                                 break;
@@ -91,6 +91,6 @@ export class CsvMapperConfig {
     destFieldNameToMatch:string;
     csvFieldNameToMatch:string;
     destFieldNameToSet:string;
-    destFieldNameToSetType:ParamType;
+    destFieldNameToSetType:ParameterType;
     csvFieldNameToRetrieve:string;
 }

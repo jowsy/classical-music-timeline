@@ -3,8 +3,10 @@ import { parse } from "papaparse";
 export class ParameterDefinition {
 
     name:string;
+    displayCaption:string; //display text in UI
+    description:string; //description of parameter, for UI
     id:string;
-    parameterType:ParamType;
+    parameterType:ParameterType;
     filterable:boolean;
     isFilterEnabled:boolean;
 }
@@ -30,19 +32,19 @@ export class Parameter {
     //TODO: could this be done in a more elegant way??
     set(val:any) : void {
         if (typeof val == "string"){
-            if (this.definition.parameterType==ParamType.Number) 
+            if (this.definition.parameterType==ParameterType.Number) 
                 throw Error("Can't assign parameter of type number to a string");
             this._stringValue = val;
         }
         else if (typeof val == "number"){
-            if (this.definition.parameterType==ParamType.String) 
+            if (this.definition.parameterType==ParameterType.String) 
                 throw Error("Can't assign parameter of type string to a number");
             this._numberValue = val;
         }
     }   
 }
 
-export enum ParamType {
+export enum ParameterType {
     Number,
     String
 }

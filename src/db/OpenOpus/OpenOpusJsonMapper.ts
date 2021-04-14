@@ -1,5 +1,5 @@
 import {IDataGateway} from '../../core/IDataGateway'
-import { ParamType } from '@/core/Parameter';
+import { ParameterType } from '@/core/Parameter';
 import { RootObject } from './OpenOpus';
 import { SessionVm } from '@/viewmodel/SessionVm';
 import { TimeLineBase } from '@/core';
@@ -27,17 +27,16 @@ export class OpenOpusJsonMapper implements IDataGateway {
     void: any;
 
     Prepare(): void {
-    
         const epochParameterDef = this.session.configuration.getParameterByName(this.epochParameterName);
         const popParameterDef = this.session.configuration.getParameterByName(this.popParameterName);
         
         if (epochParameterDef == undefined){
-            var definition = this.session.configuration.addParameter(this.epochParameterName, ParamType.String, true);
-           // this.session.colorManager.mapColorsByStringParameter(definition);
+            var definition = this.session.configuration.addParameter(this.epochParameterName, "Epoch", ParameterType.String, true);
+            this.session.colorManager.mapColorsByStringParameter(definition);
         }
 
         if (popParameterDef == undefined){
-            var definition = this.session.configuration.addParameter(this.popParameterName, ParamType.String, true);
+            var definition = this.session.configuration.addParameter(this.popParameterName, "Popularity", ParameterType.String, true);
         }
     }
     

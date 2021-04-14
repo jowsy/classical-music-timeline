@@ -4,7 +4,7 @@ import { IColorGenerator,
          ParameterDefinition,
          TimeLineBase,
          ISessionContext,
-         ParamType,
+         ParameterType,
          ParameterGroup } from "./";
 
 export class ColorManager {
@@ -93,7 +93,7 @@ export class ColorManager {
         var colors = this.colorSchemes.get(this.currentColorScheme);
         
         switch(this.currentParameterDefinition.parameterType){
-            case ParamType.String:{
+            case ParameterType.String:{
 
                 // NOTE: Sort based on x value in geometry instance
                 // The first item in the group represent the group's total x-value (problems???)
@@ -119,7 +119,7 @@ export class ColorManager {
                 }
                 break;
             }
-            case ParamType.Number:{
+            case ParameterType.Number:{
                this.generateColorScheme(this.colorGenColorSchemeName, 
                                         this.colorGenStepNumber, 
                                         this.colorGenStartColor,
@@ -137,7 +137,7 @@ export class ColorManager {
             return this.defaultColor;
 
         switch(this.currentParameterDefinition.parameterType){
-            case ParamType.String:{         
+            case ParameterType.String:{         
                 var index = this.mapTable.get(element.internalId)
 
                 if (index==null ||colors.length<index)
@@ -145,7 +145,7 @@ export class ColorManager {
 
                 return colors[index];
             } 
-            case ParamType.Number:{
+            case ParameterType.Number:{
                 const n = element.getParameterByDefinition(this.currentParameterDefinition).asNumber();
                 if (n==undefined) return this.defaultColor;
                 if (this.colorGenMinMax[0]==n) return colors[0];
@@ -164,7 +164,7 @@ export class ColorManager {
         
 
         switch(this.currentParameterDefinition.parameterType){
-            case ParamType.String:{
+            case ParameterType.String:{
                 if (this.parameterGroupValues == undefined) return arrayOfColorMappings;
                 this.parameterGroupValues.forEach(str => {
                     var indexInList = this.parameterGroupValues.indexOf(str);
@@ -175,7 +175,7 @@ export class ColorManager {
                 });
                 break;
             }
-            case ParamType.Number:{
+            case ParameterType.Number:{
                 if (colorScheme != undefined) {
                 this.colorGenRanges.forEach(range => {
                         var indexInList = this.colorGenRanges.indexOf(range);

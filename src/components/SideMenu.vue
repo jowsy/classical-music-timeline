@@ -101,36 +101,14 @@
               v-on:change="activateFilter($event, parameter.id)"
             />
             <label class="form-check-label" for="customSwitch1">{{
-              parameter.name
+              parameter.displayCaption
             }}</label>
           </div>
         </div>
 
         <div
-          class="collapse multi-collapse"
-          v-bind:id="parameter.name + 'List'"
-        >
-          <div class="card card-body">
-            <li
-              class="list-group-item"
-              v-for="str in groupByParameter(parameter)"
-              v-bind:key="str"
-            >
-              <input
-                type="checkbox"
-                class="form-check-input"
-                v-on:change="
-                  applyParameterFilter(
-                    $event,
-                    parameter.id,
-                    parameter.name,
-                    str
-                  )
-                "
-              />
-              {{ str }}
-            </li>
-          </div>
+          class="collapse multi-collapse" v-bind:id="parameter.name + 'List'">
+            <ListFilterControl :session="session" :parameter="parameter" v-if="parameter.parameterType==1"   @callUpdateTimeLineInParent="updateTimeLine"/>
         </div>
       </li>
     </ul>
@@ -139,17 +117,14 @@
 
 <script lang="ts">
 // eslint-disable-next-line no-unused-vars
-import { ParameterDefinition } from "@/core/Parameter";
-import { ParameterStringFilter } from "@/core/ParameterFilter";
-import { OrFilter } from "@/core/OrFilter";
+import { TimeLineBase, ParameterType, ParameterDefinition, ParameterStringFilter, OrFilter, AndFilter } from "@/core/";
 // eslint-disable-next-line no-unused-vars
-import { TimeLineBase } from "@/core/TimeLineBase";
 import { Options, Vue } from "vue-class-component";
 // eslint-disable-next-line no-unused-vars
 import { SessionVm } from "../viewmodel/SessionVm";
 // eslint-disable-next-line no-unused-vars
-import { AndFilter } from "../core/AndFilterTest";
 import VueSlider from "vue-slider-component";
+import ListFilterControl from "./ListFilterControl.vue"
 import "vue-slider-component/theme/antd.css";
 //import MultiRangeSlider from './MultiRangeSlider.vue';
 
@@ -159,6 +134,7 @@ import "vue-slider-component/theme/antd.css";
   },
   components: {
     VueSlider,
+    ListFilterControl
   },
   emits: ["callUpdateTimeLineInParent"],
 })
@@ -168,6 +144,11 @@ export default class SideMenu extends Vue {
   filterMap: Map<string, string> = new Map<string, string>();
   minValue: number;
   maxValue: number;
+
+
+  updateTimeLine(){
+    this.redrawTimeLine(); //pass to parent and tell it to update UI
+  }
 
   private _composerFilterValue: string = "";
   get composerFilterValue(): string {
@@ -210,7 +191,6 @@ export default class SideMenu extends Vue {
         this.redrawTimeLine();
     }
 
-    
     hideComposer(e:number){
         var composer = this.session.composers.find(c => c.internalId == e);
         if (composer == undefined) return;
@@ -226,92 +206,39 @@ export default class SideMenu extends Vue {
     );
   }
 
-  groupByParameter(definition: ParameterDefinition): Array<string> {
-    let groups: Record<string, TimeLineBase[]> = [...this.session.composers]
-      .sort((a, b) => {
-        return a.birth > b.birth ? 1 : -1;
-      })
-      .groupBy((tSpan) =>
-        tSpan.getParameterByDefinition(definition).asString()
-      );
-    return Object.keys(groups);
-  }
-
-  applyParameterFilter(
-    checkBoxCtrl: any,
-    ParameterDefinitionId: string,
-    paramName: string,
-    value: string
-  ) {
-    let filterId: string = this.filterMap.get(ParameterDefinitionId) as string;
-    let rootFilter: AndFilter = this.session.rootFilter as AndFilter;
-
-    var checked = checkBoxCtrl.target.checked;
-    var filter = rootFilter.getFilter(filterId) as OrFilter;
-    //console.log("applyParameterFilter, filterId: "+filter.id);
-    if (checked) {
-      var newFilter = new ParameterStringFilter(paramName, value);
-      newFilter.id = value;
-      newFilter.Activate();
-      filter.addFilter(newFilter);
-      //  console.log("is active:"+newFilter.isActive);
-      rootFilter.Activate();
-    } else {
-      filter.removeFilter(value);
-      rootFilter.Deactivate();
-    }
-
-    //console.log("Count in OrFilter: "+filter.getCount());
-    this.session.Refresh();
-    this.redrawTimeLine();
-  }
   redrawTimeLine() {
     this.$emit("callUpdateTimeLineInParent");
   }
+
   activateFilter(checkBoxCtrl: any, parameterDefId: string) {
+
     var checked = checkBoxCtrl.target.checked;
     let rootFilter: AndFilter = this.session.rootFilter as AndFilter;
+    var filterId = this.filterMap.get(parameterDefId) as string;
 
     if (checked) {
-      var filter = new OrFilter();
-      this.filterMap.set(parameterDefId, filter.id);
-      rootFilter.addFilter(filter);
-      //  console.log("Add OrFilter, id: "+filter.id);
-      filter.Activate();
+      if (filterId==undefined){
+        var filter = new OrFilter();
+        filter.id = "f_"+parameterDefId;
+        this.filterMap.set(parameterDefId, filter.id);
+        rootFilter.addFilter(filter);
+        filter.Activate();
+      }else{
+         rootFilter.getFilter(filterId).Activate();
+      } 
       rootFilter.Activate();
     } else {
-      var filterId = this.filterMap.get(parameterDefId) as string;
-      rootFilter.removeFilter(filterId);
-      this.filterMap.delete(filterId);
+      rootFilter.getFilter(filterId).Deactivate();
       rootFilter.Deactivate();
-      // console.log("Delete filter, id: "+parameterDefId);
     }
-    //var checked= checkBoxCtrl.target.checked;
+
     this.session.Refresh();
     this.redrawTimeLine();
   }
 }
 
-declare global {
-  interface Array<T> {
-    groupBy<T, K extends keyof any>(
-      this: T[],
-      getKey: (item: T) => K
-    ): Record<K, T[]>;
-  }
-}
 
-Array.prototype.groupBy = function <T, K extends keyof any>(
-  this: T[],
-  getKey: (item: T) => K
-) {
-  return this.reduce((prev, current) => {
-    const group = getKey(current);
-    if (!prev[group]) prev[group] = [];
-    prev[group].push(current);
-    return prev;
-  }, {} as Record<K, T[]>);
-};
+
 </script>
 
 <style scoped>

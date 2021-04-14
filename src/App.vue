@@ -25,7 +25,7 @@ import {CsvMapper, CsvMapperConfig} from './db/CsvMapper';
 import {OpenOpusJsonMapper} from './db/OpenOpus/OpenOpusJsonMapper';
 import {WebColor} from './WebColor';
 import {SessionVm} from './viewmodel/SessionVm'
-import {ParamType } from './core/Parameter';
+import {ParameterType } from './core/Parameter';
 import {ColorGeneratorImpl} from './viewmodel/ColorGeneratorImpl';
 import { ShapeGeneratorConfig } from './viewmodel/ShapeGeneratorConfig';
 import { SvgDimensions } from './viewmodel/SvgDimensions';
@@ -97,7 +97,7 @@ export default class App extends Vue {
             destFieldNameToMatch:"fullName",
             csvFieldNameToMatch:"Name",
             destFieldNameToSet:imdbDestParameterName,
-            destFieldNameToSetType: ParamType.Number,
+            destFieldNameToSetType: ParameterType.Number,
             csvFieldNameToRetrieve:"SoundtrackCredits",
             delimiterString: ";"
         }, new CsvMapperConfig());
@@ -105,9 +105,11 @@ export default class App extends Vue {
 
     //Create custom parameters
     //=================================================================
-    this.session.configuration.addParameter(imdbDestParameterName, 
-                                            ParamType.Number,
-                                            true); //for IMDB soundtrack credits, see csv-mapper above
+    this.session.configuration.addParameter(imdbDestParameterName,
+                                            "IMDB soundtrack credits", 
+                                            ParameterType.Number,
+                                            true,
+                                            "Number of soundtrack credits for composer in March 2021."); //for IMDB soundtrack credits, see csv-mapper above
 
     //Load data source - OpenOpus
     //=================================================================
@@ -121,7 +123,7 @@ export default class App extends Vue {
               const csvTransformer=new CsvMapper(csv, csvMapperConfig);
               csvTransformer.transform(this.session.elements);
               
-              const parameterDef = this.session.configuration.getParameterByName(imdbDestParameterName);
+              /*const parameterDef = this.session.configuration.getParameterByName(imdbDestParameterName);
 
               //Color in timeline using a gradient
              if (parameterDef!=undefined)
@@ -129,7 +131,7 @@ export default class App extends Vue {
                                                                      10, 
                                                                       new WebColor("#e5f5f9"), 
                                                                       new WebColor("#2ca25f"));
-              
+              */
               this.session.regenerate(); //generate geometry
               this.session.Refresh();
               this.updateTimeLine();
