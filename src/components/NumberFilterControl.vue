@@ -38,6 +38,7 @@ export default class NumberFilterControl extends Vue {
     parameterDefinition:ParameterDefinition;
     min:number;
     max:number;
+
     private filterValue:number[]=[];
     get value (){
       return this.filterValue;
@@ -76,8 +77,18 @@ export default class NumberFilterControl extends Vue {
           this.min=Math.min(...result);
           this.value = [this.min,this.max];
           this.updateFilter();
-        }
+          
+          //Listen to filter update and trigger update component if a user for example activates a filter
+          //CAN WE DO THIS IN A BETTER WAY???
+          //The problem is that the component is rendered before the Filter is created and added to the Root Filter.
+          //When a user activates the filter, we need to tell this component that it should re-render with new data
+          this.$watch(() => this.session.rootFilter, () => {
+            this.updateFilter();
+        }, {
+        deep: true
+        });
     
+       }
       }
     }
 
@@ -86,7 +97,7 @@ export default class NumberFilterControl extends Vue {
       let rootFilter: AndFilter = this.session.rootFilter as AndFilter;
       var filter = rootFilter.getFilter("f_"+this.parameterDefinition.id) as OrFilter;
 
-      if (filter == undefined) return;
+      if (filter == undefined || !filter.isActive) return;
 
       var rangeFilter = filter.getFilter("1") as ParameterNumberRangeFilter;
       if (rangeFilter==undefined){
