@@ -82,33 +82,43 @@
     <ul class="nav flex-column">
       <li
         class="nav-item"
-        v-for="parameter in getFilterableParameterDefinitions()"
-        v-bind:key="parameter.id"
+        v-for="parameterDef in getFilterableParameterDefinitions()"
+        v-bind:key="parameterDef.id"
       >
         <div class="justify-content-between d-flex">
           <div
             class="form-check form-switch"
             data-bs-toggle="collapse"
-            v-bind:href="'#' + parameter.name + 'List'"
+            v-bind:href="'#' + parameterDef.name + 'List'"
             role="button"
             aria-expanded="false"
-            v-bind:aria-controls="parameter.name + 'List'"
+            v-bind:aria-controls="parameterDef.name + 'List'"
           >
             <input
               type="checkbox"
               class="form-check-input"
               id="customSwitch1"
-              v-on:change="activateFilter($event, parameter.id)"
+              v-on:change="activateFilter($event, parameterDef.id)"
             />
             <label class="form-check-label" for="customSwitch1">{{
-              parameter.displayCaption
+              parameterDef.displayCaption
             }}</label>
           </div>
         </div>
 
         <div
-          class="collapse multi-collapse" v-bind:id="parameter.name + 'List'">
-            <ListFilterControl :session="session" :parameter="parameter" v-if="parameter.parameterType==1"   @callUpdateTimeLineInParent="updateTimeLine"/>
+          class="collapse multi-collapse" v-bind:id="parameterDef.name + 'List'">
+           <ListFilterControl 
+              :session="session" 
+              :parameterDefinition="parameterDef" 
+              v-if="parameterDef.parameterType==1" 
+              @callUpdateTimeLineInParent="updateTimeLine"/>
+            <NumberFilterControl 
+              :session="session" 
+              :parameterDefinition="parameterDef"
+              v-if="parameterDef.parameterType==0"  
+              @callUpdateTimeLineInParent="updateTimeLine"
+              :key="session.dataChangedTick"/>
         </div>
       </li>
     </ul>
@@ -124,9 +134,11 @@ import { Options, Vue } from "vue-class-component";
 import { SessionVm } from "../viewmodel/SessionVm";
 // eslint-disable-next-line no-unused-vars
 import VueSlider from "vue-slider-component";
-import ListFilterControl from "./ListFilterControl.vue"
 import "vue-slider-component/theme/antd.css";
-//import MultiRangeSlider from './MultiRangeSlider.vue';
+// eslint-disable-next-line no-unused-vars
+import ListFilterControl from "./ListFilterControl.vue"
+// eslint-disable-next-line no-unused-vars
+import NumberFilterControl from "./NumberFilterControl.vue"
 
 @Options({
   props: {
@@ -134,7 +146,8 @@ import "vue-slider-component/theme/antd.css";
   },
   components: {
     VueSlider,
-    ListFilterControl
+    ListFilterControl,
+    NumberFilterControl
   },
   emits: ["callUpdateTimeLineInParent"],
 })

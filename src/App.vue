@@ -134,6 +134,7 @@ export default class App extends Vue {
               */
               this.session.regenerate(); //generate geometry
               this.session.Refresh();
+              this.session.dataChangedTick++;
               this.updateTimeLine();
             });
         });

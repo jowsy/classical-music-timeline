@@ -15,6 +15,8 @@ export class SessionVm implements ISessionContext {
     public configuration:Configuration = new Configuration();
     public colorManager: ColorManager = new ColorManager();
     public shapeGenerator: ShapeGeneratorImpl = new ShapeGeneratorImpl();
+    
+    public dataChangedTick : number = 0; //This is used by components to react on changes done to the underlying data
 
     private _selection:number[]=[];
     selectedComposer:Composer;
@@ -102,6 +104,7 @@ export class SessionVm implements ISessionContext {
         dataGateway.SetSession(this);
         dataGateway.Prepare();
         this.setElements(dataGateway.getElements());
+        //this.dataChangedTick++;
     }
 
     public regenerate(){

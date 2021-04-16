@@ -11,7 +11,7 @@ export abstract class TimeLineBase {
     private _parameters : Array<Parameter> = new Array<Parameter>();
 
     getParameterByName(paramName:string) {
-        var param = this._parameters.find(p => p.definition.name == paramName);
+        var param = this._parameters.find(p =>  p.definition != undefined && p.definition.name == paramName);
         if (param!= null){
             return param;
         }

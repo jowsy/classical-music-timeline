@@ -2,7 +2,7 @@
     <div class="card card-body">
             <li
               class="list-group-item"
-              v-for="str in groupByParameter(parameter)"
+              v-for="str in groupByParameter(parameterDefinition)"
               v-bind:key="str">
               <input
                 type="checkbox"
@@ -10,8 +10,8 @@
                 v-on:change="
                   applyParameterFilter(
                     $event,
-                    parameter.id,
-                    parameter.name,
+                    parameterDefinition.id,
+                    parameterDefinition.name,
                     str)"/>
               {{ str }}
             </li>
@@ -25,14 +25,14 @@ import { Options, Vue } from "vue-class-component";
 
 @Options({
       props: {
-        parameter: Parameter,
+        parameterDefinition: ParameterDefinition,
         session: SessionVm
       },
       emits: ["callUpdateTimeLineInParent"],
 })
 export default class ListFilterControl extends Vue {
     session:SessionVm;
-    parameter:Parameter;
+    parameterDefinition:ParameterDefinition;
     filterMap: Map<string, string> = new Map<string, string>();
     
     groupByParameter(definition: ParameterDefinition): Array<string> {

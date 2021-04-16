@@ -13,6 +13,7 @@ export * from './IColor';
 //Parameter modules
 export * from './Parameter';
 export * from './ParameterStringFilter'
+export * from './ParameterNumberRangeFilter'
 export * from './OrFilter'
 export * from './AndFilterTest'
 export * from './ParameterGroup';
