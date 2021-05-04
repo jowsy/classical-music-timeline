@@ -9,6 +9,7 @@ export class ParameterDefinition {
     parameterType:ParameterType;
     filterable:boolean;
     isFilterEnabled:boolean;
+    
 }
 
 export class Parameter {
