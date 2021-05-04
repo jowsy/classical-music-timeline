@@ -13,7 +13,6 @@ export class ShapeGeneratorImpl implements IShapeGenerator {
     session:ISessionContext;
 
     private maxBarHeight = 70;
-    //private scale:d3.ScaleTime<number,number,never>;
 
     get svgCanvasHeight(){
         var sideMenuDomObject = document.getElementById("sidebarMenu");
