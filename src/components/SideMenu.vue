@@ -245,7 +245,7 @@ export default class SideMenu extends Vue {
       rootFilter.Deactivate();
     }
 
-    this.session.Refresh();
+    this.session.refresh();
     this.redrawTimeLine();
   }
 }

@@ -112,7 +112,7 @@ export default class NumberFilterControl extends Vue {
       }
       rootFilter.Activate();
      
-      this.session.Refresh();
+      this.session.refresh();
        this.$emit("callUpdateTimeLineInParent");
     }
   

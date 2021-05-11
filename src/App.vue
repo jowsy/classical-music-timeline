@@ -21,14 +21,12 @@ import Properties from './components/Properties.vue';
 import Footer from './components/Footer.vue';
 
 import {AndFilter} from './core/AndFilterTest';
-import {CsvMapper, CsvMapperConfig} from './db/CsvMapper';
-import {OpenOpusJsonMapper} from './db/OpenOpus/OpenOpusJsonMapper';
 import {WebColor} from './WebColor';
 import {SessionVm} from './viewmodel/SessionVm'
-import {ParameterType } from './core/Parameter';
 import {ColorGeneratorImpl} from './viewmodel/ColorGeneratorImpl';
 import { ShapeGeneratorConfig } from './viewmodel/ShapeGeneratorConfig';
 import { SvgDimensions } from './viewmodel/SvgDimensions';
+import { OpenOpusDataGateway } from './db/OpenOpus/OpenOpusDataGateway';
 
 @Options({
   components: {
@@ -78,6 +76,18 @@ export default class App extends Vue {
     //Setup shape generator, set constants
     newSession.shapeGenerator.config = new ShapeGeneratorConfig();
 
+     //Add OpenOpus datasource
+
+     /**
+      * The data gateway is the component that handles low-level communication (I/O) with an external data source
+      * The data source could be a REST-service, csv-file or a JSON/XML
+      * You can add multiple datasets, the loader will load them in the order they are added
+      * The data gateway can also act on selection of an item, for example a composer. This enables lazy loading of data. 
+      */
+
+    var dataGateway = new OpenOpusDataGateway();
+    newSession.addDataSet("OpenOpus Data Dump", "Dump from OpenOpus API", dataGateway);
+
     var svgConfig = new SvgDimensions();
     svgConfig.marginLeft = 20;
     svgConfig.marginTop = 40;
@@ -88,59 +98,16 @@ export default class App extends Vue {
   }
 
   async mounted(){
+    this.session.loadData().then(() => {
+      
+      console.debug("data loaded");
 
-    //Define data transformer for CSV file
-    //=================================================================
-    const imdbDestParameterName = "ImdbSoundtrackCredits";
-        
-      const csvMapperConfig = Object.assign({
-            destFieldNameToMatch:"fullName",
-            csvFieldNameToMatch:"Name",
-            destFieldNameToSet:imdbDestParameterName,
-            destFieldNameToSetType: ParameterType.Number,
-            csvFieldNameToRetrieve:"SoundtrackCredits",
-            delimiterString: ";"
-        }, new CsvMapperConfig());
+      this.session.regenerate(); //create shapes
+      this.session.refresh(); //update visibility
+      this.session.dataChangedTick++; //increment data change counter
 
-
-    //Create custom parameters
-    //=================================================================
-    this.session.configuration.addParameter(imdbDestParameterName,
-                                            "IMDB soundtrack credits", 
-                                            ParameterType.Number,
-                                            true,
-                                            "Number of soundtrack credits for composer in March 2021."); //for IMDB soundtrack credits, see csv-mapper above
-
-    //Load data source - OpenOpus
-    //=================================================================
-    fetch("dump.json")
-      .then(response => response.text())
-      .then(json => this.session.PlugIn(new OpenOpusJsonMapper(json)))
-      .finally( () => {
-         fetch("IMDBSoundtrackCredits.csv")
-          .then(response => response.text())
-          .then(csv => {
-              const csvTransformer=new CsvMapper(csv, csvMapperConfig);
-              csvTransformer.transform(this.session.elements);
-              
-              /*const parameterDef = this.session.configuration.getParameterByName(imdbDestParameterName);
-
-              //Color in timeline using a gradient
-             if (parameterDef!=undefined)
-                this.session.colorManager.mapColorsByNumberParameter(parameterDef,
-                                                                     10, 
-                                                                      new WebColor("#e5f5f9"), 
-                                                                      new WebColor("#2ca25f"));
-              */
-              this.session.regenerate(); //generate geometry
-              this.session.Refresh();
-              this.session.dataChangedTick++;
-              this.updateTimeLine();
-            });
-        });
-
+    });
   }
 }
 </script>
 <style scoped src="../src/assets/css/app.css"/>
-

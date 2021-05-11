@@ -1,6 +1,7 @@
 //Entities
 export * from './TimeLineBase';
 export * from './TimeLineGeometry';
+export * from './Composer';
 
 //Container interface
 export * from './ISessionContext';
@@ -17,3 +18,7 @@ export * from './ParameterNumberRangeFilter'
 export * from './OrFilter'
 export * from './AndFilterTest'
 export * from './ParameterGroup';
+
+//Data
+export * from './DataSet';
+export * from './IDataGateway';

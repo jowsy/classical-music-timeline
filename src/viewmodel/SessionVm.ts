@@ -9,8 +9,10 @@ import { ISessionContext } from "@/core/ISessionContext";
 import { ShapeGeneratorImpl } from "./ShapeGeneratorImpl";
 import { Composer } from "@/core/Composer";
 import { TimeLineGeometry } from "@/core/TimeLineGeometry";
+import { DataSet } from "@/core";
 
 export class SessionVm implements ISessionContext {
+
     private _elements: Array<TimeLineBase> = new Array<TimeLineBase>();
     public configuration:Configuration = new Configuration();
     public colorManager: ColorManager = new ColorManager();
@@ -18,6 +20,7 @@ export class SessionVm implements ISessionContext {
     
     public dataChangedTick : number = 0; //This is used by components to react on changes done to the underlying data
 
+    
     private _selection:number[]=[];
     selectedComposer:Composer;
     get selection(){
@@ -39,6 +42,38 @@ export class SessionVm implements ISessionContext {
     constructor(){
         this.colorManager.session = this;   
         this.shapeGenerator.session = this;
+        this.dataSets = new Array<DataSet>();
+    }
+
+    addDataSet(name: string, description: string, dataGateway: IDataGateway): number {
+        var dataSet = new DataSet();
+        dataSet.name = name;
+        dataSet.description = description;
+        dataSet.dataGateway = dataGateway;
+        dataSet.id = this.dataSets.length+1;
+        this.dataSets.push(dataSet);
+        return dataSet.id;
+    }
+
+    dataSets: DataSet[];
+
+    loadData(): Promise<void> {
+    return new Promise((resolve, reject) => {    
+        var arrayOfPromises = new Array<Promise<Boolean>>();
+        try {
+        this.dataSets.forEach(dataSet => {
+            arrayOfPromises.push(dataSet.dataGateway.Load(this));
+        });
+        }catch(Error){
+            console.log("loadData: data failed to load: "+Error.message);
+            reject();
+        }
+        Promise.all(arrayOfPromises).then( fulfilled => {
+            console.debug("Load fulfilled:"+fulfilled);
+            resolve();
+        })
+    });
+
     }
 
     get elements(): Array<TimeLineBase> {
@@ -49,12 +84,7 @@ export class SessionVm implements ISessionContext {
         return this._elements.filter(el => el instanceof Composer) as Array<Composer>;
     }
 
-
-    protected setElements(value: Array<TimeLineBase>) {
-        this._elements.push(...value);
-        this.setExtents();
-    }
-    protected setExtents():void {
+    public setExtents():void {
    
         var list : Array<Date> = [];
         
@@ -84,7 +114,7 @@ export class SessionVm implements ISessionContext {
         this.shapeGenerator.config.maxDate = this.maxDate;
     }
 
-    public Refresh(){
+    public refresh(){
 
         if (this.rootFilter!=null){
 
@@ -98,13 +128,6 @@ export class SessionVm implements ISessionContext {
         }   
 
         this.colorManager.refresh();
-    }
-
-    public PlugIn(dataGateway : IDataGateway) {
-        dataGateway.SetSession(this);
-        dataGateway.Prepare();
-        this.setElements(dataGateway.getElements());
-        //this.dataChangedTick++;
     }
 
     public regenerate(){

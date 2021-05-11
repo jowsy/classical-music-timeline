@@ -69,7 +69,7 @@ export default class ListFilterControl extends Vue {
       rootFilter.Deactivate();
     }
 
-    this.session.Refresh();
+    this.session.refresh();
     this.$emit("callUpdateTimeLineInParent");
   }
 }

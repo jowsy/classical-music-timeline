@@ -2,16 +2,15 @@ import {IDataGateway} from '../../core/IDataGateway'
 import { ParameterType } from '@/core/Parameter';
 import { Root } from './OpenOpus';
 import { SessionVm } from '@/viewmodel/SessionVm';
-import { TimeLineBase } from '@/core';
+import { ISessionContext, TimeLineBase } from '@/core';
 import * as OpenOpus from './OpenOpus';
 import { Composer } from '@/core/Composer';
 
 /* -------------------------------------------------------
 * Resonsible to map OpenOpus composers into TimeSpan objects
 -------------------------------------------------------*/ 
-export class OpenOpusJsonMapper implements IDataGateway {
+export class OpenOpusJsonMapper {
 
-    private session : SessionVm;
     private json : string;
 
     private epochParameterName : string = "epoch";
@@ -22,31 +21,26 @@ export class OpenOpusJsonMapper implements IDataGateway {
         this.json = json;
     }
 
-    SetSession(session:SessionVm) {
-        this.session=session;
-    }
-    void: any;
-
-    Prepare(): void {
-        const epochParameterDef = this.session.configuration.getParameterByName(this.epochParameterName);
-        const popParameterDef = this.session.configuration.getParameterByName(this.popParameterName);
-        const worksParameterDef = this.session.configuration.getParameterByName(this.worksParameterName);
+    AddParameters(session:ISessionContext): void {
+        const epochParameterDef = session.configuration.getParameterByName(this.epochParameterName);
+        const popParameterDef = session.configuration.getParameterByName(this.popParameterName);
+        const worksParameterDef = session.configuration.getParameterByName(this.worksParameterName);
         
         if (epochParameterDef == undefined){
-            var definition = this.session.configuration.addParameter(this.epochParameterName, "Epoch", ParameterType.String, true);
-            this.session.colorManager.mapColorsByStringParameter(definition);
+            var definition = session.configuration.addParameter(this.epochParameterName, "Epoch", ParameterType.String, true);
+            session.colorManager.mapColorsByStringParameter(definition);
         }
 
         if (popParameterDef == undefined){
-            var definition = this.session.configuration.addParameter(this.popParameterName, "Popularity", ParameterType.String, true);
+            var definition = session.configuration.addParameter(this.popParameterName, "Popularity", ParameterType.String, true);
         }
 
         if (worksParameterDef == undefined){
-            var definition = this.session.configuration.addParameter(this.worksParameterName, "Quantity of Works", ParameterType.Number, true);
+            var definition = session.configuration.addParameter(this.worksParameterName, "Quantity of Works", ParameterType.Number, true);
         }
     }
     
-    getElements(): TimeLineBase[] {
+    getElements(session:ISessionContext): TimeLineBase[] {
         let id:number=0;
         let rootObject : Root = JSON.parse(this.json);
         let data: Array<TimeLineBase> = new Array<TimeLineBase>();
@@ -64,7 +58,7 @@ export class OpenOpusJsonMapper implements IDataGateway {
                 composer.death = new Date(c.death);
             composer.visible = true; //Show by default
 
-            composer.session = this.session;
+            composer.session = session;
             composer.getParameterByName(this.epochParameterName).set(c.epoch); 
             composer.getParameterByName(this.popParameterName).set(c.popular == "1" ? "High": "Low"); 
 
