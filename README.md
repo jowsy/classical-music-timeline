@@ -1,24 +1,24 @@
 # classical-music-timeline
 
 ## Background
-I wanted to learn TypeScript and had trouble finding an interactive timeline of composers and their works. 
-The overall aim is to increase the general knowledge of music history, focusing on the western classical tradition. It can also be used as a quality assurance tool for validating metadata.
+I had trobule finding a good interactive timeline of composers so I made one! 
+The overall goal is to increase the general knowledge of music history, focusing on the western classical tradition. 
 
 ## Data
-As primary data source I use OpenOpus but it is built to support implementation of other datasources as well. Learn more at: https://openopus.org/.
+Primary datasource: OpenOpus API. Learn more at: https://openopus.org/.
+On that layer, additional data are added. 
 
-
-## TODO
-- [ ] Add support for selection of composer and displaying metadata in a property window
-- [ ] Draw works as points in time (date related to work is missing from OpenOpus, test other datasource?)
-- [ ] Add support for number parameter and filtering
-- [ ] Collect IMDB soundtrack statistics and number of Spotify listeners for each composers, and map to datasource
+## BACKLOG
+- [x] Add support for selection of composer and displaying metadata in a property window
+- [ ] As a user, I want to be able to see notable events in a composer's life as a list and as points in the timeline view
+- [ ] As a user, I want to be able to edit styling of bars in the timeline view (ex: change style parameter) 
+- [x] Add support for number parameter and filtering
+- [x] Collect IMDB soundtrack statistics and number of Spotify listeners for each composers, and map to datasource
 
 ## Frameworks
-
 * Vue.js v.3
 * Bootstrap 5
-
+* d3.js
 
 ## Project setup
 ```
