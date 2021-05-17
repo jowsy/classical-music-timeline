@@ -4,8 +4,10 @@
            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
              <SideMenu :session="session" @callUpdateTimeLineInParent="updateTimeLine"/> 
            </nav>
-          <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <TimeLine :session="session" ref="timeline"/>          
+          <main class="col-md-9 ms-sm-auto col-lg-10 px-md-0">
+            <Properties :composer="session.selectedComposer"/>
+            <TimeLine :session="session" ref="timeline"/>        
+            <Footer :colorManager="session.colorManager"/>  
           </main>
         </div>
     </div>
@@ -15,20 +17,23 @@
 import { Options, Vue } from 'vue-class-component';
 import TimeLine from './components/TimeLine.vue';
 import SideMenu from './components/SideMenu.vue';
+import Properties from './components/Properties.vue';
+import Footer from './components/Footer.vue';
+
 import {AndFilter} from './core/AndFilterTest';
-import {CsvMapper, CsvMapperConfig} from './db/CsvMapper';
-import {OpenOpusJsonMapper} from './db/OpenOpus/OpenOpusJsonMapper';
 import {WebColor} from './WebColor';
 import {SessionVm} from './viewmodel/SessionVm'
-import {ParamType } from './core/Parameter';
 import {ColorGeneratorImpl} from './viewmodel/ColorGeneratorImpl';
 import { ShapeGeneratorConfig } from './viewmodel/ShapeGeneratorConfig';
 import { SvgDimensions } from './viewmodel/SvgDimensions';
+import { OpenOpusDataGateway } from './db/OpenOpus/OpenOpusDataGateway';
 
 @Options({
   components: {
     TimeLine,
-    SideMenu
+    SideMenu,
+    Properties,
+    Footer
   },
 })
 export default class App extends Vue {
@@ -36,7 +41,6 @@ export default class App extends Vue {
   session:SessionVm;
 
   updateTimeLine(){
-     console.log("Update timeline component");  
     (this.$refs as any).timeline.redraw();
   }
 
@@ -72,68 +76,38 @@ export default class App extends Vue {
     //Setup shape generator, set constants
     newSession.shapeGenerator.config = new ShapeGeneratorConfig();
 
+     //Add OpenOpus datasource
+
+     /**
+      * The data gateway is the component that handles low-level communication (I/O) with an external data source
+      * The data source could be a REST-service, csv-file or a JSON/XML
+      * You can add multiple datasets, the loader will load them in the order they are added
+      * The data gateway can also act on selection of an item, for example a composer. This enables lazy loading of data. 
+      */
+
+    var dataGateway = new OpenOpusDataGateway();
+    newSession.addDataSet("OpenOpus Data Dump", "Dump from OpenOpus API", dataGateway);
+
     var svgConfig = new SvgDimensions();
     svgConfig.marginLeft = 20;
     svgConfig.marginTop = 40;
     
     newSession.shapeGenerator.config.svgDimensions = new SvgDimensions();
 
-    
-
     return { session : newSession};
   }
 
   async mounted(){
+    this.session.loadData().then(() => {
+      
+      console.debug("data loaded");
 
-    //Define data transformer for CSV file
-    //=================================================================
-    const imdbDestParameterName = "ImdbSoundtrackCredits";
-        
-      const csvMapperConfig = Object.assign({
-            destFieldNameToMatch:"displayCaption",
-            csvFieldNameToMatch:"Name",
-            destFieldNameToSet:imdbDestParameterName,
-            destFieldNameToSetType: ParamType.Number,
-            csvFieldNameToRetrieve:"SoundtrackCredits",
-            delimiterString: ";"
-        }, new CsvMapperConfig());
+      this.session.regenerate(); //create shapes
+      this.session.refresh(); //update visibility
+      this.session.dataChangedTick++; //increment data change counter
 
-
-    //Create custom parameters
-    //=================================================================
-    this.session.configuration.addParameter(imdbDestParameterName, 
-                                            ParamType.Number,
-                                            true); //for IMDB soundtrack credits, see csv-mapper above
-
-    //Load data source - OpenOpus
-    //=================================================================
-    fetch("dump.json")
-      .then(response => response.text())
-      .then(json => this.session.PlugIn(new OpenOpusJsonMapper(json)))
-      .finally( () => {
-         fetch("IMDBSoundtrackCredits.csv")
-          .then(response => response.text())
-          .then(csv => {
-              const csvTransformer=new CsvMapper(csv, csvMapperConfig);
-              csvTransformer.transform(this.session.elements);
-              
-             // const parameterDef = this.session.configuration.getParameterByName(imdbDestParameterName);
-
-              //Color in timeline using a gradient
-            /* if (parameterDef!=undefined)
-                this.session.colorManager.mapColorsByNumberParameter(parameterDef,
-                                                                     100, 
-                                                                      new WebColor("#e5f5f9"), 
-                                                                      new WebColor("#2ca25f"));*/
-              
-              this.session.regenerate(); //generate geometry
-              this.session.Refresh();
-              this.updateTimeLine();
-            });
-        });
-
+    });
   }
 }
 </script>
 <style scoped src="../src/assets/css/app.css"/>
-

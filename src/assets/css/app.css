@@ -18,3 +18,12 @@ ul.list-group.vertical-scroll
 .verticalgrid line {
     stroke: dimgrey;
 }
+
+#main-footer {
+    width: inherit !important;
+    left: inherit;
+}
+
+.accordion-body {
+    padding: 0 0 !important;
+}

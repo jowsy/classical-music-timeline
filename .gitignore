@@ -121,9 +121,3 @@ dist
 
 # TernJS port file
 .tern-port
-src/db/OpenOpus/OpenOpusJsonMapper.js
-src/db/OpenOpus/OpenOpusJsonMapper.js.map
-src/viewmodel/ColorGeneratorImpl.js.map
-src/viewmodel/ShapeGenerator.js
-src/viewmodel/ShapeGenerator.js.map
-src/db/OpenOpus/OpenOpusJsonMapper.js

@@ -5,5 +5,5 @@ export abstract class TimeLineGeometry extends TimeLineBase {
     shape : TimeLineShape;
     visible : boolean;
     visibilityOverriden : boolean;
-    displayCaption : string;
+    abstract displayCaption : string;
 }
