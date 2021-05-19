@@ -20,6 +20,13 @@ On that layer, additional data are added.
 * Bootstrap 5
 * d3.js
 
+## Documentation
+Use dependency cruiser to generate component dependency diagram.
+Validation rules is defined in .dependecy-cruiser.js.
+```
+npx depcruise --config .dependency-cruiser.js src --include-only "^src" --output-type dot src | dot -T svg > dependencygraph.svg
+```
+
 ## Project setup
 ```
 npm install
