@@ -1,4 +1,4 @@
-import { Composer } from "@/core/Composer";
+import { Person } from "@/core/Person";
 import { IShapeGenerator } from "@/core/IShapeGenerator";
 import { TimeLineGeometry } from "@/core/TimeLineGeometry";
 import { TimeLineRectangle } from "@/core/TimeLineShapes";
@@ -54,19 +54,19 @@ export class ShapeGeneratorImpl implements IShapeGenerator {
         let xAxis = d3.axisTop(scale).ticks(dateInterval); //Date ticks
         
      
-        var composers = this.session.composers;
-        const barHeight = this.GetMaximumBarHeight(composers.length);
-        var sortComposerList = [...composers].sort((a, b) => {
+        var persons = this.session.composers;
+        const barHeight = this.GetMaximumBarHeight(persons.length);
+        var sortComposerList = [...persons].sort((a, b) => {
             return a.birth > b.birth ? 1 : -1;});
          
-        if (composers.length > 0){
+        if (persons.length > 0){
             switch (this.config.layoutType) {
                 case LayoutType.StackVertically:
                     {
                         for (let index = 0; index < sortComposerList.length; index++) {
                             const element = sortComposerList[index];
-                            if (element instanceof Composer){
-                                this.createComposerShape(element as Composer, index, scale, barHeight);
+                            if (element instanceof Person){
+                                this.createShape(element as Person, index, scale, barHeight);
                             }
                         }
                     
@@ -81,29 +81,29 @@ export class ShapeGeneratorImpl implements IShapeGenerator {
         }
     }
         
-    private recursiveCreateShape(list:Composer[],
+    private recursiveCreateShape(list:Person[],
                                 currentIndex:number, 
                                 yRow:number,
                                 takenIndexes: number[], 
                                 scale:d3.ScaleTime<number,number,never>, 
                                 rectangleHeight:number){
     
-        var composer = list[currentIndex];
+        var person = list[currentIndex];
         const rectangle = new TimeLineRectangle();
-        rectangle.x = scale(composer.birth);
+        rectangle.x = scale(person.birth);
         rectangle.y = ((yRow * rectangleHeight) + this.config.svgDimensions.topAxisHeight);
-        var endDate = composer.death;
+        var endDate = person.death;
         if (endDate==undefined)
             endDate = new Date();  
-        rectangle.width = scale(endDate)-scale(composer.birth);
+        rectangle.width = scale(endDate)-scale(person.birth);
         rectangle.height = rectangleHeight*(1-this.config.rectangleMargin);
-        composer.shape = rectangle;
-        takenIndexes.push(list.indexOf(composer));
+        person.shape = rectangle;
+        takenIndexes.push(list.indexOf(person));
         takenIndexes.sort((a, b) => {
             return a > b ? 1 : -1;});
-        //Get composer next to current
+        //Get person next to current
         var query = list.filter(c => takenIndexes.findIndex(indx => indx==list.indexOf(c))==-1)
-                        .filter(c => scale(c.birth)>composer.shape.x+rectangle.width);
+                        .filter(c => scale(c.birth)>person.shape.x+rectangle.width);
         
         if (query.length!=0){
         const nextIndex = list.indexOf(query[0]);
@@ -124,16 +124,16 @@ export class ShapeGeneratorImpl implements IShapeGenerator {
         }
     }
 
-    private createComposerShape(composer:Composer, index:number, scale:d3.ScaleTime<number,number,never>, rectangleHeight:number){
+    private createShape(person:Person, index:number, scale:d3.ScaleTime<number,number,never>, rectangleHeight:number){
         const rectangle = new TimeLineRectangle();
-        rectangle.x = scale(composer.birth);
+        rectangle.x = scale(person.birth);
         rectangle.y = ((index * rectangleHeight) + this.config.svgDimensions.topAxisHeight);
-        var endDate = composer.death;
+        var endDate = person.death;
         if (endDate==undefined)
             endDate = new Date();  
-        rectangle.width = scale(endDate)-scale(composer.birth);
+        rectangle.width = scale(endDate)-scale(person.birth);
         rectangle.height = rectangleHeight;
-        composer.shape = rectangle;
+        person.shape = rectangle;
     }
 
     private createScale() : d3.ScaleTime<number,number,never> {

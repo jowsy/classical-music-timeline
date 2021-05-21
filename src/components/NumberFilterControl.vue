@@ -93,7 +93,7 @@ export default class NumberFilterControl extends Vue {
     }
 
     updateFilter() {
-      console.log("hej");
+
       let rootFilter: AndFilter = this.session.rootFilter as AndFilter;
       var filter = rootFilter.getFilter("f_"+this.parameterDefinition.id) as OrFilter;
 

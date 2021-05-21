@@ -15,7 +15,7 @@ import { IColor } from '@/core/IColor';
 import { SvgDimensions } from '@/viewmodel/SvgDimensions';
 import { TimeLineRectangle } from '@/core/TimeLineShapes';
 import { ZoomBehavior } from 'd3';
-import { Composer } from '@/core/Composer';
+import { Person } from '@/core/Person';
 
 @Options({
       props: {
@@ -169,7 +169,7 @@ export default class TimeLine extends Vue {
     rectangles.on("click", (e,c) => select(e,c));
     texts.on("click", (e,c) => select(e,c));
 
-    function select(e:any,c:Composer) {       
+    function select(e:any,c:Person) {       
          //Reset selection, we can only select one item at a time, 
          if (session.selection.length>0){
             var previousId = session.selection[0];

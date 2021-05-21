@@ -1,4 +1,4 @@
-import { ISessionContext, TimeLineBase, Composer, ParameterType } from "@/core";
+import { ISessionContext, TimeLineBase, Person, ParameterType } from "@/core";
 import { IDataGateway } from "@/core/IDataGateway";
 import { CsvMapper, CsvMapperConfig } from "../CsvMapper";
 import { OpenOpusJsonMapper } from "./OpenOpusJsonMapper";
@@ -71,7 +71,7 @@ export class OpenOpusDataGateway implements IDataGateway {
     }
 
     Select(element: TimeLineBase): void {
-        if (element instanceof Composer) {
+        if (element instanceof Person) {
             console.log("selected!! Lazy load!!");
         }
     }

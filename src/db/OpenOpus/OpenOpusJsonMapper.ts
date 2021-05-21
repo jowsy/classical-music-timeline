@@ -4,7 +4,8 @@ import { Root } from './OpenOpus';
 import { SessionVm } from '@/viewmodel/SessionVm';
 import { ISessionContext, TimeLineBase } from '@/core';
 import * as OpenOpus from './OpenOpus';
-import { Composer } from '@/core/Composer';
+import { Person } from '@/core/Person';
+import { Occupation } from '@/core/Occupation';
 
 /* -------------------------------------------------------
 * Resonsible to map OpenOpus composers into TimeSpan objects
@@ -46,7 +47,7 @@ export class OpenOpusJsonMapper {
         let data: Array<TimeLineBase> = new Array<TimeLineBase>();
         (rootObject.composers as OpenOpus.Composer[]).forEach(c =>{ 
             
-            let composer = new Composer();
+            let composer = new Person();
 
             composer.internalId=id;
             id++;
@@ -57,7 +58,7 @@ export class OpenOpusJsonMapper {
             if (c.death!=null)
                 composer.death = new Date(c.death);
             composer.visible = true; //Show by default
-
+            composer.occupation = Occupation.Composer;
             composer.session = session;
             composer.getParameterByName(this.epochParameterName).set(c.epoch); 
             composer.getParameterByName(this.popParameterName).set(c.popular == "1" ? "High": "Low"); 

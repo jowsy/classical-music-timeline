@@ -1,7 +1,7 @@
 //Entities
 export * from './TimeLineBase';
 export * from './TimeLineGeometry';
-export * from './Composer';
+export * from './Person';
 
 //Container interface
 export * from './ISessionContext';

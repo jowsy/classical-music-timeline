@@ -25,12 +25,12 @@
 </template>
 
 <script lang="ts">
-import { Composer } from "@/core/Composer";
+import { Person } from "@/core/Person";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
       props: {
-    composer: Composer
+    composer: Person
       }
 })
 export default class Properties extends Vue {

@@ -7,7 +7,7 @@ import { ColorManager } from "../core/ColorManager";
 import { timeLineExtents } from "./timeLineExtents";
 import { ISessionContext } from "@/core/ISessionContext";
 import { ShapeGeneratorImpl } from "./ShapeGeneratorImpl";
-import { Composer } from "@/core/Composer";
+import { Person } from "@/core/Person";
 import { TimeLineGeometry } from "@/core/TimeLineGeometry";
 import { DataSet } from "@/core";
 
@@ -22,7 +22,7 @@ export class SessionVm implements ISessionContext {
 
     
     private _selection:number[]=[];
-    selectedComposer:Composer;
+    selected:Person;
     get selection(){
         return this._selection;
     }
@@ -30,7 +30,7 @@ export class SessionVm implements ISessionContext {
         this._selection = value;
         var c = this.composers.find(comp => comp.internalId == value[0]);
         if (c!=undefined)
-            this.selectedComposer = c;
+            this.selected = c;
     }
 
     minDate : Date;
@@ -80,8 +80,8 @@ export class SessionVm implements ISessionContext {
         return this._elements;
     }
 
-    get composers() : Array<Composer> {
-        return this._elements.filter(el => el instanceof Composer) as Array<Composer>;
+    get composers() : Array<Person> {
+        return this._elements.filter(el => el instanceof Person) as Array<Person>;
     }
 
     public setExtents():void {

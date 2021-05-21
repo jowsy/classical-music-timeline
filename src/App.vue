@@ -5,7 +5,7 @@
              <SideMenu :session="session" @callUpdateTimeLineInParent="updateTimeLine"/> 
            </nav>
           <main class="col-md-9 ms-sm-auto col-lg-10 px-md-0">
-            <Properties :composer="session.selectedComposer"/>
+            <Properties :composer="session.selected"/>
             <TimeLine :session="session" ref="timeline"/>        
             <Footer :colorManager="session.colorManager"/>  
           </main>
