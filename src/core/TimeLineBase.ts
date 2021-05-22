@@ -1,3 +1,4 @@
+import { ClassType } from "./ClassType";
 import { ISessionContext } from "./ISessionContext";
 import { ParameterDefinition, Parameter } from "./Parameter";
 
@@ -5,7 +6,7 @@ export abstract class TimeLineBase {
 
     session:ISessionContext;
     internalId: number;
-
+    classType:ClassType;
     order : number;
     
     private _parameters : Array<Parameter> = new Array<Parameter>();

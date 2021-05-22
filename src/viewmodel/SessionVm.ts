@@ -10,6 +10,7 @@ import { ShapeGeneratorImpl } from "./ShapeGeneratorImpl";
 import { Person } from "@/core/Person";
 import { TimeLineGeometry } from "@/core/TimeLineGeometry";
 import { DataSet } from "@/core";
+import { ClassType } from "@/core/ClassType";
 
 export class SessionVm implements ISessionContext {
 
@@ -81,7 +82,7 @@ export class SessionVm implements ISessionContext {
     }
 
     get composers() : Array<Person> {
-        return this._elements.filter(el => el instanceof Person) as Array<Person>;
+        return this._elements.filter(el => el.classType == ClassType.Person) as Array<Person>;
     }
 
     public setExtents():void {
