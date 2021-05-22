@@ -47,6 +47,7 @@ export class OpenOpusDataGateway implements IDataGateway {
                     fetch("IMDBSoundtrackCredits.csv")
                         .then(response => response.text())
                         .then(csv => {
+
                             const csvTransformer = new CsvMapper(csv, csvMapperConfig);
                             csvTransformer.transform(session.elements);
 
@@ -62,10 +63,13 @@ export class OpenOpusDataGateway implements IDataGateway {
                                                                                     new WebColor("#2ca25f"));
                             */
 
-                            session.setExtents();
                             resolve(true);
                         })
-                        .catch(error => reject(false));
+                        .catch(error => {
+                            console.log("ERROR:"+error);
+                            reject(false)
+                            
+                        });
                 });
         });
     }

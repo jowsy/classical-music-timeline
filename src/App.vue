@@ -101,7 +101,7 @@ export default class App extends Vue {
     this.session.loadData().then(() => {
       
       console.debug("data loaded");
-
+      this.session.setExtents();
       this.session.regenerate(); //create shapes
       this.session.refresh(); //update visibility
       this.session.dataChangedTick++; //increment data change counter
