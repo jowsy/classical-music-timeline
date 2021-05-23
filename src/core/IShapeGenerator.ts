@@ -1,7 +1,5 @@
-import { ISessionContext } from ".";
-import { TimeLineGeometry } from "./TimeLineGeometry";
+import { Person } from ".";
 
 export interface IShapeGenerator {
-    session:ISessionContext;
-    generateShapes(geometryInstances:TimeLineGeometry[]):void;
+    generatePersonShapes(persons:Person[]):void;
 }

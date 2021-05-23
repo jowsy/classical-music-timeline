@@ -18,7 +18,7 @@
 <script lang="ts">
 // eslint-disable-next-line no-unused-vars
 import { AndFilter, OrFilter, Parameter, ParameterDefinition, ParameterNumberRangeFilter, TimeLineBase } from "@/core";
-import { SessionVm } from "@/viewmodel/SessionVm";
+import { Workspace } from "@/viewmodel/Workspace";
 import { Options, Vue } from "vue-class-component";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
@@ -26,7 +26,7 @@ import "vue-slider-component/theme/antd.css";
 @Options({
       props: {
         parameterDefinition: ParameterDefinition,
-        session: SessionVm
+        session: Workspace
       },
       components: {
         VueSlider
@@ -34,7 +34,7 @@ import "vue-slider-component/theme/antd.css";
       emits: ["callUpdateTimeLineInParent"],
 })
 export default class NumberFilterControl extends Vue {
-    session:SessionVm;
+    session:Workspace;
     parameterDefinition:ParameterDefinition;
     min:number;
     max:number;

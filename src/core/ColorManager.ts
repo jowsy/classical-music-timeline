@@ -3,13 +3,13 @@ import { IColorGenerator,
          IColor, 
          ParameterDefinition,
          TimeLineBase,
-         ISessionContext,
+         WorkspaceBase,
          ParameterType,
          ParameterGroup } from "./";
 
 export class ColorManager {
 
-    session: ISessionContext;
+    session: WorkspaceBase;
     colorGenerator : IColorGenerator;
     private currentParameterDefinition: ParameterDefinition;
     private currentColorScheme: string | undefined;

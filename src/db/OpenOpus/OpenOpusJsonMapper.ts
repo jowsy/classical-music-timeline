@@ -1,8 +1,8 @@
 import {IDataGateway} from '../../core/IDataGateway'
 import { ParameterType } from '@/core/Parameter';
 import { Root } from './OpenOpus';
-import { SessionVm } from '@/viewmodel/SessionVm';
-import { ISessionContext, TimeLineBase } from '@/core';
+import { Workspace } from '@/viewmodel/Workspace';
+import { WorkspaceBase, TimeLineBase } from '@/core';
 import * as OpenOpus from './OpenOpus';
 import { Person } from '@/core/Person';
 import { Occupation } from '@/core/Occupation';
@@ -22,7 +22,7 @@ export class OpenOpusJsonMapper {
         this.json = json;
     }
 
-    AddParameters(session:ISessionContext): void {
+    AddParameters(session:WorkspaceBase): void {
         const epochParameterDef = session.configuration.getParameterByName(this.epochParameterName);
         const popParameterDef = session.configuration.getParameterByName(this.popParameterName);
         const worksParameterDef = session.configuration.getParameterByName(this.worksParameterName);
@@ -41,7 +41,7 @@ export class OpenOpusJsonMapper {
         }
     }
     
-    getElements(session:ISessionContext): TimeLineBase[] {
+    getElements(session:WorkspaceBase): TimeLineBase[] {
         let id:number=0;
         let rootObject : Root = JSON.parse(this.json);
         let data: Array<TimeLineBase> = new Array<TimeLineBase>();

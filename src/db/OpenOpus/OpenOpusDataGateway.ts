@@ -1,10 +1,10 @@
-import { ISessionContext, TimeLineBase, Person, ParameterType } from "@/core";
+import { WorkspaceBase, TimeLineBase, Person, ParameterType } from "@/core";
 import { IDataGateway } from "@/core/IDataGateway";
 import { CsvMapper, CsvMapperConfig } from "../CsvMapper";
 import { OpenOpusJsonMapper } from "./OpenOpusJsonMapper";
 
 export class OpenOpusDataGateway implements IDataGateway {
-    Load(session: ISessionContext): Promise<Boolean> {
+    Load(session: WorkspaceBase): Promise<Boolean> {
 
         return new Promise((resolve, reject) => {
             //Define data transformer for CSV file

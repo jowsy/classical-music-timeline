@@ -19,14 +19,14 @@ import TimeLine from './components/TimeLine.vue';
 import SideMenu from './components/SideMenu.vue';
 import Properties from './components/Properties.vue';
 import Footer from './components/Footer.vue';
-
 import {AndFilter} from './core/AndFilterTest';
 import {WebColor} from './WebColor';
-import {SessionVm} from './viewmodel/SessionVm'
+import {Workspace} from './viewmodel/Workspace'
 import {ColorGeneratorImpl} from './viewmodel/ColorGeneratorImpl';
 import { ShapeGeneratorConfig } from './viewmodel/ShapeGeneratorConfig';
 import { SvgDimensions } from './viewmodel/SvgDimensions';
 import { OpenOpusDataGateway } from './db/OpenOpus/OpenOpusDataGateway';
+import { ShapeGeneratorImpl } from './viewmodel/ShapeGeneratorImpl';
 
 @Options({
   components: {
@@ -38,7 +38,7 @@ import { OpenOpusDataGateway } from './db/OpenOpus/OpenOpusDataGateway';
 })
 export default class App extends Vue {
 
-  session:SessionVm;
+  session:Workspace;
 
   updateTimeLine(){
     (this.$refs as any).timeline.redraw();
@@ -47,13 +47,13 @@ export default class App extends Vue {
   data() {
     
     // Create a new user workspace/session for the user with all composers shown as default
-    var newSession = new SessionVm	();
+    var workspace = new Workspace();
     
     //Set main filter
-    newSession.rootFilter = new AndFilter();
+    workspace.rootFilter = new AndFilter();
 
     //Set color generator
-    newSession.colorManager.colorGenerator = new ColorGeneratorImpl();
+    workspace.colorManager.colorGenerator = new ColorGeneratorImpl();
 
     //Add color scheme
     //=================================================================
@@ -70,14 +70,10 @@ export default class App extends Vue {
                               new WebColor("#F29E4C")
                           ];  
 
-    newSession.colorManager.addColorScheme("default",colors);
-    newSession.colorManager.setDefaultColor(new WebColor("#808080"));
-
-    //Setup shape generator, set constants
-    newSession.shapeGenerator.config = new ShapeGeneratorConfig();
+    workspace.colorManager.addColorScheme("default",colors);
+    workspace.colorManager.setDefaultColor(new WebColor("#808080"));
 
      //Add OpenOpus datasource
-
      /**
       * The data gateway is the component that handles low-level communication (I/O) with an external data source
       * The data source could be a REST-service, csv-file or a JSON/XML
@@ -86,25 +82,44 @@ export default class App extends Vue {
       */
 
     var dataGateway = new OpenOpusDataGateway();
-    newSession.addDataSet("OpenOpus Data Dump", "Dump from OpenOpus API", dataGateway);
-
-    var svgConfig = new SvgDimensions();
-    svgConfig.marginLeft = 20;
-    svgConfig.marginTop = 40;
-    
-    newSession.shapeGenerator.config.svgDimensions = new SvgDimensions();
-
-    return { session : newSession};
+    workspace.addDataSet("OpenOpus Data Dump", "Dump from OpenOpus API", dataGateway);
+  
+    return { session : workspace};
   }
 
   async mounted(){
+
     this.session.loadData().then(() => {
       
       console.debug("data loaded");
+
       this.session.setExtents();
-      this.session.regenerate(); //create shapes
+
+      //When extents have been set, create Shape Generator
+      //=================================================
+      var shapeGenConfig = new ShapeGeneratorConfig();
+          
+      var svgConfig = new SvgDimensions();
+      svgConfig.marginLeft = 20;
+      svgConfig.marginTop = 40;
+
+      shapeGenConfig.svgDimensions = svgConfig;
+      this.session.viewConfig = shapeGenConfig;
+      var shapeGenImpl= new ShapeGeneratorImpl(shapeGenConfig);
+
+      shapeGenImpl.minDate = this.session.minDate;
+      shapeGenImpl.maxDate = this.session.maxDate;
+      
+      this.session.shapeGenerator =  shapeGenImpl;
+      //===================================================
+
+      this.session.regenerate(); //generate shapes
+
       this.session.refresh(); //update visibility
+      
       this.session.dataChangedTick++; //increment data change counter
+
+      this.updateTimeLine();
 
     });
   }

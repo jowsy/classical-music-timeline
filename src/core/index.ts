@@ -4,7 +4,7 @@ export * from './TimeLineGeometry';
 export * from './Person';
 
 //Container interface
-export * from './ISessionContext';
+export * from './WorkspaceBase';
 
 //Color modules
 export * from './IColorGenerator';

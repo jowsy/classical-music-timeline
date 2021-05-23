@@ -1,12 +1,12 @@
 import { Guid } from "./Guid";
 import { IFilter } from "./IFilter";
-import { ISessionContext } from "./ISessionContext";
+import { WorkspaceBase } from "./WorkspaceBase";
 import { TimeLineBase } from "./TimeLineBase";
 
 export class LogicalOperatorFilter implements IFilter{
     protected filters : Array<IFilter> = new Array<IFilter>();
     id: string;
-    session: ISessionContext;
+    session: WorkspaceBase;
     protected _isActive: boolean;
     public get isActive(): boolean {
         return this._isActive;

@@ -131,7 +131,7 @@ import { TimeLineBase, ParameterType, ParameterDefinition, ParameterStringFilter
 // eslint-disable-next-line no-unused-vars
 import { Options, Vue } from "vue-class-component";
 // eslint-disable-next-line no-unused-vars
-import { SessionVm } from "../viewmodel/SessionVm";
+import { Workspace } from "../viewmodel/Workspace";
 // eslint-disable-next-line no-unused-vars
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
@@ -142,7 +142,7 @@ import NumberFilterControl from "./NumberFilterControl.vue"
 
 @Options({
   props: {
-    session: SessionVm,
+    session: Workspace,
   },
   components: {
     VueSlider,
@@ -153,7 +153,7 @@ import NumberFilterControl from "./NumberFilterControl.vue"
 })
 export default class SideMenu extends Vue {
   value: Array<number> = [];
-  session: SessionVm;
+  session: Workspace;
   filterMap: Map<string, string> = new Map<string, string>();
   minValue: number;
   maxValue: number;

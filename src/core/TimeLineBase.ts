@@ -1,10 +1,10 @@
 import { ClassType } from "./ClassType";
-import { ISessionContext } from "./ISessionContext";
+import { WorkspaceBase } from "./WorkspaceBase";
 import { ParameterDefinition, Parameter } from "./Parameter";
 
 export abstract class TimeLineBase {
 
-    session:ISessionContext;
+    session:WorkspaceBase;
     internalId: number;
     classType:ClassType;
     order : number;

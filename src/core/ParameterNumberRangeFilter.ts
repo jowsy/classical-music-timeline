@@ -1,12 +1,12 @@
 import { Guid } from "./Guid";
 import { IFilter } from "./IFilter";
-import { ISessionContext } from "./ISessionContext";
+import { WorkspaceBase } from "./WorkspaceBase";
 import { ParameterDefinition } from "./Parameter";
 import { TimeLineBase } from "./TimeLineBase";
 
 export class ParameterNumberRangeFilter implements IFilter{
     id: string;
-    session: ISessionContext;
+    session: WorkspaceBase;
     parameterDefinition:ParameterDefinition;
 
     min : number;

@@ -1,9 +1,9 @@
-import { ISessionContext } from "./ISessionContext";
+import { WorkspaceBase } from "./WorkspaceBase";
 import { TimeLineBase } from "./TimeLineBase";
 
 export interface IFilter {
     id: string;
-    session:ISessionContext;
+    session:WorkspaceBase;
     isActive: boolean;
     Apply(instance: TimeLineBase):boolean;
     Activate(): void;

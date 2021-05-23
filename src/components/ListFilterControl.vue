@@ -20,18 +20,18 @@
 <script lang="ts">
 // eslint-disable-next-line no-unused-vars
 import { AndFilter, OrFilter, Parameter, ParameterDefinition, ParameterStringFilter, TimeLineBase } from "@/core";
-import { SessionVm } from "@/viewmodel/SessionVm";
+import { Workspace } from "@/viewmodel/Workspace";
 import { Options, Vue } from "vue-class-component";
 
 @Options({
       props: {
         parameterDefinition: ParameterDefinition,
-        session: SessionVm
+        session: Workspace
       },
       emits: ["callUpdateTimeLineInParent"],
 })
 export default class ListFilterControl extends Vue {
-    session:SessionVm;
+    session:Workspace;
     parameterDefinition:ParameterDefinition;
     filterMap: Map<string, string> = new Map<string, string>();
     

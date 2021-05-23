@@ -6,25 +6,24 @@
 
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component'
-import { SessionVm } from '../viewmodel/SessionVm';
+import { Workspace } from '../viewmodel/Workspace';
 import * as d3 from 'd3';
 // eslint-disable-next-line no-unused-vars
 import { WebColor } from '@/WebColor';
 // eslint-disable-next-line no-unused-vars
 import { IColor } from '@/core/IColor';
-import { SvgDimensions } from '@/viewmodel/SvgDimensions';
 import { TimeLineRectangle } from '@/core/TimeLineShapes';
-import { ZoomBehavior } from 'd3';
 import { Person } from '@/core/Person';
+import { ViewportUtils } from "../viewmodel/ViewportUtils";
 
 @Options({
       props: {
-    session: SessionVm
+    session: Workspace
       }
 })
 export default class TimeLine extends Vue {
 
-    session : SessionVm;
+    session : Workspace;
 
     created(){
 
@@ -38,21 +37,17 @@ export default class TimeLine extends Vue {
 
     }
     redrawFully(){
-        this.session.shapeGenerator.generateShapes();
+        this.session.shapeGenerator.generatePersonShapes(this.session.composers);
         this.redraw();
     }
     redraw(){
-    const config = this.session.shapeGenerator.config;
+    const config = this.session.viewConfig;
     var session = this.session;
-    //config.minDate = this.session.timeExtents.getSelectedMinDate();
-    //config.maxDate = this.session.timeExtents.getSelectedMaxDate();
 
-    //this.session.regenerate(); //generate shapes
- 
-    const maxDate = config.maxDate;
-    const minDate = config.minDate;
-    const computedWidth = this.session.shapeGenerator.svgCanvasWidth;
-    const computedHeight = this.session.shapeGenerator.svgCanvasHeight;
+    const maxDate = session.maxDate;
+    const minDate = session.minDate;
+    const computedWidth =  ViewportUtils.GetViewportWidth(config.svgDimensions);
+    const computedHeight = ViewportUtils.GetViewportHeight(config.svgDimensions);
     const gridHeight = computedHeight-config.svgDimensions.topAxisHeight;
 
     //Filter
@@ -236,9 +231,6 @@ export default class TimeLine extends Vue {
 
     }  
 
-
-
-
     private static textBackgroundColor(color:IColor) : string{
        
         var newColor = Math.round(((color.r * 299) + 
@@ -247,7 +239,8 @@ export default class TimeLine extends Vue {
         var textColor = (newColor > 125) ? 'black' : 'white'; 
     
         return textColor;
-        }
+    }
+    
 
 }
 

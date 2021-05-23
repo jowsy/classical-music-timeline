@@ -1,4 +1,4 @@
-export class timeLineExtents {
+export class TimeLineExtents {
     value: Array<number> = new Array<number>();
     min: number;
     max:number;
